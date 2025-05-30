@@ -3,11 +3,11 @@ A custom bash prompt inspired by the [Tokyo Night Theme](https://www.github.com/
 ## Features
 Will highlight the current directory and change color depending if you're in HOME/ root/ or /mnt.
 
-![tokyobash_3](https://github.com/user-attachments/assets/a55c64af-8c00-4d4e-916e-570426bfab48)
+![tokyobash_3](https://github.com/user-attachments/assets/ec448438-38d1-4ada-abb2-54e1fc064581)
 
 And will abbreviate paths longer than 50 characters.
 
-![tokyobash_4](https://github.com/user-attachments/assets/07c0e014-5961-48aa-87d4-71aa70f0a465)
+![tokyobash_4](https://github.com/user-attachments/assets/b8bf6df8-7bad-4acb-9a19-831e9326e64b)
 
 
 ## Installation
