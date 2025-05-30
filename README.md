@@ -7,7 +7,7 @@ Will highlight the current directory and change color depending if you're in HOM
 
 And will abbreviate paths longer than 50 characters.
 
-![tokyobash_4](https://github.com/user-attachments/assets/be5266f4-f006-4704-89c2-68e61ab65c47)
+![tokyobash_4](https://github.com/user-attachments/assets/3529a96b-d37d-47a2-b383-906ad2801922)
 
 
 ## Installation
