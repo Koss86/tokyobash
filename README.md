@@ -7,14 +7,14 @@ Will highlight the current directory and change color depending if you're in HOM
 
 And will abbreviate paths longer than 50 characters.
 
-![tokyobash_4](https://github.com/user-attachments/assets/b8bf6df8-7bad-4acb-9a19-831e9326e64b)
+![tokyobash_4](https://github.com/user-attachments/assets/be5266f4-f006-4704-89c2-68e61ab65c47)
 
 
 ## Installation
 You will need a c compiler.
 Either gcc or clang should be fine.
 
-And add this to your .bashrc:
+And add this to your .bashrc or .bash_profile:
 
 ```bash
 SECONDS=0
