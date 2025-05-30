@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
 
     if (in_home(path, pHome, Hleng)) {
       replace_home(path, pHome, leng, Hleng);
+      leng = strlen(path);
 
       if (leng > ABV_PATH_LEN_T) {
         abrv_path(path, leng);
