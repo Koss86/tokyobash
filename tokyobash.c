@@ -18,6 +18,7 @@ bool in_mnt(char *path);
 int main(int argc, char *argv[]) {
 
   char path[PATH_MAX];
+  // Check to make sure we got the path
   if (!getcwd(path, sizeof(path))) {
     perror("Error: getcwd() failed to retrieve path\n");
     exit(1);
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
   int leng = strlen(path);
   bool pHomeState = true;
 
+  // Check that getenv() didn't return NULL
   if (!pHome) {
     pHomeState = false;
 
@@ -37,6 +39,7 @@ int main(int argc, char *argv[]) {
   } else {
     int Hleng = strlen(pHome);
 
+    // If path contains $HOME replace it with ~
     if (in_home(path, pHome, Hleng)) {
 
       replace_home(path, pHome, leng, Hleng);
@@ -66,12 +69,17 @@ int main(int argc, char *argv[]) {
   char red[] = "\\[\\e[38;5;211m\\]";
   char yellow[] = "\\[\\e[38;5;222m\\]";
 
+  // This checks if the term just opened,
+  // if so it won't print. W/o this, when
+  // the term first opens there would be a blank space
+  // above the prompt. Still happens with 'clear'
   if (argc > 1) {
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
   }
 
+  // If getenv() returned NULL just print standard prompt
   if (!pHomeState) {
     printf("%s%s\\u@\\h%s:%s [\\t] %s/\\n", bold, cyan, reset, blue, path);
   } else {
