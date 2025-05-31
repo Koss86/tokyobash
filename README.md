@@ -20,7 +20,7 @@ And add this to your .bashrc or .bash_profile:
 SECONDS=0
 export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS)"'
 ```
-Add this if a blank line above your prompt after 'clear' will bother you.
+Add this to fix having a blank line above your prompt after 'clear'.
 ```bash
 alias clear='reset_and_clear'
 reset_and_clear() {
