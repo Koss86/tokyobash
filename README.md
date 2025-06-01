@@ -1,5 +1,5 @@
 # tokyobash
-A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](https://www.github.com/neovim/neovim).
+A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](http://www.neovim.io).
 ## Features
 Will highlight the current directory and change color depending if you're in HOME/ root/ or /mnt.
 
@@ -20,7 +20,7 @@ And add this to your .bashrc or .bash_profile:
 SECONDS=0
 export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS)"'
 ```
-Add this to fix having a blank line above your prompt after 'clear'.
+Add this to fix the issue of having a blank line above your prompt after using 'clear'.
 ```bash
 alias clear='reset_and_clear'
 reset_and_clear() {
@@ -39,4 +39,8 @@ If another program, like git, alters the font color it will be reset back to def
 ## Disclaimer
 I'm not sure if this will run on all linux distros. I'm also new to programming so any feedback is welcomed.
 
-All screenshots were taken in ghostty terminal with tokyonight theme.
+All screenshots were taken with:
+
+[ghostty](https://www.ghostty.org) terminal with tokyonight theme
+
+SourceCodePro [Nerd Font](https://www.nerdfonts.com).
