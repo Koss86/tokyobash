@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   } else {
     int Hleng = strlen(pHome);
 
-    // If path contains $HOME replace it with ~
+    // If path contains $HOME replace it with '~'
     if (in_home(path, pHome, Hleng)) {
 
       replace_home(path, pHome, leng, Hleng);
@@ -85,7 +85,8 @@ int main(int argc, char *argv[]) {
   } else {
 
     if (leng > 1) {
-
+      // Removing current directoy from path but then adding
+      // it back with \\W so we can make it bold.
       if (path[0] == '~') {
         rem_curDir(path, leng);
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue,
@@ -102,7 +103,9 @@ int main(int argc, char *argv[]) {
                red, path, bold);
       }
     } else {
-
+      // Im checking for this state only because Im adding a '/' at the end of
+      // path. And I think '~/' looks ok but don't like the look of '//' for
+      // root. So we remove the extra '/' here for root.
       if (path[0] == '~') {
 
         printf("%s%s\\u@\\h%s:%s [\\t] %s\\W/\\n", bold, cyan, reset, blue,
