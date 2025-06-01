@@ -11,16 +11,22 @@ And will abbreviate paths longer than 50 characters.
 
 
 ## Installation
-You will need a c compiler.
-Either gcc or clang should be fine.
+You will need a c compiler. Either gcc or clang should be fine.
 
-And add this to your .bashrc or .bash_profile:
+Navigate to your tokyobash.c file location in your terminal and type:
+```
+gcc -o tokyobash tokyobash.c
+```
+Or if you're using clang, just replace gcc with clang and it will work the same.
+This will create the binary you will need the path for below.
+
+Now add this to your .bashrc or .bash_profile:
 
 ```bash
 SECONDS=0
 export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS)"'
 ```
-Add this to fix the issue of having a blank line above your prompt after using 'clear'.
+To fix the issue of having a blank line above your prompt after using 'clear', add this as well:
 ```bash
 alias clear='reset_and_clear'
 reset_and_clear() {
