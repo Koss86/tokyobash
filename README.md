@@ -26,7 +26,11 @@ Now add this to your .bashrc or .bash_profile:
 SECONDS=0
 export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS)"'
 ```
-To fix the issue of having a blank line above your prompt after using 'clear', add this as well:
+Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash.c binary.
+
+Save then restart your terminal!
+##
+Add this as well if you want 'clear' to not print a newline when used :
 ```bash
 alias clear='reset_and_clear'
 reset_and_clear() {
@@ -34,9 +38,7 @@ reset_and_clear() {
   command clear
 }
 ```
-Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash.c binary.
 
-Save then restart your terminal!
 ## Known Issues
 If another program, like git, alters the font color it will be reset back to default until the next prompt prints.
 
