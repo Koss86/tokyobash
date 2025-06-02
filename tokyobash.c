@@ -80,7 +80,9 @@ int main(int argc, char *argv[]) {
 
   // If getenv() returned NULL just print standard prompt
   if (!pHomeState) {
-    printf("%s%s\\u@\\h%s:%s [\\t] %s/\\n", bold, cyan, reset, blue, path);
+    rem_curDir(path, leng);
+    printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue, path,
+           bold);
   } else {
 
     if (leng > 1) {
