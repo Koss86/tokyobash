@@ -7,7 +7,7 @@
 
 #define ABV_PATH_LEN1 24
 #define ABV_PATH_LEN2 23
-#define ABV_PATH_LEN_T 50
+#define ABV_PATH_LEN_T 50 // 24 + 23 + "..."
 
 bool in_home(char *path, char *home, int Hleng);
 void replace_home(char *path, char *home, int leng, int indx);
@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
   char cyan[] = "\\[\\e[38;5;86m\\]";
   char red[] = "\\[\\e[38;5;211m\\]";
   char yellow[] = "\\[\\e[38;5;222m\\]";
+
   // This checks if the term just opened,
   // W/o this, when the term first opens there
   // would be a blank line above the prompt.
@@ -62,41 +63,36 @@ int main(int argc, char **argv) {
       printf("\\n");
     }
   }
+
   // If getenv() returned NULL just print standard prompt
   if (!pHomeState) {
-
-    // Removing current directoy from path to change
-    // text to bold before adding it back with \\W.
-
     rem_curDir(path, leng);
     printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue, path,
            bold);
   } else {
+    if (path[0] == '~') {
 
-    if (leng > 1) {
-
-      if (path[0] == '~') {
-        rem_curDir(path, leng);
+      // Removing current directoy from path to change
+      // text to bold before adding it back with \\W.
+      rem_curDir(path, leng);
+      if (leng > 1) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue,
                path, bold);
       } else {
-
-        bool inMnt = in_mnt(path);
-        rem_curDir(path, leng);
-
-        if (inMnt) {
-          printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset,
-                 blue, yellow, path, bold);
-        } else {
-          printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset,
-                 blue, red, path, bold);
-        }
-      }
-    } else {
-      if (path[0] == '~') {
-
         printf("%s%s\\u@\\h%s:%s [\\t] %s\\W/\\n", bold, cyan, reset, blue,
                bold);
+      }
+    } else {
+
+      bool inMnt = in_mnt(path);
+      rem_curDir(path, leng);
+
+      if (inMnt) {
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset, blue,
+               yellow, path, bold);
+      } else if (leng > 1) {
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset, blue,
+               red, path, bold);
       } else {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, cyan, reset, blue,
                bold, red);
