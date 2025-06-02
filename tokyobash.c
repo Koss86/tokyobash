@@ -15,7 +15,7 @@ void abrv_path(char *path, int leng);
 void rem_curDir(char *path, int leng);
 bool in_mnt(char *path);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
 
   char path[PATH_MAX];
   // Check to make sure we got the path
@@ -23,8 +23,9 @@ int main(int argc, char *argv[]) {
     perror("Error: getcwd() failed to retrieve path\n");
     exit(1);
   }
-  char *pHome = getenv("HOME");
+
   int leng = strlen(path);
+  char *pHome = getenv("HOME");
   bool pHomeState = true;
 
   // Check that getenv() didn't return NULL
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
     // If path contains $HOME replace it with '~'
     if (in_home(path, pHome, Hleng)) {
       replace_home(path, pHome, leng, Hleng);
-      leng = leng - Hleng;
+      leng = (leng - Hleng) + 1;
     }
   }
 
@@ -102,7 +103,6 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-
   printf("  %s└:> %s%s", cyan, reset, lBlue);
   return 0;
 }
