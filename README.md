@@ -38,13 +38,14 @@ Then replace 'path/to/tokyobash/binary' above with the acutal path to the compil
 
 Save then restart your terminal!
 <details>
-<summary>What's with SECONDS?</summary>
+<summary>Remove blank line spacer</summary>
   
+If you don't like the blank line spacer, you can remove the check for argv in tokyobash.c and the references to SECONDS in your bash file. Then recompile tokyobash.c and it should work the same, just without the spacing.
+
 SECONDS is only used for aesthetic reasons. I like the look of a blank line between each prompt. But, it has to be printed before the other printfs are called. If not, it will cause the input field to be below where intended. But printing it first leaves the issues of a blank line at the top upon opening, and the same when `clear` is used.
 
-  In bash, SECONDS just adds 1 to itself every second the terminal is open. So we know when the terminal has just opened, and we set up an alias to reset SECONDS when `clear` is called. Then we check if SECONDS is >1 to print the newline or not.
+  In bash, SECONDS just adds 1 to itself every second the terminal is open. So we then know when the terminal has just opened, and we set up an alias to reset SECONDS when `clear` is called. Then we check if SECONDS is >1 to print the newline or not.
 
-  If you don't like the blank line spacer, you can remove the check for argv in tokyobash.c and references to SECONDS in your bash file; it will work the same, just without the spacing.
 </details>
 
 ### Known Issues
