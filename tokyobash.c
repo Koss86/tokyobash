@@ -49,11 +49,11 @@ int main(int argc, char **argv) {
   // to use in the printfs below
   char bold[] = "\\[\\e[1m\\]";
   char reset[] = "\\[\\e[00m\\]";
-  char blue[] = "\\[\\e[38;5;4m\\]";
-  char lBlue[] = "\\[\\e[38;5;117m\\]";
-  char cyan[] = "\\[\\e[38;5;86m\\]";
-  char red[] = "\\[\\e[38;5;211m\\]";
-  char yellow[] = "\\[\\e[38;5;222m\\]";
+  char color_1[] = "\\[\\e[38;5;86m\\]";
+  char color_2[] = "\\[\\e[38;5;4m\\]";
+  char color_3[] = "\\[\\e[38;5;117m\\]";
+  char color_4[] = "\\[\\e[38;5;222m\\]";
+  char color_5[] = "\\[\\e[38;5;211m\\]";
 
   // This checks if the term just opened,
   // W/o this, when the term first opens there
@@ -67,19 +67,19 @@ int main(int argc, char **argv) {
   // If getenv() returned NULL just print standard prompt
   if (!pHomeState) {
     rem_curDir(path, leng);
-    printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue, path,
-           bold);
+    printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset, color_2,
+           path, bold);
   } else {
     if (path[0] == '~') {
       // Removing current directoy from path to change
       // text to bold before adding it back with \\W.
       rem_curDir(path, leng);
       if (leng > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, cyan, reset, blue,
-               path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset,
+               color_2, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s\\W/\\n", bold, cyan, reset, blue,
-               bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s\\W/\\n", bold, color_1, reset,
+               color_2, bold);
       }
     } else {
 
@@ -87,18 +87,18 @@ int main(int argc, char **argv) {
       rem_curDir(path, leng);
 
       if (inMnt) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset, blue,
-               yellow, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
+               color_2, color_4, path, bold);
       } else if (leng > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, cyan, reset, blue,
-               red, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
+               color_2, color_5, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, cyan, reset, blue,
-               bold, red);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_1, reset,
+               color_2, bold, color_5);
       }
     }
   }
-  printf("  %s└:> %s%s", cyan, reset, lBlue);
+  printf("  %s└:> %s%s", color_1, reset, color_3);
   return 0;
 }
 
