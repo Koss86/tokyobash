@@ -1,5 +1,7 @@
 # Tokyobash
 A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](http://www.neovim.io).
+
+Requires a [Nerd Font](https://www.nerdfonts.com) for the penguin icon.
 ## Features
 Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
 
@@ -58,8 +60,4 @@ I'm not sure if this will run on all linux distros. I believe it should work on 
 
 I'm also new to programming so any feedback is welcomed.
 
-All screenshots were taken with:
-
-[ghostty](https://www.ghostty.org) terminal with tokyonight theme
-
-SourceCodePro [Nerd Font](https://www.nerdfonts.com).
+All screenshots were taken in the [ghostty](https://www.ghostty.org) terminal with tokyonight theme.
