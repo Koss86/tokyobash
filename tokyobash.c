@@ -50,18 +50,28 @@ int main(int argc, char **argv) {
   // to use in the printfs below
   char bold[] = "\\[\\e[1m\\]";
   char reset[] = "\\[\\e[00m\\]";
-  char color_1[] = "\\[\\e[38;5;86m\\]";
-  char color_2[] = "\\[\\e[38;5;4m\\]";
-  char color_3[] = "\\[\\e[38;5;117m\\]";
-  char color_4[] = "\\[\\e[38;5;222m\\]";
-  char color_5[] = "\\[\\e[38;5;211m\\]";
+  char color_1[50];
+  char color_2[50];
+  char color_3[50];
+  char color_4[50];
+  char color_5[50];
 
   if (argc > 1) {
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
-    if ((strcmp(argv[2], "tokyonight")) == 0) {
-      printf("theme is %s\n", argv[2]);
+    if ((strcmp(argv[2], "catppuccin")) == 0) {
+      strncpy(color_1, "\\[\\e[38;5;208m\\]", 50);
+      strncpy(color_2, "\\[\\e[38;5;90m\\]", 50);
+      strncpy(color_3, "\\[\\e[38;5;117m\\]", 50);
+      strncpy(color_4, "\\[\\e[38;5;222m\\]", 50);
+      strncpy(color_5, "\\[\\e[38;5;211m\\]", 50);
+    } else {
+      strncpy(color_1, "\\[\\e[38;5;86m\\]", 50);
+      strncpy(color_2, "\\[\\e[38;5;4m\\]", 50);
+      strncpy(color_3, "\\[\\e[38;5;117m\\]", 50);
+      strncpy(color_4, "\\[\\e[38;5;222m\\]", 50);
+      strncpy(color_5, "\\[\\e[38;5;211m\\]", 50);
     }
   }
 
