@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define THEME_1 "catppuchinn"
+#define BUF_SIZE 25
 #define ABV_PATH_LEN1 24
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50 // 24 + 23 + "..."
@@ -48,34 +48,32 @@ int main(int argc, char **argv) {
 
   // Add or remove color & format codes here
   // to use in the printfs below
-  char bold[] = "\\[\\e[1m\\]";
+  char color_1[BUF_SIZE]; // User/Host
+  char color_2[BUF_SIZE]; // Time/Path
+  char color_3[BUF_SIZE]; // Text
+  char color_4[] = "\\[\\e[38;5;222m\\]";
+  char color_5[] = "\\[\\e[38;5;211m\\]";
   char reset[] = "\\[\\e[00m\\]";
-  char color_1[50];
-  char color_2[50];
-  char color_3[50];
-  char color_4[50];
-  char color_5[50];
+  char bold[] = "\\[\\e[1m\\]";
 
   if (argc > 1) {
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
     if ((strcmp(argv[2], "catppuccin")) == 0) {
-      strncpy(color_1, "\\[\\e[38;5;208m\\]", 50);
-      strncpy(color_2, "\\[\\e[38;5;90m\\]", 50);
-      strncpy(color_3, "\\[\\e[38;5;117m\\]", 50);
-      strncpy(color_4, "\\[\\e[38;5;222m\\]", 50);
-      strncpy(color_5, "\\[\\e[38;5;211m\\]", 50);
+      strncpy(color_1, "\\[\\e[38;5;214m\\]", BUF_SIZE);
+      strncpy(color_2, "\\[\\e[38;5;140m\\]", BUF_SIZE);
+      strncpy(color_3, "\\[\\e[38;5;217m\\]", BUF_SIZE);
+    } else if ((strcmp(argv[2], "koss")) == 0) {
+      strncpy(color_1, "\\[\\e[38;5;208m\\]", BUF_SIZE);
     } else {
-      strncpy(color_1, "\\[\\e[38;5;86m\\]", 50);
-      strncpy(color_2, "\\[\\e[38;5;4m\\]", 50);
-      strncpy(color_3, "\\[\\e[38;5;117m\\]", 50);
-      strncpy(color_4, "\\[\\e[38;5;222m\\]", 50);
-      strncpy(color_5, "\\[\\e[38;5;211m\\]", 50);
+      strncpy(color_1, "\\[\\e[38;5;86m\\]", BUF_SIZE);
+      strncpy(color_2, "\\[\\e[38;5;4m\\]", BUF_SIZE);
+      strncpy(color_3, "\\[\\e[38;5;117m\\]", BUF_SIZE);
     }
   }
 
-  // If getenv() returned NULL just print standard prompt
+  // If getenv() returned NULL, just print standard prompt
   if (!pHomeState) {
     rem_curDir(path, leng);
     printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset, color_2,
