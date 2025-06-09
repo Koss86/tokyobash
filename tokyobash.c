@@ -46,49 +46,62 @@ int main(int argc, char **argv) {
     leng = ABV_PATH_LEN_T;
   }
 
-  // Add or remove color & format codes here
-  // to use in the printfs below
-  char color_1[BUF_SIZE]; // User/Host
-  char color_2[BUF_SIZE]; // Time/Path
-  char color_3[BUF_SIZE]; // Text
-  char color_4[] = "\\[\\e[38;5;222m\\]";
-  char color_5[] = "\\[\\e[38;5;211m\\]";
-  char reset[] = "\\[\\e[00m\\]";
-  char bold[] = "\\[\\e[1m\\]";
+  char reset[] = "\\[\\033[00m\\]";
+  char bold[] = "\\[\\033[1m\\]";
+  char cyan[] = "\\[\\033[38;5;86m\\]";
+  char blue[] = "\\[\\033[38;5;4m\\]";
+  char lBlue[] = "\\[\\033[38;5;117m\\]";
+  char yellow[] = "\\[\\033[38;5;222m\\]";
+  char red[] = "\\[\\033[38;5;211m\\]";
+  char peach[] = "\\[\\033[38;2;255;219;153m\\]";
+  char purple[] = "\\[\\033[38;5;140m\\]";
+  char pink[] = "\\[\\033[38;5;217m\\]";
+  char orange[] = "\\[\\033[38;5;208m\\]";
+
+  char *color_1; // User/Host
+  char *color_2; // Time
+  char *color_3; // Path
+  char *color_4; // Text
+  char *color_5; // /mnt Path
+  char *color_6; // /root Path
 
   if (argc > 1) {
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
     if ((strcmp(argv[2], "catppuccin")) == 0) {
-      strncpy(color_1, "\\[\\e[38;5;214m\\]", BUF_SIZE);
-      strncpy(color_2, "\\[\\e[38;5;140m\\]", BUF_SIZE);
-      strncpy(color_3, "\\[\\e[38;5;217m\\]", BUF_SIZE);
-    } else if ((strcmp(argv[2], "koss")) == 0) {
-      strncpy(color_1, "\\[\\e[38;5;208m\\]", BUF_SIZE);
-    } else {
-      strncpy(color_1, "\\[\\e[38;5;86m\\]", BUF_SIZE);
-      strncpy(color_2, "\\[\\e[38;5;4m\\]", BUF_SIZE);
-      strncpy(color_3, "\\[\\e[38;5;117m\\]", BUF_SIZE);
+      color_1 = &peach[0];
+      color_2 = &pink[0];
+      color_3 = &purple[0];
+      color_4 = &reset[0];
+      color_5 = &yellow[0];
+      color_6 = &red[0];
+    } else if ((strcmp(argv[2], "tokyonight")) == 0) {
+      color_1 = &cyan[0];
+      color_2 = &lBlue[0];
+      color_3 = &blue[0];
+      color_4 = &lBlue[0];
+      color_5 = &yellow[0];
+      color_6 = &red[0];
     }
   }
 
   // If getenv() returned NULL, just print standard prompt
   if (!pHomeState) {
     rem_curDir(path, leng);
-    printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset, color_2,
-           path, bold);
+    printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
+           color_2, color_3, path, bold);
   } else {
     if (path[0] == '~') {
       // Removing current directoy from path to change
       // text to bold before adding it back with \\W.
       rem_curDir(path, leng);
       if (leng > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset,
-               color_2, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
+               color_2, color_3, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s\\W/\\n", bold, color_1, reset,
-               color_2, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset,
+               color_2, color_3, bold);
       }
     } else {
 
@@ -97,17 +110,17 @@ int main(int argc, char **argv) {
 
       if (inMnt) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_4, path, bold);
+               color_2, color_5, path, bold);
       } else if (leng > 1) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_5, path, bold);
+               color_2, color_6, path, bold);
       } else {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_1, reset,
-               color_2, bold, color_5);
+               color_2, bold, color_6);
       }
     }
   }
-  printf("  %s└:> %s%s", color_1, reset, color_3);
+  printf("  %s└:> %s%s", color_1, reset, color_4);
   return 0;
 }
 
