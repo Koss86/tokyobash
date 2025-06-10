@@ -10,10 +10,10 @@
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50 // 24 + 23 + "..."
 
-bool in_home(char *path, char *home, int Hleng);
-void replace_home(char *path, char *home, int leng, int indx);
-void abrv_path(char *path, int leng);
-void rem_curDir(char *path, int leng);
+bool in_home(char *path, char *home, int Hlen);
+void replace_home(char *path, char *home, int Plen, int indx);
+void abrv_path(char *path, int Plen);
+void rem_curDir(char *path, int Plen);
 bool in_mnt(char *path);
 
 int main(int argc, char **argv) {
@@ -21,29 +21,8 @@ int main(int argc, char **argv) {
   char path[PATH_MAX];
   // Check to make sure we got the path
   if (!getcwd(path, sizeof(path))) {
-    perror("Error: getcwd() failed to retrieve path\n");
+    perror("Error: getcwd() failed to retrieve path\\n");
     exit(1);
-  }
-
-  int leng = strlen(path);
-  char *pHome = getenv("HOME");
-  bool pHomeState = true;
-
-  // Check that getenv() didn't return NULL
-  if (!pHome) {
-    pHomeState = false;
-  } else {
-    int Hleng = strlen(pHome);
-    // If path contains $HOME replace it with '~'
-    if (in_home(path, pHome, Hleng)) {
-      replace_home(path, pHome, leng, Hleng);
-      leng = (leng - Hleng) + 1;
-    }
-  }
-
-  if (leng > ABV_PATH_LEN_T) {
-    abrv_path(path, leng);
-    leng = ABV_PATH_LEN_T;
   }
 
   char reset[] = "\\[\\033[00m\\]";
@@ -51,12 +30,12 @@ int main(int argc, char **argv) {
   char cyan[] = "\\[\\033[38;5;86m\\]";
   char blue[] = "\\[\\033[38;5;4m\\]";
   char lBlue[] = "\\[\\033[38;5;117m\\]";
-  char yellow[] = "\\[\\033[38;5;222m\\]";
   char red[] = "\\[\\033[38;5;211m\\]";
-  char peach[] = "\\[\\033[38;2;255;219;153m\\]";
-  char purple[] = "\\[\\033[38;5;140m\\]";
+  char peach[] = "\\[\\033[38;5;223m\\]";
+  char purple[] = "\\[\\033[38;5;182m\\]";
   char pink[] = "\\[\\033[38;5;217m\\]";
-  char orange[] = "\\[\\033[38;5;208m\\]";
+  char orange[] = "\\[\\033[38;5;214m\\]";
+  char lGreen[] = "\\[\\033[38;5;149m\\]";
 
   char *color_1; // User/Host
   char *color_2; // Time
@@ -71,32 +50,53 @@ int main(int argc, char **argv) {
     }
     if ((strcmp(argv[2], "catppuccin")) == 0) {
       color_1 = &peach[0];
-      color_2 = &pink[0];
+      color_2 = &purple[0];
       color_3 = &purple[0];
-      color_4 = &reset[0];
-      color_5 = &yellow[0];
-      color_6 = &red[0];
+      color_4 = &pink[0];
+      color_5 = &lBlue[0];
+      color_6 = &orange[0];
     } else if ((strcmp(argv[2], "tokyonight")) == 0) {
       color_1 = &cyan[0];
       color_2 = &lBlue[0];
       color_3 = &blue[0];
       color_4 = &lBlue[0];
-      color_5 = &yellow[0];
+      color_5 = &peach[0];
       color_6 = &red[0];
     }
   }
 
+  int Plen = strlen(path);
+  char *pHome = getenv("HOME");
+  bool pHomeState = true;
+
+  // Check that getenv() didn't return NULL
+  if (!pHome) {
+    pHomeState = false;
+  } else {
+    int Hlen = strlen(pHome);
+    // If path contains $HOME replace it with '~'
+    if (in_home(path, pHome, Hlen)) {
+      replace_home(path, pHome, Plen, Hlen);
+      Plen = (Plen - Hlen) + 1;
+    }
+  }
+
+  if (Plen > ABV_PATH_LEN_T) {
+    abrv_path(path, Plen);
+    Plen = ABV_PATH_LEN_T;
+  }
+
   // If getenv() returned NULL, just print standard prompt
   if (!pHomeState) {
-    rem_curDir(path, leng);
+    rem_curDir(path, Plen);
     printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
            color_2, color_3, path, bold);
   } else {
     if (path[0] == '~') {
       // Removing current directoy from path to change
       // text to bold before adding it back with \\W.
-      rem_curDir(path, leng);
-      if (leng > 1) {
+      rem_curDir(path, Plen);
+      if (Plen > 1) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
                color_2, color_3, path, bold);
       } else {
@@ -106,12 +106,12 @@ int main(int argc, char **argv) {
     } else {
 
       bool inMnt = in_mnt(path);
-      rem_curDir(path, leng);
+      rem_curDir(path, Plen);
 
       if (inMnt) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
                color_2, color_5, path, bold);
-      } else if (leng > 1) {
+      } else if (Plen > 1) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
                color_2, color_6, path, bold);
       } else {
@@ -124,8 +124,8 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-bool in_home(char *path, char *home, int Hleng) {
-  for (int i = 0; i < Hleng; i++) {
+bool in_home(char *path, char *home, int Hlen) {
+  for (int i = 0; i < Hlen; i++) {
     if (path[i] != home[i]) {
       return false;
     }
@@ -133,33 +133,33 @@ bool in_home(char *path, char *home, int Hleng) {
   return true;
 }
 
-void replace_home(char *path, char *home, int leng, int Hleng) {
+void replace_home(char *path, char *home, int Plen, int Hlen) {
   path[0] = '~';
-  if (leng == Hleng) {
+  if (Plen == Hlen) {
     path[1] = '\0';
   } else {
-    int indx = Hleng;
-    for (int i = 1; i < leng; i++) {
+    int indx = Hlen;
+    for (int i = 1; i < Plen; i++) {
       path[i] = path[indx++];
     }
     path[indx] = '\0';
   }
 }
 
-void abrv_path(char *path, int leng) {
+void abrv_path(char *path, int Plen) {
   int i;
   for (i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
     path[i] = '.';
   }
-  int indx = leng - ABV_PATH_LEN2;
+  int indx = Plen - ABV_PATH_LEN2;
   for (i = ABV_PATH_LEN1 + 3; i < ABV_PATH_LEN_T; i++) {
     path[i] = path[indx++];
   }
   path[ABV_PATH_LEN_T] = '\0';
 }
 
-void rem_curDir(char *path, int leng) {
-  for (int i = leng - 1; i > -1; i--) {
+void rem_curDir(char *path, int Plen) {
+  for (int i = Plen - 1; i > -1; i--) {
     if (path[i] == '/') {
       path[i + 1] = '\0';
       break;
