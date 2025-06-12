@@ -35,6 +35,9 @@ int main(int argc, char **argv) {
   char purple[] = "\\[\\e[38;5;182m\\]";
   char pink[] = "\\[\\e[38;5;217m\\]";
   char orange[] = "\\[\\e[38;5;214m\\]";
+  char lGold[] = "\\[\\e[38;2;238;232;170m\\]";
+
+  char khaki[] = "\\[\\e[38;5;186m\\]";
   char lGreen[] = "\\[\\e[38;5;149m\\]";
 
   char *color_1 = &cyan[0];  // User/Host
@@ -48,8 +51,8 @@ int main(int argc, char **argv) {
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
-    if (argc > 2) {
 
+    if (argc > 2) {
       if ((strcmp(argv[2], "catppuccin")) == 0) {
         color_1 = &peach[0];
         color_2 = &pink[0];
@@ -63,6 +66,13 @@ int main(int argc, char **argv) {
         color_3 = &blue[0];
         color_4 = &peach[0];
         color_5 = &red[0];
+
+      } else if ((strcmp(argv[2], "kanagawa")) == 0) {
+        color_1 = &red[0];
+        color_2 = &khaki[0];
+        color_3 = &lGold[0];
+        color_4 = &peach[0];
+        color_5 = &purple[0];
       }
     }
   }
