@@ -48,10 +48,7 @@ SECONDS is only used for aesthetic reasons. I like the look of a blank line betw
 
 </details>
 
-### Known Issues
-If another program, like git, alters the font color, it will be reset back to the default until the next prompt is printed.
-
-![tokyobash_iss1](https://github.com/user-attachments/assets/6c1d19fa-f4c3-43f7-b1ba-ff947650a0fd)
+##
 
 ### Disclaimer
 I'm not sure if this will run on all linux distros. I believe it should work on most if not all.
