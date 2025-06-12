@@ -25,43 +25,45 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  char reset[] = "\\[\\033[00m\\]";
-  char bold[] = "\\[\\033[1m\\]";
-  char cyan[] = "\\[\\033[38;5;86m\\]";
-  char blue[] = "\\[\\033[38;5;4m\\]";
-  char lBlue[] = "\\[\\033[38;5;117m\\]";
-  char red[] = "\\[\\033[38;5;211m\\]";
-  char peach[] = "\\[\\033[38;5;223m\\]";
-  char purple[] = "\\[\\033[38;5;182m\\]";
-  char pink[] = "\\[\\033[38;5;217m\\]";
-  char orange[] = "\\[\\033[38;5;214m\\]";
-  char lGreen[] = "\\[\\033[38;5;149m\\]";
+  char reset[] = "\\[\\e[00m\\]";
+  char bold[] = "\\[\\e[1m\\]";
+  char cyan[] = "\\[\\e[38;5;86m\\]";
+  char blue[] = "\\[\\e[38;5;4m\\]";
+  char lBlue[] = "\\[\\e[38;5;117m\\]";
+  char red[] = "\\[\\e[38;5;211m\\]";
+  char peach[] = "\\[\\e[38;5;223m\\]";
+  char purple[] = "\\[\\e[38;5;182m\\]";
+  char pink[] = "\\[\\e[38;5;217m\\]";
+  char orange[] = "\\[\\e[38;5;214m\\]";
+  char lGreen[] = "\\[\\e[38;5;149m\\]";
 
-  char *color_1; // User/Host
-  char *color_2; // Time
-  char *color_3; // Path
-  char *color_4; // Text
-  char *color_5; // /mnt Path
-  char *color_6; // /root Path
+  char *color_1 = &cyan[0];  // User/Host
+  char *color_2 = &lBlue[0]; // Time
+  char *color_3 = &blue[0];  // Path
+  char *color_4 = &peach[0]; // /mnt Path
+  char *color_5 = &red[0];   // /root Path
 
   if (argc > 1) {
+
     if (atoi(argv[1]) > 1) {
       printf("\\n");
     }
-    if ((strcmp(argv[2], "catppuccin")) == 0) {
-      color_1 = &peach[0];
-      color_2 = &purple[0];
-      color_3 = &purple[0];
-      color_4 = &pink[0];
-      color_5 = &lBlue[0];
-      color_6 = &orange[0];
-    } else if ((strcmp(argv[2], "tokyonight")) == 0) {
-      color_1 = &cyan[0];
-      color_2 = &lBlue[0];
-      color_3 = &blue[0];
-      color_4 = &lBlue[0];
-      color_5 = &peach[0];
-      color_6 = &red[0];
+    if (argc > 2) {
+
+      if ((strcmp(argv[2], "catppuccin")) == 0) {
+        color_1 = &peach[0];
+        color_2 = &pink[0];
+        color_3 = &purple[0];
+        color_4 = &lBlue[0];
+        color_5 = &orange[0];
+
+      } else if ((strcmp(argv[2], "tokyonight")) == 0) {
+        color_1 = &cyan[0];
+        color_2 = &lBlue[0];
+        color_3 = &blue[0];
+        color_4 = &peach[0];
+        color_5 = &red[0];
+      }
     }
   }
 
@@ -110,17 +112,17 @@ int main(int argc, char **argv) {
 
       if (inMnt) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_5, path, bold);
+               color_2, color_4, path, bold);
       } else if (Plen > 1) {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_6, path, bold);
+               color_2, color_5, path, bold);
       } else {
         printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_1, reset,
-               color_2, bold, color_6);
+               color_2, bold, color_5);
       }
     }
   }
-  printf("  %s└:> %s%s", color_1, reset, color_4);
+  printf("  %s└:> %s", color_1, reset);
   return 0;
 }
 
