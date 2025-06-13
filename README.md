@@ -74,4 +74,6 @@ I'm not sure if this will run on all linux distros. I believe it should work on 
 
 I'm also new to programming so any feedback is welcomed.
 
+
 All screenshots were taken with: [ghostty](https://www.ghostty.org) terminal with tokyonight theme
+
