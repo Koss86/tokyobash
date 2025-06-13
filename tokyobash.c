@@ -5,16 +5,19 @@
 #include <string.h>
 #include <unistd.h>
 
-#define BUF_SIZE 25
 #define ABV_PATH_LEN1 24
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50 // 24 + 23 + "..."
+#define MAX_BRANCH_LEN 256
 
 bool in_home(char *path, char *home, int Hlen);
 void replace_home(char *path, char *home, int Plen, int indx);
 void abrv_path(char *path, int Plen);
 void rem_curDir(char *path, int Plen);
 bool in_mnt(char *path);
+int is_git_accessible();
+int in_repo();
+int get_branch(char *bName);
 
 int main(int argc, char **argv) {
 
@@ -39,9 +42,11 @@ int main(int argc, char **argv) {
   char orange[] = "\\[\\e[38;5;214m\\]";
   char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
   char lime[] = "\\[\\e[38;5;149m\\]";
+  char bglBlue[] = "\\[\\e[48;5;237m\\]";
 
   char *color_usr = &cyan[0];
   char *color_time = &lBlue[0];
+  char *color_branch = &bglBlue[0];
   char *color_path = &blue[0];
   char *color_mnt = &peach[0];
   char *color_root = &lRed[0];
@@ -53,6 +58,7 @@ int main(int argc, char **argv) {
       if (!strcmp(argv[1], "tokyonight")) {
         color_usr = &cyan[0];
         color_time = &lBlue[0];
+        color_branch = &bglBlue[0];
         color_path = &blue[0];
         color_mnt = &peach[0];
         color_root = &lRed[0];
@@ -60,6 +66,7 @@ int main(int argc, char **argv) {
       } else if (!strcmp(argv[1], "catppuccin")) {
         color_usr = &peach[0];
         color_time = &pink[0];
+        color_branch = &bglBlue[0];
         color_path = &purple[0];
         color_mnt = &lBlue[0];
         color_root = &orange[0];
@@ -67,6 +74,7 @@ int main(int argc, char **argv) {
       } else if (!strcmp(argv[1], "kanagawa")) {
         color_usr = &red[0];
         color_time = &dCyan[0];
+        color_branch = &bglBlue[0];
         color_path = &khaki[0];
         color_mnt = &lime[0];
         color_root = &purple[0];
@@ -88,6 +96,7 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[2], "tokyonight")) {
           color_usr = &cyan[0];
           color_time = &lBlue[0];
+          color_branch = &bglBlue[0];
           color_path = &blue[0];
           color_mnt = &peach[0];
           color_root = &lRed[0];
@@ -95,6 +104,7 @@ int main(int argc, char **argv) {
         } else if (!strcmp(argv[2], "catppuccin")) {
           color_usr = &peach[0];
           color_time = &pink[0];
+          color_branch = &bglBlue[0];
           color_path = &purple[0];
           color_mnt = &lBlue[0];
           color_root = &orange[0];
@@ -102,6 +112,7 @@ int main(int argc, char **argv) {
         } else if (!strcmp(argv[2], "kanagawa")) {
           color_usr = &red[0];
           color_time = &dCyan[0];
+          color_branch = &bglBlue[0];
           color_path = &khaki[0];
           color_mnt = &lime[0];
           color_root = &purple[0];
@@ -126,28 +137,35 @@ int main(int argc, char **argv) {
     }
   }
 
-
   if (Plen > ABV_PATH_LEN_T) {
     abrv_path(path, Plen);
     Plen = ABV_PATH_LEN_T;
   }
 
+  char bName[MAX_BRANCH_LEN] = {0};
+  if (is_git_accessible() && in_repo()) {
+
+    get_branch(&bName[0]);
+    printf("%s%s\\u@\\h%s:%s [\\t]%s  %s %s", bold, color_usr, reset,
+           color_time, color_branch, bName, reset);
+  } else {
+
+    printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
+  }
+
   // If getenv() returned NULL, just print standard prompt
   if (!pHomeState) {
     rem_curDir(path, Plen);
-    printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
-           color_time, color_path, path, bold);
+    printf("%s%s%s\\W/\\n", color_path, path, bold);
   } else {
     if (path[0] == '~') {
       // Removing current directoy from path to change
       // text to bold before adding it back with \\W.
       rem_curDir(path, Plen);
       if (Plen > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
-               color_time, color_path, path, bold);
+        printf("%s%s%s\\W/\\n", color_path, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_usr, reset,
-               color_time, color_path, bold);
+        printf("%s%s\\W/\\n", color_path, bold);
       }
     } else {
 
@@ -155,14 +173,11 @@ int main(int argc, char **argv) {
       rem_curDir(path, Plen);
 
       if (inMnt) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
-               color_time, color_mnt, path, bold);
+        printf("%s%s%s\\W/\\n", color_mnt, path, bold);
       } else if (Plen > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
-               color_time, color_root, path, bold);
+        printf("%s%s%s\\W/\\n", color_root, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_usr, reset,
-               color_time, bold, color_root);
+        printf("%s%s\\W\\n", bold, color_root);
       }
     }
   }
@@ -221,4 +236,49 @@ bool in_mnt(char *path) {
     }
   }
   return true;
+}
+
+int is_git_accessible() {
+  FILE *file = popen("git --version 2>/dev/null", "r");
+  if (file == NULL) {
+    return 0;
+  }
+  char buf[64] = {0};
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    pclose(file);
+    return 0;
+  }
+  pclose(file);
+  return (strstr(buf, "git version") != NULL);
+}
+
+int in_repo() {
+  FILE *file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
+  if (file == NULL) {
+    return 0;
+  }
+  char buf[16] = {0};
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    pclose(file);
+    return 0;
+  }
+  pclose(file);
+  return (strncmp(buf, "true", 4) == 0);
+}
+
+int get_branch(char *bName) {
+  FILE *file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
+  if (file == NULL) {
+    return 0;
+  }
+  if (fgets(bName, MAX_BRANCH_LEN, file) == NULL) {
+    pclose(file);
+    return 0;
+  }
+  int len = strlen(bName);
+  if (len > 0 && bName[len - 1] == '\n') {
+    bName[len - 1] = '\0';
+  }
+  pclose(file);
+  return 1;
 }
