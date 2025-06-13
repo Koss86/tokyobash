@@ -142,7 +142,9 @@ int main(int argc, char **argv) {
     Plen = ABV_PATH_LEN_T;
   }
 
-  char bName[MAX_BRANCH_LEN] = {0};
+  char bName[MAX_BRANCH_LEN];
+  // Check if git is available and current directory is a repo.
+  // If yes, get current branch name for prompt.
   if (is_git_accessible() && in_repo()) {
 
     get_branch(&bName[0]);
