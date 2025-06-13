@@ -28,51 +28,84 @@ int main(int argc, char **argv) {
   char reset[] = "\\[\\e[00m\\]";
   char bold[] = "\\[\\e[1m\\]";
   char cyan[] = "\\[\\e[38;5;86m\\]";
+  char dCyan[] = "\\[\\e[38;2;104;155;196m\\]";
   char blue[] = "\\[\\e[38;5;4m\\]";
   char lBlue[] = "\\[\\e[38;5;117m\\]";
-  char red[] = "\\[\\e[38;5;211m\\]";
+  char red[] = "\\[\\e[38;2;255;77;77m\\]";
+  char lRed[] = "\\[\\e[38;5;211m\\]";
   char peach[] = "\\[\\e[38;5;223m\\]";
   char purple[] = "\\[\\e[38;5;182m\\]";
   char pink[] = "\\[\\e[38;5;217m\\]";
   char orange[] = "\\[\\e[38;5;214m\\]";
-  char lGold[] = "\\[\\e[38;2;238;232;170m\\]";
+  char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
+  char lime[] = "\\[\\e[38;5;149m\\]";
 
-  char khaki[] = "\\[\\e[38;5;186m\\]";
-  char lGreen[] = "\\[\\e[38;5;149m\\]";
-
-  char *color_1 = &cyan[0];  // User/Host
-  char *color_2 = &lBlue[0]; // Time
-  char *color_3 = &blue[0];  // Path
-  char *color_4 = &peach[0]; // /mnt Path
-  char *color_5 = &red[0];   // /root Path
+  char *color_usr = &cyan[0];
+  char *color_time = &lBlue[0];
+  char *color_path = &blue[0];
+  char *color_mnt = &peach[0];
+  char *color_root = &lRed[0];
 
   if (argc > 1) {
 
-    if (atoi(argv[1]) > 1) {
-      printf("\\n");
-    }
+    if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
 
-    if (argc > 2) {
-      if ((strcmp(argv[2], "catppuccin")) == 0) {
-        color_1 = &peach[0];
-        color_2 = &pink[0];
-        color_3 = &purple[0];
-        color_4 = &lBlue[0];
-        color_5 = &orange[0];
+      if (!strcmp(argv[1], "tokyonight")) {
+        color_usr = &cyan[0];
+        color_time = &lBlue[0];
+        color_path = &blue[0];
+        color_mnt = &peach[0];
+        color_root = &lRed[0];
 
-      } else if ((strcmp(argv[2], "tokyonight")) == 0) {
-        color_1 = &cyan[0];
-        color_2 = &lBlue[0];
-        color_3 = &blue[0];
-        color_4 = &peach[0];
-        color_5 = &red[0];
+      } else if (!strcmp(argv[1], "catppuccin")) {
+        color_usr = &peach[0];
+        color_time = &pink[0];
+        color_path = &purple[0];
+        color_mnt = &lBlue[0];
+        color_root = &orange[0];
 
-      } else if ((strcmp(argv[2], "kanagawa")) == 0) {
-        color_1 = &red[0];
-        color_2 = &khaki[0];
-        color_3 = &lGold[0];
-        color_4 = &peach[0];
-        color_5 = &purple[0];
+      } else if (!strcmp(argv[1], "kanagawa")) {
+        color_usr = &red[0];
+        color_time = &dCyan[0];
+        color_path = &khaki[0];
+        color_mnt = &lime[0];
+        color_root = &purple[0];
+      }
+
+      if (argc > 2) {
+        if (atoi(argv[2]) > 1) {
+          printf("\\n");
+        }
+      }
+
+    } else {
+
+      if (atoi(argv[1]) > 1) {
+        printf("\\n");
+      }
+
+      if (argc > 2) {
+        if (!strcmp(argv[2], "tokyonight")) {
+          color_usr = &cyan[0];
+          color_time = &lBlue[0];
+          color_path = &blue[0];
+          color_mnt = &peach[0];
+          color_root = &lRed[0];
+
+        } else if (!strcmp(argv[2], "catppuccin")) {
+          color_usr = &peach[0];
+          color_time = &pink[0];
+          color_path = &purple[0];
+          color_mnt = &lBlue[0];
+          color_root = &orange[0];
+
+        } else if (!strcmp(argv[2], "kanagawa")) {
+          color_usr = &red[0];
+          color_time = &dCyan[0];
+          color_path = &khaki[0];
+          color_mnt = &lime[0];
+          color_root = &purple[0];
+        }
       }
     }
   }
@@ -101,19 +134,19 @@ int main(int argc, char **argv) {
   // If getenv() returned NULL, just print standard prompt
   if (!pHomeState) {
     rem_curDir(path, Plen);
-    printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-           color_2, color_3, path, bold);
+    printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
+           color_time, color_path, path, bold);
   } else {
     if (path[0] == '~') {
       // Removing current directoy from path to change
       // text to bold before adding it back with \\W.
       rem_curDir(path, Plen);
       if (Plen > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_3, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
+               color_time, color_path, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_3, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W/\\n", bold, color_usr, reset,
+               color_time, color_path, bold);
       }
     } else {
 
@@ -121,18 +154,18 @@ int main(int argc, char **argv) {
       rem_curDir(path, Plen);
 
       if (inMnt) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_4, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
+               color_time, color_mnt, path, bold);
       } else if (Plen > 1) {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_1, reset,
-               color_2, color_5, path, bold);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s\\W/\\n", bold, color_usr, reset,
+               color_time, color_root, path, bold);
       } else {
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_1, reset,
-               color_2, bold, color_5);
+        printf("%s%s\\u@\\h%s:%s [\\t] %s%s\\W\\n", bold, color_usr, reset,
+               color_time, bold, color_root);
       }
     }
   }
-  printf("  %s└:> %s", color_1, reset);
+  printf("  %s└:> %s", color_usr, reset);
   return 0;
 }
 
