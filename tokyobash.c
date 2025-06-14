@@ -51,14 +51,7 @@ int main(int argc, char **argv) {
 
     if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
 
-      if (!strcmp(argv[1], "tokyonight")) {
-        color_usr = &cyan[0];
-        color_time = &lBlue[0];
-        color_path = &blue[0];
-        color_mnt = &peach[0];
-        color_root = &lRed[0];
-
-      } else if (!strcmp(argv[1], "catppuccin")) {
+      if (!strcmp(argv[1], "catppuccin")) {
         color_usr = &peach[0];
         color_time = &pink[0];
         color_path = &purple[0];
@@ -86,14 +79,8 @@ int main(int argc, char **argv) {
       }
 
       if (argc > 2) {
-        if (!strcmp(argv[2], "tokyonight")) {
-          color_usr = &cyan[0];
-          color_time = &lBlue[0];
-          color_path = &blue[0];
-          color_mnt = &peach[0];
-          color_root = &lRed[0];
 
-        } else if (!strcmp(argv[2], "catppuccin")) {
+        if (!strcmp(argv[2], "catppuccin")) {
           color_usr = &peach[0];
           color_time = &pink[0];
           color_path = &purple[0];
