@@ -40,6 +40,9 @@ int main(int argc, char **argv) {
   char orange[] = "\\[\\e[38;5;214m\\]";
   char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
   char lime[] = "\\[\\e[38;5;149m\\]";
+  char lGray[] = "\\[\\e[38;2;193;193;193m\\]";
+  char dOrange[] = "\\[\\e[38;2;255;149;20m\\]";
+  char white[] = "\\[\\e[38;2;255;255;255m\\]";
 
   char *color_usr = &cyan[0];
   char *color_time = &lBlue[0];
@@ -64,6 +67,12 @@ int main(int argc, char **argv) {
         color_path = &khaki[0];
         color_mnt = &lime[0];
         color_root = &purple[0];
+      } else if (!strcmp(argv[1], "koss")) {
+        color_usr = &dOrange[0];
+        color_time = &lGray[0];
+        color_path = &white[0];
+        color_mnt = &peach[0];
+        color_root = &red[0];
       }
 
       if (argc > 2) {
@@ -93,6 +102,12 @@ int main(int argc, char **argv) {
           color_path = &khaki[0];
           color_mnt = &lime[0];
           color_root = &purple[0];
+        } else if (!strcmp(argv[2], "koss")) {
+          color_usr = &dOrange[0];
+          color_time = &lGray[0];
+          color_path = &white[0];
+          color_mnt = &peach[0];
+          color_root = &red[0];
         }
       }
     }
