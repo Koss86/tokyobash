@@ -8,7 +8,7 @@ Highlights the current directory and changes color depending on whether you're i
 ![tokyobash_1](https://github.com/user-attachments/assets/401314ad-97fa-4125-8ec3-8c07f5b321dc)
 
 Also, if current directory is a repository it will show the current branch name:
-![git_example](https://github.com/user-attachments/assets/4196179e-1307-48b6-b621-bfe777b5fc24)
+![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
 
 And finally, it will abbreviate paths longer than 50 characters.
 
@@ -16,9 +16,25 @@ And finally, it will abbreviate paths longer than 50 characters.
 
 ## Themes
 
-You can currently choose between 3 different themes: [Tokyonight](https://github.com/user-attachments/assets/237e151e-a07f-4ed5-b4ef-f353a814b706), [Catppuccin](https://github.com/user-attachments/assets/a0b34a53-dde6-4e6b-8e0c-a1790469cf5a)
-, and [Kanagawa](https://github.com/user-attachments/assets/fa380084-c2b2-4401-9777-2c15dad736b8).
-To pick a theme, create a theme variable somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
+You can currently choose between 3 different themes.
+
+  Tokyonight:
+  
+  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
+##
+
+  Catppuccin:
+
+  ![tokyobash_catppuccin](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
+##
+
+  Kanagawa:
+  
+  ![tokyobash_kanagawa](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
+
+
+
+To pick a theme, add `theme="theme_name"` somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
 ```bash
 #For Tokyonight
 theme="tokyonight"
