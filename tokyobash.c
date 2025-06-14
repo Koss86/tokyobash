@@ -71,8 +71,6 @@ int main(int argc, char **argv) {
         color_usr = &dOrange[0];
         color_time = &lGray[0];
         color_path = &white[0];
-        color_mnt = &peach[0];
-        color_root = &red[0];
       }
 
       if (argc > 2) {
@@ -106,8 +104,6 @@ int main(int argc, char **argv) {
           color_usr = &dOrange[0];
           color_time = &lGray[0];
           color_path = &white[0];
-          color_mnt = &peach[0];
-          color_root = &red[0];
         }
       }
     }
