@@ -13,7 +13,7 @@
 void replace_home(char *path, char *home, int Plen, int indx);
 void abrv_path(char *path, int Plen);
 void rem_curDir(char *path, int Plen);
-int is_git_accessible();
+int git_is_accessible();
 int in_repo();
 int get_branch(char *bName);
 
@@ -40,14 +40,12 @@ int main(int argc, char **argv) {
   char orange[] = "\\[\\e[38;5;214m\\]";
   char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
   char lime[] = "\\[\\e[38;5;149m\\]";
-  char bgDark[] = "\\[\\e[48;5;237m\\]";
 
   char *color_usr = &cyan[0];
   char *color_time = &lBlue[0];
   char *color_path = &blue[0];
   char *color_mnt = &peach[0];
   char *color_root = &lRed[0];
-  char *color_bg = &bgDark[0];
 
   if (argc > 1) {
 
@@ -137,12 +135,12 @@ int main(int argc, char **argv) {
   char bName[MAX_BRANCH_LEN];
   // Check if git is available and current directory is a repo.
   // If yes, get current branch name for prompt.
-  if (is_git_accessible() && in_repo()) {
+  if (git_is_accessible() && in_repo()) {
 
     get_branch(&bName[0]);
 
-    printf("%s%s\\u@\\h%s:%s [\\t]%s%s  %s%s %s", bold, color_usr, reset,
-           color_time, color_usr, color_bg, color_path, bName, reset);
+    printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s  ", bold, color_usr, reset,
+           color_time, color_path, bName, color_usr);
 
   } else {
 
@@ -220,7 +218,7 @@ void rem_curDir(char *path, int Plen) {
   }
 }
 
-int is_git_accessible() {
+int git_is_accessible() {
   FILE *file;
   if ((file = popen("git --version 2>/dev/null", "r")) == NULL) {
     return 0;
