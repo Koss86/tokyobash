@@ -63,8 +63,9 @@ Now add this to your .bashrc or .bash_profile:
 
 ```bash
 SECONDS=0
+theme="theme_name"
 
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS)"'
+export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS $theme)"'
 
 alias clear='reset_and_clear'
 reset_and_clear() {
