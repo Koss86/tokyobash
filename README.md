@@ -5,7 +5,7 @@ Requires a [Nerd Font](https://www.nerdfonts.com) for the penguin and git icons.
 ## Features
 Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
 
-![tokyobash_1](https://github.com/user-attachments/assets/401314ad-97fa-4125-8ec3-8c07f5b321dc)
+![Screenshot_display](https://github.com/user-attachments/assets/f331bb4d-6a9d-4378-aa94-0f26bb2aed78)
 
 Also, if current directory is a repository it will show the current branch name:
 ![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
