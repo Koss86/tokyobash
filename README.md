@@ -7,10 +7,10 @@ Highlights the current directory and changes color depending on whether you're i
 
 ![Screenshot_display](https://github.com/user-attachments/assets/f331bb4d-6a9d-4378-aa94-0f26bb2aed78)
 
-Also, if current directory is a repository it will show the current branch name:
+If current directory is a repository it will show the current branch name:
 ![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
 
-And finally, it will abbreviate paths longer than 50 characters.
+And it will abbreviate paths longer than 50 characters.
 
 ![tokyobash_2](https://github.com/user-attachments/assets/380b6184-6d09-4616-8278-6d7c01b70cc0)
 
@@ -73,13 +73,13 @@ reset_and_clear() {
   command clear
 }
 ```
-Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary.
+Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary and 'theme_name' with the name of your chosen theme.
 
 Save then restart your terminal!
 <details>
 <summary>Remove blank line spacer</summary>
   
-If you don't like the blank line spacer, you can remove the SECONDS from your .bashrc or .bash_profile file. It should work the same, just without the spacing.
+If you don't want the blank line spacer, you can remove SECONDS and the alias for clear from your .bashrc or .bash_profile file. It should work the same, just without the spacing.
 
 SECONDS is only used for aesthetic reasons. I like the look of a blank line between each prompt. But, it has to be printed before the other printfs are called. If not, it will cause the input field to be below where intended. But printing it first leaves the issues of a blank line at the top upon opening, and the same when `clear` is used.
 
