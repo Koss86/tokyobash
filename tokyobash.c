@@ -30,10 +30,10 @@ int main(int argc, char **argv) {
   char bold[] = "\\[\\e[1m\\]";
 
   char cyan[] = "\\[\\e[38;5;86m\\]";
-  char lBlue[] = "\\[\\e[38;5;117m\\]";
+  char sky_blue[] = "\\[\\e[38;5;117m\\]";
   char blue[] = "\\[\\e[38;5;4m\\]";
   char peach[] = "\\[\\e[38;5;223m\\]";
-  char lRed[] = "\\[\\e[38;5;211m\\]";
+  char light_red[] = "\\[\\e[38;5;211m\\]";
 
   char pink[] = "\\[\\e[38;5;217m\\]";
   char purple[] = "\\[\\e[38;5;182m\\]";
@@ -44,16 +44,16 @@ int main(int argc, char **argv) {
   char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
   char lime[] = "\\[\\e[38;2;117;156;38m\\]";
 
-  char dOrange[] = "\\[\\e[38;2;255;149;20m\\]";
+  char dark_orange[] = "\\[\\e[38;2;255;149;20m\\]";
   char beige[] = "\\[\\e[38;2;239;239;200m\\]";
   char white[] = "\\[\\e[38;2;255;255;255m\\]";
 
   // Assign tokyonight colors as default.
   char *color_usr = &cyan[0];
-  char *color_time = &lBlue[0];
+  char *color_time = &sky_blue[0];
   char *color_path = &blue[0];
   char *color_mnt = &orange[0];
-  char *color_root = &lRed[0];
+  char *color_root = &light_red[0];
 
   if (argc > 1) {
 
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
         color_root = &purple[0];
 
       } else if (strcmp(argv[1], "koss") == 0) {
-        color_usr = &dOrange[0];
+        color_usr = &dark_orange[0];
         color_time = &beige[0];
         color_path = &white[0];
       }
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
           color_root = &purple[0];
 
         } else if (strcmp(argv[2], "koss") == 0) {
-          color_usr = &dOrange[0];
+          color_usr = &dark_orange[0];
           color_time = &beige[0];
           color_path = &white[0];
         }
