@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
 
     char reset[] = "\\[\\e[00m\\]";
     char bold[] = "\\[\\e[1m\\]";
-    char ul[] = "\\[\\e[4m\\]";
     char yellow[] = "\\[\\e[38;2;255;255;0m\\]";
     char green[] = "\\[\\e[38;2;0;255;0m\\]";
 
@@ -63,7 +62,6 @@ int main(int argc, char **argv) {
     char *color_root = &light_red[0];
 
     if (argc > 1) {
-
         if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
 
             if (strcmp(argv[1], "catppuccin") == 0) {
@@ -97,7 +95,6 @@ int main(int argc, char **argv) {
             }
 
             if (argc > 2) {
-
                 if (strcmp(argv[2], "catppuccin") == 0) {
                     color_usr = &peach[0];
                     color_time = &pink[0];
@@ -232,7 +229,7 @@ int main(int argc, char **argv) {
 
         if (unstaged > 0 || staged > 0 || unpushed > 0 || unpulled > 0) {
             printf("  %s┠─┤", color_usr);
-            printf("%s%s%d%s |", orange, reset, unstaged, color_usr);
+            printf(" %s%s%d%s |", orange, reset, unstaged, color_usr);
             printf(" %s󰄳%s%d%s |", yellow, reset, staged, color_usr);
             printf(" %s%s%d%s |", green, reset, unpushed, color_usr);
             printf(" %s%s%d", red, reset, unpulled);
