@@ -130,20 +130,24 @@ int main(int argc, char **argv) {
 
     // If path contains $HOME replace it with '~'
     if (strstr(path, pHome) != NULL) {
+
       replace_home(path, pHome, Plen, Hlen);
       Plen = (Plen - Hlen) + 1;
     }
   }
 
   if (Plen > ABV_PATH_LEN_T) {
+
     abrv_path(path, Plen);
     Plen = ABV_PATH_LEN_T;
   }
 
   // Check if git is available and current directory is a repo.
   // If yes, get current branch name for prompt.
+  bool inRepo = false;
   if (git_is_accessible() && in_repo()) {
 
+    inRepo = true;
     char branch_name[MAX_BRANCH_LEN];
     get_branch(&branch_name[0]);
 
@@ -170,8 +174,11 @@ int main(int argc, char **argv) {
       rem_curDir(path, Plen);
 
       if (Plen > 1) {
+
         printf("%s%s%s\\W/\\n", color_path, path, bold);
+
       } else {
+
         printf("%s%s\\W/\\n", color_path, bold);
       }
 
@@ -179,8 +186,11 @@ int main(int argc, char **argv) {
 
       bool inMnt;
       if (strstr(path, "/mnt") != NULL) {
+
         inMnt = true;
+
       } else {
+
         inMnt = false;
       }
 
@@ -198,26 +208,43 @@ int main(int argc, char **argv) {
     }
   }
 
-  //  if (git_is_accessible() && in_repo()) {
-  //
-  //    char branch_name[MAX_BRANCH_LEN];
-  //    get_branch(&branch_name[0]);
-  //
-  //    printf("  %s┣   %s%s%s%s\\n", color_mnt, reset, color_path,
-  //           branch_name, color_usr);
-  //  }
+  if (inRepo) {
+
+    //  if (git_is_accessible() && in_repo()) {
+    //
+    //    printf("  %s┣   %s%s%s%s\\n", color_mnt, reset, color_path,
+    //           branch_name, color_usr);
+    //  }
+  }
 
   printf("  %s┗:> %s", color_usr, reset);
   return 0;
 }
 
+int unsaved() {
+  FILE *file = popen("git diff --name-only | wc -l 2>dev/null", "r");
+  if (file == NULL) {
+    return 0;
+  }
+  char buf[16];
+
+  return 0;
+}
+
 void replace_home(char *path, char *home, int Plen, int Hlen) {
+
   path[0] = '~';
+
   if (Plen == Hlen) {
+
     path[1] = '\0';
+
   } else {
+
     int indx = Hlen;
+
     for (int i = 1; i < Plen; i++) {
+
       path[i] = path[indx++];
     }
     path[indx] = '\0';
@@ -225,20 +252,28 @@ void replace_home(char *path, char *home, int Plen, int Hlen) {
 }
 
 void abrv_path(char *path, int Plen) {
+
   int i;
   for (i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
+
     path[i] = '.';
   }
+
   int indx = Plen - ABV_PATH_LEN2;
+
   for (i = ABV_PATH_LEN1 + 3; i < ABV_PATH_LEN_T; i++) {
+
     path[i] = path[indx++];
   }
   path[ABV_PATH_LEN_T] = '\0';
 }
 
 void rem_curDir(char *path, int Plen) {
+
   for (int i = Plen - 1; i > -1; i--) {
+
     if (path[i] == '/') {
+
       path[i + 1] = '\0';
       break;
     }
@@ -246,12 +281,15 @@ void rem_curDir(char *path, int Plen) {
 }
 
 bool git_is_accessible() {
+
   FILE *file;
   if ((file = popen("git --version 2>/dev/null", "r")) == NULL) {
+
     return false;
   }
   char buf[64];
   if (fgets(buf, sizeof(buf), file) == NULL) {
+
     pclose(file);
     return false;
   }
@@ -260,12 +298,15 @@ bool git_is_accessible() {
 }
 
 bool in_repo() {
+
   FILE *file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
   if (file == NULL) {
+
     return false;
   }
   char buf[16];
   if (fgets(buf, sizeof(buf), file) == NULL) {
+
     pclose(file);
     return false;
   }
@@ -274,16 +315,20 @@ bool in_repo() {
 }
 
 bool get_branch(char *branch_name) {
+
   FILE *file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
   if (file == NULL) {
+
     return false;
   }
   if (fgets(branch_name, MAX_BRANCH_LEN, file) == NULL) {
+
     pclose(file);
     return false;
   }
   int len = strlen(branch_name);
   if (len > 0 && branch_name[len - 1] == '\n') {
+
     branch_name[len - 1] = '\0';
   }
   pclose(file);
