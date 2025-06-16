@@ -12,7 +12,7 @@ If current directory is a repository it will display the current branch name:
 
 And it will abbreviate paths longer than 50 characters.
 
-![tokyobash_arbv](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
+![tokyobash_arbv](https://github.com/user-attachments/assets/f8e4d0a6-7ce0-46f4-946d-c786fd0d6933)
 
 ## Themes
 
