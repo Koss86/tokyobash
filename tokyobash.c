@@ -16,6 +16,9 @@ void rem_curDir(char *path, int Plen);
 bool git_is_accessible();
 bool in_repo();
 bool get_branch(char *branch_name);
+int unPushed();
+int Staged();
+int unStaged();
 
 int main(int argc, char **argv) {
 
@@ -28,7 +31,8 @@ int main(int argc, char **argv) {
 
   char reset[] = "\\[\\e[00m\\]";
   char bold[] = "\\[\\e[1m\\]";
-  char ul[] = "\\[\\e[4m\\]";
+  char yellow[] = "\\[\\e[38;2;255;255;0m\\]";
+  char green[] = "\\[\\e[38;2;0;255;0m\\]";
 
   char cyan[] = "\\[\\e[38;5;86m\\]";
   char sky_blue[] = "\\[\\e[38;5;117m\\]";
@@ -41,7 +45,7 @@ int main(int argc, char **argv) {
   char orange[] = "\\[\\e[38;5;214m\\]";
 
   char red[] = "\\[\\e[38;2;255;77;77m\\]";
-  char teal[] = "\\[\\e[38;2;140;185;187m\\]";
+  char teal[] = "\\[\\e[38;2;104;155;196m\\]";
   char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
   char lime[] = "\\[\\e[38;2;117;156;38m\\]";
 
@@ -209,26 +213,85 @@ int main(int argc, char **argv) {
   }
 
   if (inRepo) {
-
-    //  if (git_is_accessible() && in_repo()) {
-    //
-    //    printf("  %s┣   %s%s%s%s\\n", color_mnt, reset, color_path,
-    //           branch_name, color_usr);
-    //  }
+    int unstaged = unStaged();
+    int staged = Staged();
+    int unpushed = unPushed();
+    if (unstaged > 0 || staged > 0 || unpushed > 0) {
+      printf("  %s┠─ ", color_usr);
+      if (unstaged > 0) {
+        printf("%s%s%d ", orange, reset, unstaged);
+      }
+      if (staged > 0) {
+        printf("%s%s%s%d ", yellow, bold, reset, staged);
+      }
+      if (unpushed > 0) {
+        printf("%s%s%s%d", green, bold, reset, unpushed);
+      }
+      printf("\\n");
+    }
   }
 
-  printf("  %s┗:> %s", color_usr, reset);
+  printf("  %s%s┗:> %s", bold, color_usr, reset);
   return 0;
 }
 
-int unsaved() {
-  FILE *file = popen("git diff --name-only | wc -l 2>dev/null", "r");
-  if (file == NULL) {
-    return 0;
-  }
-  char buf[16];
+int unPushed() {
 
-  return 0;
+  FILE *file;
+  if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
+    perror("Error");
+    return -1;
+  }
+
+  char buf[16];
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    pclose(file);
+    printf("error");
+    return -1;
+  }
+
+  pclose(file);
+  int unpushed = atoi(buf);
+  return unpushed;
+}
+
+int Staged() {
+
+  FILE *file = popen("git diff --cached --name-only | wc -l 2>/dev/null", "r");
+  if (file == NULL) {
+    perror("Error\\n");
+    return -1;
+  }
+
+  char buf[16];
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    perror("Error\n");
+    pclose(file);
+    return -1;
+  }
+
+  int staged = atoi(buf);
+  return staged;
+}
+
+int unStaged() {
+
+  FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
+  if (file == NULL) {
+    printf("error");
+    return -1;
+  }
+
+  char buf[16];
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    printf("error");
+    pclose(file);
+    return -1;
+  }
+
+  pclose(file);
+  int unstaged = atoi(buf);
+  return unstaged;
 }
 
 void replace_home(char *path, char *home, int Plen, int Hlen) {

@@ -7,12 +7,12 @@ Highlights the current directory and changes color depending on whether you're i
 
 ![Screenshot_display](https://github.com/user-attachments/assets/f331bb4d-6a9d-4378-aa94-0f26bb2aed78)
 
-If current directory is a repository it will show the current branch name:
+If current directory is a repository it will display the current branch name:
 ![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
 
 And it will abbreviate paths longer than 50 characters.
 
-![tokyobash_2](https://github.com/user-attachments/assets/380b6184-6d09-4616-8278-6d7c01b70cc0)
+![tokyobash_arbv](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
 
 ## Themes
 
