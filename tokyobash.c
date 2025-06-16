@@ -19,6 +19,7 @@ bool get_branch(char *branch_name);
 int unPushed();
 int Staged();
 int unStaged();
+int unPulled();
 
 int main(int argc, char **argv) {
 
@@ -213,40 +214,65 @@ int main(int argc, char **argv) {
   }
 
   if (inRepo) {
+
     int unstaged = unStaged();
     int staged = Staged();
     int unpushed = unPushed();
-    if (unstaged > 0 || staged > 0 || unpushed > 0) {
-      printf("  %s┠─ ", color_usr);
+    int unpulled = unPulled();
+
+    if (unstaged < 0 || staged < 0 || unpushed < 0 || unpulled < 0) {
+      printf("errors...");
+    }
+
+    if (unstaged > 0 || staged > 0 || unpushed > 0 || unpulled > 0) {
+
+      printf("  %s┠─", color_usr);
+
       if (unstaged > 0) {
-        printf("%s%s%d ", orange, reset, unstaged);
+        printf("%s%s%d ", orange, reset, unstaged);
       }
       if (staged > 0) {
-        printf("%s%s%s%d ", yellow, bold, reset, staged);
+        printf("%s%s󰄳%s%d ", yellow, bold, reset, staged);
       }
       if (unpushed > 0) {
         printf("%s%s%s%d", green, bold, reset, unpushed);
       }
+      if (unpulled > 0) {
+        printf("%s%s%s%d", red, bold, reset, unpulled);
+      }
       printf("\\n");
     }
   }
-
   printf("  %s%s┗:> %s", bold, color_usr, reset);
   return 0;
+}
+
+int unPulled() {
+  // popen("git fetch 2>/dev/null", "r");
+  FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
+  if (file == NULL) {
+    return -1;
+  }
+  char buf[16];
+  if (fgets(buf, sizeof(buf), file) == NULL) {
+    pclose(file);
+    return -1;
+  }
+  pclose(file);
+  int unpulled = atoi(buf);
+  return unpulled;
 }
 
 int unPushed() {
 
   FILE *file;
   if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
-    perror("Error");
     return -1;
   }
 
   char buf[16];
   if (fgets(buf, sizeof(buf), file) == NULL) {
     pclose(file);
-    printf("error");
     return -1;
   }
 
@@ -259,13 +285,11 @@ int Staged() {
 
   FILE *file = popen("git diff --cached --name-only | wc -l 2>/dev/null", "r");
   if (file == NULL) {
-    perror("Error\\n");
     return -1;
   }
 
   char buf[16];
   if (fgets(buf, sizeof(buf), file) == NULL) {
-    perror("Error\n");
     pclose(file);
     return -1;
   }
@@ -278,13 +302,11 @@ int unStaged() {
 
   FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
   if (file == NULL) {
-    printf("error");
     return -1;
   }
 
   char buf[16];
   if (fgets(buf, sizeof(buf), file) == NULL) {
-    printf("error");
     pclose(file);
     return -1;
   }
