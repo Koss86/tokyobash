@@ -28,6 +28,7 @@ int main(int argc, char **argv) {
 
   char reset[] = "\\[\\e[00m\\]";
   char bold[] = "\\[\\e[1m\\]";
+  char ul[] = "\\[\\e[4m\\]";
 
   char cyan[] = "\\[\\e[38;5;86m\\]";
   char sky_blue[] = "\\[\\e[38;5;117m\\]";
@@ -196,7 +197,17 @@ int main(int argc, char **argv) {
       }
     }
   }
-  printf("  %s└:> %s", color_usr, reset);
+
+  //  if (git_is_accessible() && in_repo()) {
+  //
+  //    char branch_name[MAX_BRANCH_LEN];
+  //    get_branch(&branch_name[0]);
+  //
+  //    printf("  %s┣   %s%s%s%s\\n", color_mnt, reset, color_path,
+  //           branch_name, color_usr);
+  //  }
+
+  printf("  %s┗:> %s", color_usr, reset);
   return 0;
 }
 
