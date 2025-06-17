@@ -16,12 +16,14 @@ void rem_curDir(char *path, int Plen);
 bool git_is_accessible();
 bool in_repo();
 bool get_branch(char *branch_name);
-int unPushed();
+int Untracked();
+int Unstaged();
 int Staged();
-int unStaged();
-int unPulled();
+int Committed();
+int Fetched();
 
 int main(int argc, char **argv) {
+
 
     char path[PATH_MAX];
     // Check to make sure we got the path
@@ -55,33 +57,43 @@ int main(int argc, char **argv) {
     char white[] = "\\[\\e[38;2;255;255;255m\\]";
 
     // Assign tokyonight colors as default.
-    char *color_usr = &cyan[0];
-    char *color_time = &sky_blue[0];
-    char *color_path = &blue[0];
-    char *color_mnt = &orange[0];
-    char *color_root = &light_red[0];
+    char *clr_usr = &cyan[0];
+    char *clr_time = &sky_blue[0];
+    char *clr_path = &blue[0];
+    char *clr_mnt = &orange[0];
+    char *clr_root = &light_red[0];
+
+    typedef enum Themes {
+        Tokyonight, Catppuccin,
+        Kanagawa, Koss,
+    }Themes;
+    Themes theme = Tokyonight;
 
     if (argc > 1) {
+
         if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
 
             if (strcmp(argv[1], "catppuccin") == 0) {
-                color_usr = &peach[0];
-                color_time = &pink[0];
-                color_path = &purple[0];
-                color_mnt = &blue[0];
-                color_root = &orange[0];
+                clr_usr = &peach[0];
+                clr_time = &pink[0];
+                clr_path = &purple[0];
+                clr_mnt = &blue[0];
+                clr_root = &orange[0];
+                theme = Catppuccin;
 
             } else if (strcmp(argv[1], "kanagawa") == 0) {
-                color_usr = &red[0];
-                color_time = &teal[0];
-                color_path = &khaki[0];
-                color_mnt = &lime[0];
-                color_root = &purple[0];
+                clr_usr = &red[0];
+                clr_time = &teal[0];
+                clr_path = &khaki[0];
+                clr_mnt = &lime[0];
+                clr_root = &purple[0];
+                theme = Kanagawa;
 
             } else if (strcmp(argv[1], "koss") == 0) {
-                color_usr = &dark_orange[0];
-                color_time = &beige[0];
-                color_path = &white[0];
+                clr_usr = &dark_orange[0];
+                clr_time = &beige[0];
+                clr_path = &white[0];
+                theme = Koss;
             }
 
             if (argc > 2 && (atoi(argv[2]) > 1)) {
@@ -95,24 +107,28 @@ int main(int argc, char **argv) {
             }
 
             if (argc > 2) {
+
                 if (strcmp(argv[2], "catppuccin") == 0) {
-                    color_usr = &peach[0];
-                    color_time = &pink[0];
-                    color_path = &purple[0];
-                    color_mnt = &blue[0];
-                    color_root = &orange[0];
+                    clr_usr = &peach[0];
+                    clr_time = &pink[0];
+                    clr_path = &purple[0];
+                    clr_mnt = &blue[0];
+                    clr_root = &orange[0];
+                    theme = Catppuccin;
 
                 } else if (strcmp(argv[2], "kanagawa") == 0) {
-                    color_usr = &red[0];
-                    color_time = &teal[0];
-                    color_path = &khaki[0];
-                    color_mnt = &lime[0];
-                    color_root = &purple[0];
+                    clr_usr = &red[0];
+                    clr_time = &teal[0];
+                    clr_path = &khaki[0];
+                    clr_mnt = &lime[0];
+                    clr_root = &purple[0];
+                    theme = Kanagawa;
 
                 } else if (strcmp(argv[2], "koss") == 0) {
-                    color_usr = &dark_orange[0];
-                    color_time = &beige[0];
-                    color_path = &white[0];
+                    clr_usr = &dark_orange[0];
+                    clr_time = &beige[0];
+                    clr_path = &white[0];
+                    theme = Koss;
                 }
             }
         }
@@ -145,28 +161,13 @@ int main(int argc, char **argv) {
         Plen = ABV_PATH_LEN_T;
     }
 
-    // Check if git is available and current directory is a repo.
-    // If yes, get current branch name for prompt.
-    bool inRepo = false;
-    if (git_is_accessible() && in_repo()) {
-
-        inRepo = true;
-        char branch_name[MAX_BRANCH_LEN];
-        get_branch(&branch_name[0]);
-
-        printf("%s%s\\u@\\h%s:%s [\\t] %s%s%s  ", bold, color_usr, reset,
-               color_time, color_path, branch_name, color_usr);
-
-    } else {
-
-        printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
-    }
+    printf("%s%s\\u@\\h%s:%s [\\t] ", bold, clr_usr, reset, clr_time);
 
     // If getenv() returned NULL, just print standard prompt
     if (pHomeState == false) {
 
         rem_curDir(path, Plen);
-        printf("%s%s%s\\W/\\n", color_path, path, bold);
+        printf("%s%s%s\\W/\\n", clr_path, path, bold);
 
     } else {
 
@@ -178,11 +179,11 @@ int main(int argc, char **argv) {
 
             if (Plen > 1) {
 
-                printf("%s%s%s\\W/\\n", color_path, path, bold);
+                printf("%s%s%s\\W/\\n", clr_path, path, bold);
 
             } else {
 
-                printf("%s%s\\W/\\n", color_path, bold);
+                printf("%s%s\\W/\\n", clr_path, bold);
             }
 
         } else {
@@ -201,70 +202,157 @@ int main(int argc, char **argv) {
 
             if (inMnt) {
 
-                printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+                printf("%s%s%s\\W/\\n", clr_mnt, path, bold);
 
             } else if (Plen > 1) {
 
-                printf("%s%s%s\\W/\\n", color_root, path, bold);
+                printf("%s%s%s\\W/\\n", clr_root, path, bold);
 
             } else {
 
-                printf("%s%s\\W\\n", color_root, bold);
+                printf("%s%s\\W\\n", clr_root, bold);
             }
         }
     }
+    // Check if git is available and current directory is a repo.
+    // If yes, get current branch name for prompt.
+    // Then determine if there are any files that are untracked,
+    // unstaged, staged, # of commits and (if known) the # of commits
+    // ready to pull.
+    bool inRepo = false;
+    if (git_is_accessible() && in_repo()) {
 
-    int unstaged, staged, unpushed, unpulled;
-    unstaged = staged = unpushed = unpulled = 0;
-    if (inRepo) {
+        inRepo = true;
+        char branch_name[MAX_BRANCH_LEN];
+        get_branch(&branch_name[0]);
 
-        unstaged = unStaged();
+        int untracked, unstaged, staged, committed, fetched;
+        untracked = unstaged = staged = committed = fetched = 0;
+
+        untracked = Untracked();
+        unstaged = Unstaged();
         staged = Staged();
-        unpushed = unPushed();
-        unpulled = unPulled();
+        committed = Committed();
+        fetched = Fetched();
 
-        if (unstaged < 0 || staged < 0 || unpushed < 0 || unpulled < 0) {
-            printf("errors...");
+        //if (untracked < 0 || unstaged < 0 || staged < 0 || committed < 0 || fetched < 0) {
+        //    printf("errors...");
+        //}
+
+        printf("  %s%s└┬ %s%s  %s|", reset, clr_usr, branch_name,  clr_path, clr_usr);
+
+        char *clr_unstaged = NULL;
+        char *clr_staged = NULL;
+        char *clr_committed = NULL;
+        char *clr_fetched = &red[0];
+        char *clr_untracked = &yellow[0];
+
+        switch (theme) {
+            case Tokyonight:
+                clr_unstaged = &orange[0];
+                clr_staged = &pink[0];
+                clr_committed = &green[0];
+                //clr_fetched = &red[0];
+                //clr_untracked = &yellow[0];
+                break;
+            case Catppuccin:
+                clr_unstaged = &orange[0];
+                clr_staged = &blue[0];
+                clr_committed = &green[0];
+                //clr_fetched = &red[0];
+                //clr_untracked = &yellow[0];
+                break;
+            case Kanagawa:
+                clr_unstaged = &purple[0];
+                clr_staged = &blue[0];
+                clr_committed = &green[0];
+                //clr_fetched = &red[0];
+                //clr_untracked = &yellow[0];
+                break;
+            case Koss:
+                clr_unstaged = &orange[0];
+                clr_staged = &blue[0];
+                clr_committed = &green[0];
+                //clr_fetched = &red[0];
+                //clr_untracked = &yellow[0];
+                break;
+
         }
 
-        if (unstaged > 0 || staged > 0 || unpushed > 0 || unpulled > 0) {
-            printf("  %s┠─┤", color_usr);
-            printf(" %s%s%d%s |", orange, reset, unstaged, color_usr);
-            printf(" %s󰄳%s%d%s |", yellow, reset, staged, color_usr);
-            printf(" %s%s%d%s |", green, reset, unpushed, color_usr);
-            printf(" %s%s%d", red, reset, unpulled);
-            printf("\\n");
+        if (fetched > 0) {
+            printf("!%s!%d |", clr_fetched, fetched);
         }
+        if (untracked > 0) {
+            printf(" %s %d%s |", clr_untracked, untracked, clr_usr);
+        }
+
+        if (unstaged > 0) {
+            printf(" %s %d%s |", clr_unstaged, unstaged, clr_usr);
+        } else {
+            printf(" %s%s |", clr_unstaged, clr_usr);
+        }
+        if (staged > 0) {
+            printf(" %s󰄳 %d%s |", clr_staged, staged, clr_usr);
+        } else {
+            printf(" %s󰄳%s |", clr_staged, clr_usr);
+        }
+        if (committed > 0) {
+            printf(" %s %d%s |", clr_committed, committed, clr_usr);
+        } else {
+            printf(" %s%s |", clr_committed, clr_usr);
+        }
+
+
+        printf("\\n");
     }
 
-    if (unstaged > 0 || staged > 0 || unpushed > 0 || unpulled > 0) {
-
-        printf("  %s┗━:> %s", color_usr, reset);
-
+    if (inRepo) {
+        printf("   %s%s└ >$ %s", bold, clr_usr, reset);
     } else {
-
-        printf("  %s┗:> %s", color_usr, reset);
+        printf("  %s%s└ >$ %s", bold, clr_usr, reset);
     }
+    // ─
     return 0;
 }
 
-int unPulled() {
-    // popen("git fetch 2>/dev/null", "r");
-    FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
+int Untracked() {
+
+    FILE *file = popen("git ls-files --others --exclude-standard | wc -l 2>/dev/null", "r");
     if (file == NULL) {
         return -1;
     }
+
     char buf[16];
     if (fgets(buf, sizeof(buf), file) == NULL) {
         pclose(file);
         return -1;
     }
+
     pclose(file);
-    int unpulled = atoi(buf);
-    return unpulled;
+    int untracked = atoi(buf);
+    return untracked;
 }
 
-int unPushed() {
+int Fetched() {
+
+    // popen("git fetch 2>/dev/null", "r");
+    FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
+    if (file == NULL) {
+        return -1;
+    }
+
+    char buf[16];
+    if (fgets(buf, sizeof(buf), file) == NULL) {
+        pclose(file);
+        return -1;
+    }
+
+    pclose(file);
+    int fetched = atoi(buf);
+    return fetched;
+}
+
+int Committed() {
 
     FILE *file;
     if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
@@ -278,8 +366,8 @@ int unPushed() {
     }
 
     pclose(file);
-    int unpushed = atoi(buf);
-    return unpushed;
+    int committed = atoi(buf);
+    return committed;
 }
 
 int Staged() {
@@ -299,7 +387,7 @@ int Staged() {
     return staged;
 }
 
-int unStaged() {
+int Unstaged() {
 
     FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
     if (file == NULL) {
