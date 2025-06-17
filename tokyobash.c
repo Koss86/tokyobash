@@ -5,10 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#define MAX_BRANCH_LEN 256
 #define ABV_PATH_LEN1 24
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50 // 24 + 23 + "..."
-#define MAX_BRANCH_LEN 256
 
 void replace_home(char *path, char *home, int Plen, int Hlen);
 void abrv_path(char *path, int Plen);
@@ -20,7 +20,7 @@ int Untracked();
 int Unstaged();
 int Staged();
 int Committed();
-int Fetched();
+int Fetched(int seconds);
 
 int main(int argc, char **argv) {
 
@@ -69,6 +69,8 @@ int main(int argc, char **argv) {
     }Themes;
     Themes theme = Tokyonight;
 
+    int seconds = 0;
+
     if (argc > 1) {
 
         if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
@@ -96,13 +98,13 @@ int main(int argc, char **argv) {
                 theme = Koss;
             }
 
-            if (argc > 2 && (atoi(argv[2]) > 1)) {
+            if (argc > 2 && ((seconds = atoi(argv[2])) > 1)) {
                 printf("\\n");
             }
 
         } else {
 
-            if (atoi(argv[1]) > 1) {
+            if ((seconds = atoi(argv[1])) > 1) {
                 printf("\\n");
             }
 
@@ -178,11 +180,9 @@ int main(int argc, char **argv) {
             rem_curDir(path, Plen);
 
             if (Plen > 1) {
-
                 printf("%s%s%s\\W/\\n", clr_path, path, bold);
 
             } else {
-
                 printf("%s%s\\W/\\n", clr_path, bold);
             }
 
@@ -201,24 +201,22 @@ int main(int argc, char **argv) {
             rem_curDir(path, Plen);
 
             if (inMnt) {
-
                 printf("%s%s%s\\W/\\n", clr_mnt, path, bold);
 
             } else if (Plen > 1) {
-
                 printf("%s%s%s\\W/\\n", clr_root, path, bold);
 
             } else {
-
                 printf("%s%s\\W\\n", clr_root, bold);
             }
         }
     }
+
     // Check if git is available and current directory is a repo.
     // If yes, get current branch name for prompt.
     // Then determine if there are any files that are untracked,
-    // unstaged, staged, # of commits and (if known) the # of commits
-    // ready to pull.
+    // unstaged, staged, # of commits and (if known) the # of
+    // commits ready to pull.
     bool inRepo = false;
     if (git_is_accessible() && in_repo()) {
 
@@ -233,84 +231,121 @@ int main(int argc, char **argv) {
         unstaged = Unstaged();
         staged = Staged();
         committed = Committed();
-        fetched = Fetched();
+        fetched = Fetched(seconds);
 
-        //if (untracked < 0 || unstaged < 0 || staged < 0 || committed < 0 || fetched < 0) {
-        //    printf("errors...");
-        //}
+        printf("  %s%s└┬ %s%s%s  %s[", reset, clr_usr, clr_time, branch_name,  clr_path, clr_usr);
 
-        printf("  %s%s└┬ %s%s  %s|", reset, clr_usr, branch_name,  clr_path, clr_usr);
+        ///////////// Uncomment to debug status bar. //////////////
+        // untracked = fetched = unstaged = staged = committed = 5;
+        ///////////////////////////////////////////////////////////
 
-        char *clr_unstaged = NULL;
-        char *clr_staged = NULL;
-        char *clr_committed = NULL;
-        char *clr_fetched = &red[0];
-        char *clr_untracked = &yellow[0];
+        if (untracked > 0 || fetched > 0 || unstaged > 0 ||
+            staged > 0 || committed > 0) {
 
-        switch (theme) {
-            case Tokyonight:
-                clr_unstaged = &orange[0];
-                clr_staged = &pink[0];
-                clr_committed = &green[0];
-                //clr_fetched = &red[0];
-                //clr_untracked = &yellow[0];
-                break;
-            case Catppuccin:
-                clr_unstaged = &orange[0];
-                clr_staged = &blue[0];
-                clr_committed = &green[0];
-                //clr_fetched = &red[0];
-                //clr_untracked = &yellow[0];
-                break;
-            case Kanagawa:
-                clr_unstaged = &purple[0];
-                clr_staged = &blue[0];
-                clr_committed = &green[0];
-                //clr_fetched = &red[0];
-                //clr_untracked = &yellow[0];
-                break;
-            case Koss:
-                clr_unstaged = &orange[0];
-                clr_staged = &blue[0];
-                clr_committed = &green[0];
-                //clr_fetched = &red[0];
-                //clr_untracked = &yellow[0];
-                break;
+            char *clr_untracked = &yellow[0];
+            char *clr_fetched = &red[0];
+            char *clr_unstaged = NULL;
+            char *clr_staged = NULL;
+            char *clr_committed = NULL;
 
-        }
+            switch (theme) {
 
-        if (fetched > 0) {
-            printf("!%s!%d |", clr_fetched, fetched);
-        }
-        if (untracked > 0) {
-            printf(" %s %d%s |", clr_untracked, untracked, clr_usr);
-        }
+                case Tokyonight:
+                    //clr_untracked = &yellow[0];
+                    //clr_fetched = &red[0];
+                    clr_unstaged = &orange[0];
+                    clr_staged = &pink[0];
+                    clr_committed = &green[0];
+                    break;
 
-        if (unstaged > 0) {
-            printf(" %s %d%s |", clr_unstaged, unstaged, clr_usr);
+                case Catppuccin:
+                    //clr_untracked = &yellow[0];
+                    //clr_fetched = &red[0];
+                    clr_unstaged = &orange[0];
+                    clr_staged = &blue[0];
+                    clr_committed = &green[0];
+                    break;
+
+                case Kanagawa:
+                    //clr_untracked = &yellow[0];
+                    //clr_fetched = &red[0];
+                    clr_unstaged = &purple[0];
+                    clr_staged = &blue[0];
+                    clr_committed = &green[0];
+                    break;
+
+                case Koss:
+                    //clr_untracked = &yellow[0];
+                    //clr_fetched = &red[0];
+                    clr_unstaged = &orange[0];
+                    clr_staged = &blue[0];
+                    clr_committed = &green[0];
+                    break;
+            }
+
+
+            int ct = 0;
+            if (untracked > 0)  ct++;
+            if (fetched > 0)  ct++;
+            if (unstaged > 0)  ct++;
+            if (staged > 0)  ct++;
+            if (committed > 0)  ct++;
+
+            if (untracked > 0) {
+                printf(" %s %s%d ", clr_untracked, reset, untracked);
+
+                if (ct > 0 && ct != 1)  {
+                    printf("%s|", clr_usr);
+                    ct--;
+                }
+            }
+
+            if (fetched > 0) {
+                printf(" %s %s%d ", clr_fetched, reset, fetched);
+
+                if (ct > 0 && ct != 1)  {
+                    printf("%s|", clr_usr);
+                    ct--;
+                }
+            }
+
+            if (unstaged > 0) {
+                printf(" %s %s%d ", clr_unstaged, reset, unstaged);
+
+                if (ct > 0 && ct != 1)  {
+                    printf("%s|", clr_usr);
+                    ct--;
+                }
+            }
+
+            if (staged > 0) {
+                printf(" %s󰄳 %s%d ", clr_staged, reset, staged);
+
+                if (ct > 0 && ct != 1)  {
+                    printf("%s|", clr_usr);
+                    ct--;
+                }
+            }
+
+            if (committed > 0) {
+                printf(" %s %s%d ", clr_committed, reset, committed);
+
+                if (ct > 0 && ct != 1)  {
+                    printf("%s|", clr_usr);
+                    ct--;
+                }
+            }
         } else {
-            printf(" %s%s |", clr_unstaged, clr_usr);
-        }
-        if (staged > 0) {
-            printf(" %s󰄳 %d%s |", clr_staged, staged, clr_usr);
-        } else {
-            printf(" %s󰄳%s |", clr_staged, clr_usr);
-        }
-        if (committed > 0) {
-            printf(" %s %d%s |", clr_committed, committed, clr_usr);
-        } else {
-            printf(" %s%s |", clr_committed, clr_usr);
+            printf(" %s ", green);
         }
 
-
-        printf("\\n");
+        printf("%s]\\n", clr_usr);
     }
 
     if (inRepo) {
-        printf("   %s%s└ >$ %s", bold, clr_usr, reset);
-    } else {
-        printf("  %s%s└ >$ %s", bold, clr_usr, reset);
+        printf(" ");
     }
+    printf("  %s%s└ >$ %s", bold, clr_usr, reset);
     // ─
     return 0;
 }
@@ -333,9 +368,24 @@ int Untracked() {
     return untracked;
 }
 
-int Fetched() {
+int Fetched(int seconds) {
 
-    // popen("git fetch 2>/dev/null", "r");
+    FILE *fetch = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    if (fetch == NULL) {
+        printf("Error with FETCH_HEAD");
+        return -1;
+    }
+    char fbuf[512];
+    if (fgets(fbuf, sizeof(fbuf), fetch) == NULL) {
+        pclose(fetch);
+        printf("Error with fgets");
+        return -1;
+    }
+
+
+
+    //popen("git fetch 2>/dev/null", "r");
+
     FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
     if (file == NULL) {
         return -1;
@@ -410,15 +460,12 @@ void replace_home(char *path, char *home, int Plen, int Hlen) {
     path[0] = '~';
 
     if (Plen == Hlen) {
-
         path[1] = '\0';
 
     } else {
-
         int indx = Hlen;
 
         for (int i = 1; i < Plen; i++) {
-
             path[i] = path[indx++];
         }
         path[indx] = '\0';
@@ -429,14 +476,12 @@ void abrv_path(char *path, int Plen) {
 
     int i;
     for (i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
-
         path[i] = '.';
     }
 
     int indx = Plen - ABV_PATH_LEN2;
 
     for (i = ABV_PATH_LEN1 + 3; i < ABV_PATH_LEN_T; i++) {
-
         path[i] = path[indx++];
     }
     path[ABV_PATH_LEN_T] = '\0';
@@ -447,7 +492,6 @@ void rem_curDir(char *path, int Plen) {
     for (int i = Plen - 1; i > -1; i--) {
 
         if (path[i] == '/') {
-
             path[i + 1] = '\0';
             break;
         }
