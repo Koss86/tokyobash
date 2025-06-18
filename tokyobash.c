@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #define MAX_BRANCH_LEN 256
@@ -370,19 +371,65 @@ int Untracked() {
 
 int Fetched(int seconds) {
 
-    FILE *fetch = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
-    if (fetch == NULL) {
+    FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    if (fetch_status == NULL) {
         printf("Error with FETCH_HEAD");
         return -1;
     }
     char fbuf[512];
-    if (fgets(fbuf, sizeof(fbuf), fetch) == NULL) {
-        pclose(fetch);
+    if (fgets(fbuf, sizeof(fbuf), fetch_status) == NULL) {
+        pclose(fetch_status);
         printf("Error with fgets");
         return -1;
     }
 
+    char c;
+    int indx = 0;
+    int nl = 0;
+    int space = 0;
+    int inDate = 0;
+    int inTime = 0;
+    char date[11];
+    char time[9];
 
+    for (int i = 0; i < 512; i++) {
+
+        c = fbuf[i];
+
+        if (c == EOF) break;
+
+        if (c == '\n') {
+            nl++;
+            continue;
+        }
+
+        if (nl == 6 && c == ' ') {
+            space++;
+            if (space == 1) {
+                inDate = 1;
+            } else if (space == 2) {
+                inTime = 1;
+                inDate = 0;
+            }
+            continue;
+        }
+
+        if (inDate) {
+            date[indx++] = c;
+            if (indx == 10) {
+                date[indx] = '\0';
+                indx = 0;
+            }
+        }
+
+        if (inTime) {
+            time[indx++] = c;
+            if (indx == 8) {
+                time[indx] = '\0';
+                break;
+            }
+        }
+    }
 
     //popen("git fetch 2>/dev/null", "r");
 
