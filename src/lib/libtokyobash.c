@@ -2,23 +2,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <time.h>
+#include <time.h>
 
 #include "tokyobash.h"
 
 bool shouldFetch() {
 
-    /*
+    char cdate[11];
+    char ctime[9];
+    time_t now = time(0);
+    struct tm *time_struct = localtime(&now); 
+
+    if (!strftime(cdate, sizeof(cdate), "%Y-%m-%d", time_struct))
+    {
+        return false;
+    }
+    if (!strftime(ctime, sizeof(ctime), "%X", time_struct))
+    {
+        return false;
+    }
+
     FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
     if (fetch_status == NULL) {
-        printf("Error with FETCH_HEAD");
-        return -1;
-    }
-    char fbuf[512];
-    if (fgets(fbuf, sizeof(fbuf), fetch_status) == NULL) {
-        pclose(fetch_status);
-        printf("Error with fgets");
-        return -1;
+        return false;
     }
 
     char c;
@@ -27,20 +33,17 @@ bool shouldFetch() {
     int space = 0;
     int inDate = 0;
     int inTime = 0;
-    char date[11];
-    char time[9];
+    char fdate[11];
+    char ftime[9];
 
-    for (int i = 0; i < 512; i++) {
-
-        c = fbuf[i];
-
-        if (c == EOF) break;
+    // If the return of 'stat .git/FETCH_HEAD' ever
+    // changes, this will need to be reworked.
+    while ((c = fgetc(fetch_status)) != EOF) {
 
         if (c == '\n') {
             nl++;
             continue;
         }
-
         if (nl == 6 && c == ' ') {
             space++;
             if (space == 1) {
@@ -51,33 +54,61 @@ bool shouldFetch() {
             }
             continue;
         }
-
         if (inDate) {
-            date[indx++] = c;
+            fdate[indx++] = c;
             if (indx == 10) {
-                date[indx] = '\0';
+                fdate[indx] = '\0';
                 indx = 0;
             }
         }
-
         if (inTime) {
-            time[indx++] = c;
+            ftime[indx++] = c;
             if (indx == 8) {
-                time[indx] = '\0';
+                ftime[indx] = '\0';
                 break;
             }
         }
     }
-    */
+    //printf("%s %s\n", ftime, ctime);
+
+    if (fdate[2] != cdate[2] || fdate[3] != cdate[3]) return true; // Year
+    if (fdate[5] != cdate[5] || fdate[6] != cdate[6]) return true; // Month
+    if (fdate[8] != cdate[8] || fdate[9] != cdate[9]) return true; // Day
+    if (ftime[0] != ctime[0] || ftime[1] != ctime[1]) return true; // Hour
+    if (ftime[3] != ctime[3] || ftime[4] != ctime[4]) {            // Minute
+
+        char fbuf[3];
+        char cbuf[3];
+
+        for (int i = 0; i < 3; i++) {
+            if (i == 2) {
+                fbuf[i] = '\0';
+                cbuf[i] = '\0';
+                break;
+            }
+            fbuf[i] = ftime[3+i];
+            cbuf[i] = ctime[3+i];
+        }
+
+        int i_fbuf = atoi(fbuf);
+        int i_cbuf = atoi(cbuf);
+
+        int diff = i_cbuf - i_fbuf;
+        if (diff > 29) {
+            return true;
+        }
+    }
+    //printf("\\n%s %s\\n%s %s\\n", fdate, ftime, cdate, ctime);
+    pclose(fetch_status);
     return false;
 }
 
-int Fetched(int seconds) {
+int Fetched() {
 
     if (shouldFetch()) {
-        popen("git fetch 2>/dev/null", "r");
+        FILE *gitFetch = popen("git fetch 2>/dev/null", "r");
+        pclose(gitFetch);
     }
-
 
     FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
     if (file == NULL) {

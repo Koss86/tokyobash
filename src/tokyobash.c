@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "tokyobash.h"
+#include "lib/tokyobash.h"
 
 int main(int argc, char **argv) {
 
@@ -17,30 +17,6 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    char reset[] = "\\[\\e[00m\\]";
-    char bold[] = "\\[\\e[1m\\]";
-    char yellow[] = "\\[\\e[38;2;255;255;0m\\]";
-    char green[] = "\\[\\e[38;2;0;255;0m\\]";
-
-    char cyan[] = "\\[\\e[38;5;86m\\]";
-    char sky_blue[] = "\\[\\e[38;5;117m\\]";
-    char blue[] = "\\[\\e[38;5;4m\\]";
-    char peach[] = "\\[\\e[38;5;223m\\]";
-    char light_red[] = "\\[\\e[38;5;211m\\]";
-
-    char pink[] = "\\[\\e[38;5;217m\\]";
-    char purple[] = "\\[\\e[38;5;182m\\]";
-    char orange[] = "\\[\\e[38;5;214m\\]";
-
-    char red[] = "\\[\\e[38;2;255;77;77m\\]";
-    char teal[] = "\\[\\e[38;2;104;155;196m\\]";
-    char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
-    char lime[] = "\\[\\e[38;2;117;156;38m\\]";
-
-    char dark_orange[] = "\\[\\e[38;2;255;149;20m\\]";
-    char beige[] = "\\[\\e[38;2;239;239;200m\\]";
-    char white[] = "\\[\\e[38;2;255;255;255m\\]";
-
     // Assign tokyonight colors as default.
     char *clr_usr = &cyan[0];
     char *clr_time = &sky_blue[0];
@@ -48,13 +24,7 @@ int main(int argc, char **argv) {
     char *clr_mnt = &orange[0];
     char *clr_root = &light_red[0];
 
-    typedef enum Themes {
-        Tokyonight, Catppuccin,
-        Kanagawa, Koss,
-    }Themes;
     Themes theme = Tokyonight;
-
-    int seconds = 0;
 
     if (argc > 1) {
 
@@ -83,13 +53,13 @@ int main(int argc, char **argv) {
                 theme = Koss;
             }
 
-            if (argc > 2 && ((seconds = atoi(argv[2])) > 1)) {
+            if (argc > 2 && (atoi(argv[2]) > 1)) {
                 printf("\\n");
             }
 
         } else {
 
-            if ((seconds = atoi(argv[1])) > 1) {
+            if (atoi(argv[1]) > 1) {
                 printf("\\n");
             }
 
@@ -216,12 +186,12 @@ int main(int argc, char **argv) {
         unstaged = Unstaged();
         staged = Staged();
         committed = Committed();
-        fetched = Fetched(seconds);
+        fetched = Fetched();
 
         printf("  %s%s└┬ %s%s%s  %s[", reset, clr_usr, clr_time, branch_name,  clr_path, clr_usr);
 
         ///////////// Uncomment to debug status bar. //////////////
-        // untracked = fetched = unstaged = staged = committed = 5;
+         untracked = fetched = unstaged = staged = committed = 5;
         ///////////////////////////////////////////////////////////
 
         if (untracked > 0 || fetched > 0 || unstaged > 0 ||
