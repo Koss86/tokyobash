@@ -6,45 +6,65 @@
 
 #include "tokyobash.h"
 
+int Untracked() {
+
+    FILE *file = popen("git ls-files --others --exclude-standard | wc -l 2>/dev/null", "r");
+    if (file == NULL) {
+        return -1;
+    }
+
+    char buf[16];
+    if (fgets(buf, sizeof(buf), file) == NULL) {
+        pclose(file);
+        return -1;
+    }
+
+    pclose(file);
+    int untracked = atoi(buf);
+    return untracked;
+}
+
 bool shouldFetch() {
 
-    char cdate[11];
-    char ctime[9];
+    char cur_date[11];
+    char cur_time[9];
     time_t now = time(0);
     struct tm *time_struct = localtime(&now); 
 
-    if (!strftime(cdate, sizeof(cdate), "%Y-%m-%d", time_struct))
+    if (!strftime(cur_date, sizeof(cur_date), "%Y-%m-%d", time_struct))
     {
         return false;
     }
-    if (!strftime(ctime, sizeof(ctime), "%X", time_struct))
+
+    if (!strftime(cur_time, sizeof(cur_time), "%X", time_struct))
     {
         return false;
     }
+
+    char c;
+    int indx = 0;
+    int newline = 0;
+    int space = 0;
+    int inDate = 0;
+    int inTime = 0;
+    char fetch_date[11];
+    char fetch_time[9];
 
     FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
     if (fetch_status == NULL) {
         return false;
     }
 
-    char c;
-    int indx = 0;
-    int nl = 0;
-    int space = 0;
-    int inDate = 0;
-    int inTime = 0;
-    char fdate[11];
-    char ftime[9];
-
     // If the return of 'stat .git/FETCH_HEAD' ever
     // changes, this will need to be reworked.
     while ((c = fgetc(fetch_status)) != EOF) {
 
         if (c == '\n') {
-            nl++;
+            newline++;
             continue;
         }
-        if (nl == 6 && c == ' ') {
+
+        if (newline == 6 && c == ' ') {
             space++;
             if (space == 1) {
                 inDate = 1;
@@ -54,51 +74,51 @@ bool shouldFetch() {
             }
             continue;
         }
+
         if (inDate) {
-            fdate[indx++] = c;
+            fetch_date[indx++] = c;
             if (indx == 10) {
-                fdate[indx] = '\0';
+                fetch_date[indx] = '\0';
                 indx = 0;
             }
         }
+
         if (inTime) {
-            ftime[indx++] = c;
+            fetch_time[indx++] = c;
             if (indx == 8) {
-                ftime[indx] = '\0';
+                fetch_time[indx] = '\0';
                 break;
             }
         }
     }
-    //printf("%s %s\n", ftime, ctime);
-
-    if (fdate[2] != cdate[2] || fdate[3] != cdate[3]) return true; // Year
-    if (fdate[5] != cdate[5] || fdate[6] != cdate[6]) return true; // Month
-    if (fdate[8] != cdate[8] || fdate[9] != cdate[9]) return true; // Day
-    if (ftime[0] != ctime[0] || ftime[1] != ctime[1]) return true; // Hour
-    if (ftime[3] != ctime[3] || ftime[4] != ctime[4]) {            // Minute
+    //printf("%s %s\n", fetch_time, cur_time);
+    if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) return true; // Year
+    if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
+    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) return true; // Day
+    if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) return true; // Hour
+    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {            // Minute
 
         char fbuf[3];
         char cbuf[3];
-
         for (int i = 0; i < 3; i++) {
             if (i == 2) {
                 fbuf[i] = '\0';
                 cbuf[i] = '\0';
                 break;
             }
-            fbuf[i] = ftime[3+i];
-            cbuf[i] = ctime[3+i];
+            fbuf[i] = fetch_time[3+i];
+            cbuf[i] = cur_time[3+i];
         }
 
         int i_fbuf = atoi(fbuf);
         int i_cbuf = atoi(cbuf);
 
         int diff = i_cbuf - i_fbuf;
-        if (diff > 29) {
+        if (diff > 44) {
+            pclose(fetch_status);
             return true;
         }
     }
-    //printf("\\n%s %s\\n%s %s\\n", fdate, ftime, cdate, ctime);
     pclose(fetch_status);
     return false;
 }
@@ -126,9 +146,9 @@ int Fetched() {
     return fetched;
 }
 
-int Untracked() {
+int Unstaged() {
 
-    FILE *file = popen("git ls-files --others --exclude-standard | wc -l 2>/dev/null", "r");
+    FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
     if (file == NULL) {
         return -1;
     }
@@ -139,27 +159,9 @@ int Untracked() {
         return -1;
     }
 
+    int unstaged = atoi(buf);
     pclose(file);
-    int untracked = atoi(buf);
-    return untracked;
-}
-
-int Committed() {
-
-    FILE *file;
-    if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
-        return -1;
-    }
-
-    char buf[16];
-    if (fgets(buf, sizeof(buf), file) == NULL) {
-        pclose(file);
-        return -1;
-    }
-
-    pclose(file);
-    int committed = atoi(buf);
-    return committed;
+    return unstaged;
 }
 
 int Staged() {
@@ -179,10 +181,10 @@ int Staged() {
     return staged;
 }
 
-int Unstaged() {
+int Committed() {
 
-    FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
-    if (file == NULL) {
+    FILE *file;
+    if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
         return -1;
     }
 
@@ -193,8 +195,8 @@ int Unstaged() {
     }
 
     pclose(file);
-    int unstaged = atoi(buf);
-    return unstaged;
+    int committed = atoi(buf);
+    return committed;
 }
 
 void replace_home(char *path, char *home, int Plen, int Hlen) {

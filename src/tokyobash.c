@@ -30,7 +30,9 @@ int main(int argc, char **argv) {
 
         if (argv[1][0] >= 'a' && argv[1][0] <= 'z') {
 
-            if (strcmp(argv[1], "catppuccin") == 0) {
+            if (strcmp(argv[1], "tokyonight") == 0) {
+                //
+            } else if (strcmp(argv[1], "catppuccin") == 0) {
                 clr_usr = &peach[0];
                 clr_time = &pink[0];
                 clr_path = &purple[0];
@@ -170,7 +172,7 @@ int main(int argc, char **argv) {
     // Check if git is available and current directory is a repo.
     // If yes, get current branch name for prompt.
     // Then determine if there are any files that are untracked,
-    // unstaged, staged, # of commits and (if known) the # of
+    // unstaged, staged, # of commits and the # of
     // commits ready to pull.
     bool inRepo = false;
     if (git_is_accessible() && in_repo()) {
@@ -182,63 +184,82 @@ int main(int argc, char **argv) {
         int untracked, unstaged, staged, committed, fetched;
         untracked = unstaged = staged = committed = fetched = 0;
 
+        // Currently Unstaged() causes a noticable slow down on larger repos.
+        // Going to disable for now, and see if I can fix.
+        //unstaged = Unstaged();
         untracked = Untracked();
-        unstaged = Unstaged();
         staged = Staged();
         committed = Committed();
         fetched = Fetched();
 
         printf("  %s%s└┬ %s%s%s  %s[", reset, clr_usr, clr_time, branch_name,  clr_path, clr_usr);
 
+        char *clr_ok = &reset[0];
+        switch (theme) {
+            case Tokyonight:
+                clr_ok = &lime[0];
+                break;
+            case Catppuccin:
+                clr_ok = &lime[0];
+                break;
+            case Kanagawa:
+                clr_ok = &green[0];
+                break;
+            case Koss:
+                clr_ok = &green[0];
+                break;
+        }
+
         ///////////// Uncomment to debug status bar. //////////////
-         untracked = fetched = unstaged = staged = committed = 5;
+        //untracked = fetched = unstaged = staged = committed = 5;
         ///////////////////////////////////////////////////////////
 
-        if (untracked > 0 || fetched > 0 || unstaged > 0 ||
-            staged > 0 || committed > 0) {
+        if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
 
-            char *clr_untracked = &yellow[0];
-            char *clr_fetched = &red[0];
-            char *clr_unstaged = NULL;
-            char *clr_staged = NULL;
-            char *clr_committed = NULL;
+            // Pointers to assign colors for each theme.
+            char *clr_untracked = &reset[0];
+            char *clr_fetched = &reset[0];
+            char *clr_unstaged = &reset[0];
+            char *clr_staged = &reset[0];
+            char *clr_committed = &reset[0];
 
             switch (theme) {
 
                 case Tokyonight:
-                    //clr_untracked = &yellow[0];
-                    //clr_fetched = &red[0];
-                    clr_unstaged = &orange[0];
-                    clr_staged = &pink[0];
-                    clr_committed = &green[0];
+                    clr_untracked = &yellow[0];
+                    clr_fetched = &red[0];
+                    clr_unstaged = &light_red[0];
+                    clr_staged = &dark_purp[0];
+                    clr_committed = &lime[0];
                     break;
 
                 case Catppuccin:
-                    //clr_untracked = &yellow[0];
-                    //clr_fetched = &red[0];
+                    clr_untracked = &yellow[0];
+                    clr_fetched = &red[0];
                     clr_unstaged = &orange[0];
                     clr_staged = &blue[0];
                     clr_committed = &green[0];
                     break;
 
                 case Kanagawa:
-                    //clr_untracked = &yellow[0];
-                    //clr_fetched = &red[0];
+                    clr_untracked = &yellow[0];
+                    clr_fetched = &red[0];
                     clr_unstaged = &purple[0];
                     clr_staged = &blue[0];
                     clr_committed = &green[0];
                     break;
 
                 case Koss:
-                    //clr_untracked = &yellow[0];
-                    //clr_fetched = &red[0];
+                    clr_untracked = &yellow[0];
+                    clr_fetched = &red[0];
                     clr_unstaged = &orange[0];
                     clr_staged = &blue[0];
                     clr_committed = &green[0];
                     break;
             }
 
-
+            // ct tracks how many items will go into
+            // the status bar.
             int ct = 0;
             if (untracked > 0)  ct++;
             if (fetched > 0)  ct++;
@@ -249,6 +270,8 @@ int main(int argc, char **argv) {
             if (untracked > 0) {
                 printf(" %s %s%d ", clr_untracked, reset, untracked);
 
+                // We stop printing at ct = 1 because we
+                // want the last one to be ']'.
                 if (ct > 0 && ct != 1)  {
                     printf("%s|", clr_usr);
                     ct--;
@@ -265,7 +288,7 @@ int main(int argc, char **argv) {
             }
 
             if (unstaged > 0) {
-                printf(" %s %s%d ", clr_unstaged, reset, unstaged);
+                printf(" %s %s%d ", clr_unstaged, reset, unstaged);
 
                 if (ct > 0 && ct != 1)  {
                     printf("%s|", clr_usr);
@@ -274,7 +297,7 @@ int main(int argc, char **argv) {
             }
 
             if (staged > 0) {
-                printf(" %s󰄳 %s%d ", clr_staged, reset, staged);
+                printf(" %s󱝣 %s%d ", clr_staged, reset, staged);
 
                 if (ct > 0 && ct != 1)  {
                     printf("%s|", clr_usr);
@@ -291,7 +314,7 @@ int main(int argc, char **argv) {
                 }
             }
         } else {
-            printf(" %s ", green);
+            printf("%s󰄬", clr_ok);
         }
 
         printf("%s]\\n", clr_usr);
