@@ -6,38 +6,26 @@
 
 #include "tokyobash.h"
 
-int Untracked() {
-
-    FILE *file = popen("git ls-files --others --exclude-standard | wc -l 2>/dev/null", "r");
-    if (file == NULL) {
-        return -1;
-    }
-
-    char buf[16];
-    if (fgets(buf, sizeof(buf), file) == NULL) {
-        pclose(file);
-        return -1;
-    }
-
-    pclose(file);
-    int untracked = atoi(buf);
-    return untracked;
-}
 
 bool shouldFetch() {
 
-    char cur_date[11];
-    char cur_time[9];
     time_t now = time(0);
     struct tm *time_struct = localtime(&now); 
+
+    char cur_date[11];
+    char cur_time[9];
 
     if (!strftime(cur_date, sizeof(cur_date), "%Y-%m-%d", time_struct))
     {
         return false;
     }
-
     if (!strftime(cur_time, sizeof(cur_time), "%X", time_struct))
     {
+        return false;
+    }
+
+    FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    if (fetch_status == NULL) {
         return false;
     }
 
@@ -50,13 +38,8 @@ bool shouldFetch() {
     char fetch_date[11];
     char fetch_time[9];
 
-    FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
-    if (fetch_status == NULL) {
-        return false;
-    }
-
     // If the return of 'stat .git/FETCH_HEAD' ever
-    // changes, this will need to be reworked.
+    // changes, this will need to be refactored.
     while ((c = fgetc(fetch_status)) != EOF) {
 
         if (c == '\n') {
@@ -91,11 +74,14 @@ bool shouldFetch() {
             }
         }
     }
-    //printf("%s %s\n", fetch_time, cur_time);
+
+    pclose(fetch_status);
+
     if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) return true; // Year
     if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
     if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) return true; // Day
     if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) return true; // Hour
+
     if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {            // Minute
 
         char fbuf[3];
@@ -115,14 +101,15 @@ bool shouldFetch() {
 
         int diff = i_cbuf - i_fbuf;
         if (diff > 44) {
-            pclose(fetch_status);
             return true;
         }
     }
-    pclose(fetch_status);
     return false;
 }
-
+// Checks when last time the repo was updated,
+// if 45mins or longer, fetch is called. Then,
+// whether fetch was called or not, it will return
+// how many commits are ready to be pulled.
 int Fetched() {
 
     if (shouldFetch()) {
@@ -142,45 +129,9 @@ int Fetched() {
     }
 
     pclose(file);
-    int fetched = atoi(buf);
-    return fetched;
+    return atoi(buf);
 }
-
-int Unstaged() {
-
-    FILE *file = popen("git diff --name-only | wc -l 2>/dev/null", "r");
-    if (file == NULL) {
-        return -1;
-    }
-
-    char buf[16];
-    if (fgets(buf, sizeof(buf), file) == NULL) {
-        pclose(file);
-        return -1;
-    }
-
-    int unstaged = atoi(buf);
-    pclose(file);
-    return unstaged;
-}
-
-int Staged() {
-
-    FILE *file = popen("git diff --cached --name-only | wc -l 2>/dev/null", "r");
-    if (file == NULL) {
-        return -1;
-    }
-
-    char buf[16];
-    if (fgets(buf, sizeof(buf), file) == NULL) {
-        pclose(file);
-        return -1;
-    }
-
-    int staged = atoi(buf);
-    return staged;
-}
-
+// Returns how many commits are ready to be pushed.
 int Committed() {
 
     FILE *file;
@@ -195,10 +146,50 @@ int Committed() {
     }
 
     pclose(file);
-    int committed = atoi(buf);
-    return committed;
+    return atoi(buf);
 }
+// Counts how many staged, unstaged, and untracked files in the repo
+// on the current branch, then puts each value in the provided variables.
+// !!Currently has a noticeable 1-2 second slow down in large repos.
+void get_status_of(int *staged, int *unstaged, int *untracked) {
+    FILE *file;
+    if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
+        exit(-1);
+    }
+    char c;
+    int state = 0;
+    int st, unst, untr;
+    st = unst = untr = 0;
+    while ((c = fgetc(file)) != EOF) {
 
+        if (c == '\n') {
+            continue;
+        }
+
+        if (state == 0) {
+            if (c == '?') {
+                untr++;
+            } else if (c == 'M' || c == 'A' || c == 'D' || c == 'R' || c == 'C') {
+                st++;
+            }
+        } else {
+            if (c == 'M' || c == 'D') {
+                unst++;
+            } //else if (c == 'U')
+        }
+
+        if (state == 0) {
+            state = 1;
+        } else {
+            state = 0;
+        }
+    }
+    *staged = st;
+    *unstaged = unst;
+    *untracked = untr;
+    pclose(file);
+}
+// If path comaings $HOME, replace it with '~'.
 void replace_home(char *path, char *home, int Plen, int Hlen) {
 
     path[0] = '~';
@@ -215,7 +206,8 @@ void replace_home(char *path, char *home, int Plen, int Hlen) {
         path[indx] = '\0';
     }
 }
-
+// If path lenth is greater than 50, keep first 24 chars, add '...' then
+// place last 23 chars after last '.' .
 void abrv_path(char *path, int Plen) {
 
     int i;
@@ -231,6 +223,8 @@ void abrv_path(char *path, int Plen) {
     path[ABV_PATH_LEN_T] = '\0';
 }
 
+// Remove current directory from path. We add it back with \\W after
+// changing text to bold. This way the path is normal, while current dir is highlighted.
 void rem_curDir(char *path, int Plen) {
 
     for (int i = Plen - 1; i > -1; i--) {
@@ -242,6 +236,7 @@ void rem_curDir(char *path, int Plen) {
     }
 }
 
+// If git is available, return true.
 bool git_is_accessible() {
 
     FILE *file;
@@ -261,6 +256,7 @@ bool git_is_accessible() {
     return (strstr(buf, "git version") != NULL);
 }
 
+// If current directory is a repository, return true.
 bool in_repo() {
 
     FILE *file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
@@ -280,6 +276,7 @@ bool in_repo() {
     return (strncmp(buf, "true", 4) == 0);
 }
 
+// Place branch name into provided buffer.
 bool get_branch(char *branch_name) {
 
     FILE *file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
