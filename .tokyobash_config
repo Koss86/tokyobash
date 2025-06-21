@@ -1,2 +1,3 @@
-theme = catppuccin
+theme = "tokyonight"
+git = 1
 statusbar = 1
