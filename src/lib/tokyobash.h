@@ -1,6 +1,7 @@
 #ifndef TOKYOBASH_H
 #define TOKYOBASH_H
 
+#include <stdbool.h>
 typedef enum Themes {
   Tokyonight, Catppuccin,
   Kanagawa, Orange,
@@ -15,6 +16,7 @@ bool get_branch(char *branch_name);
 int Committed();
 int Fetched();
 void get_status_of(int *staged, int *unstaged, int *untracked);
+void parse_config(Themes *theme, bool *statusbar);
 
 #define MAX_BRANCH_LEN 256
 #define ABV_PATH_LEN1 24
