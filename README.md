@@ -15,7 +15,7 @@ If current directory is a repository it will display the current branch name:
 <details>
   <summary>Screenshot</summary>
   
-![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
+  ![tokyobash_tokyonight_1](https://github.com/user-attachments/assets/edd76f0c-1de6-4d04-8d26-6bc3f3223e18)
 
 </details>
 
@@ -54,19 +54,18 @@ You can currently choose between 3 different themes.
 
   Tokyonight:
   
-  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
+  ![tokyobash_git](https://github.com/user-attachments/assets/edd76f0c-1de6-4d04-8d26-6bc3f3223e18)
 ##
 
   Catppuccin:
+  
+![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/920fc45a-e999-4b82-8607-56c4463f84d4)
 
-  ![tokyobash_catppuccin](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
 ##
 
   Kanagawa:
   
-  ![tokyobash_kanagawa](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
-
-
+  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/31b6bb5d-990e-4b1a-9100-8ca06d888c7d)
 
 To pick a theme, add `theme="theme_name"` somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
 ```bash
