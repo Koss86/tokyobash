@@ -21,6 +21,7 @@ void parse_config(char *pHome, Themes *theme, bool *statusbar, bool *git);
 void replace_home(char *path, char *home, int Plen, int Hlen);
 void abrv_path(char *path, int Plen);
 void rem_curDir(char *path, int Plen);
+void printpath(PathState pathstate, char *path, char *color_path, char *color_mnt, char *color_root, char *bold, int Plen);
 
 bool git_is_accessible();
 bool in_repo();
