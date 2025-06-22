@@ -3,17 +3,16 @@
 #include <string.h>
 #include <time.h>
 
-#include "tokyobash.h"
+#include "../include/tokyobash.h"
 
 void parse_config(Themes *theme, bool *statusbar, bool *git) { 
 
     char *pHome = getenv("HOME");
     char path [256];
-    char filename[] = "/.tokyobash_config";
+    char filename[] = "/.config/tokyobash/config";
     int Hleng = strlen(pHome);
     int Fleng = strlen(filename);
-    // Im sure Im not the first, but Im just real proud
-    // I came up with this way to join 2 strings.
+
     for (int i = 0; i < Hleng+Fleng; i++) {
         if (i < Hleng) {
             path[i] = pHome[i];
