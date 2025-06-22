@@ -2,6 +2,11 @@
 #define TOKYOBASH_H
 
 #include <stdbool.h>
+
+typedef enum PathState {
+  noHome, Home, Mnt, Root,
+} PathState;
+
 typedef enum Themes {
   Tokyonight, Catppuccin,
   Kanagawa, Orange,
@@ -12,7 +17,7 @@ typedef enum Themes {
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50
 
-void parse_config(Themes *theme, bool *statusbar, bool *git);
+void parse_config(char *pHome, Themes *theme, bool *statusbar, bool *git);
 void replace_home(char *path, char *home, int Plen, int Hlen);
 void abrv_path(char *path, int Plen);
 void rem_curDir(char *path, int Plen);

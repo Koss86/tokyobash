@@ -12,15 +12,20 @@ int main(int argc, char **argv) {
   getcwd(path, sizeof(path));
   // Check to make sure we got the path
   if (getcwd(path, sizeof(path)) == NULL) {
-    perror("tokyobash error: getcwd() failed to retrieve path\\n");
+    perror("tokyobash error: failed to retrieve path\\n");
     exit(1);
   }
 
   Themes theme;
   bool statusbar_enabled;
   bool git_enabled;
+  char *pHome = getenv("HOME");
+  if (pHome == NULL) {
+    printf("tokyobash error: failed to retrieve $HOME\\n");
+    exit(1);
+  }
 
-  parse_config(&theme, &statusbar_enabled, &git_enabled);
+  parse_config(pHome, &theme, &statusbar_enabled, &git_enabled);
 
   char bold[] = "\\[\\e[1m\\]";
   char reset[] = "\\[\\e[00m\\]";
@@ -87,23 +92,32 @@ int main(int argc, char **argv) {
   }
 
   int Plen = strlen(path);
-  char *pHome = getenv("HOME");
-  bool pHomeState;
+  PathState pathstate;
 
-  // Check that getenv() didn't return NULL
   if (pHome == NULL) {
-
-    pHomeState = false;
+    pathstate = noHome;
 
   } else {
-
-    pHomeState = true;
     int Hlen = strlen(pHome);
 
     if (strstr(path, pHome) != NULL) {
 
       replace_home(path, pHome, Plen, Hlen);
       Plen = (Plen - Hlen) + 1;
+    }
+
+    if (path[0] == '~') {
+      pathstate = Home;
+
+    } else {
+
+      if (strstr(path, "/mnt") != NULL) {
+        pathstate = Mnt;
+
+      } else {
+
+        pathstate = Root;
+      }
     }
   }
 
@@ -114,59 +128,43 @@ int main(int argc, char **argv) {
 
   printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
 
-  // If getenv() returned NULL, just print standard prompt
-  if (!pHomeState) {
-
-    rem_curDir(path, Plen);
-    printf("%s%s%s\\W/\\n", color_path, path, bold);
-
-  } else {
-
-    if (path[0] == '~') {
-
-      rem_curDir(path, Plen);
-
-      if (Plen > 1) {
-        printf("%s%s%s\\W/\\n", color_path, path, bold);
-
-      } else {
-        printf("%s%s\\W/\\n", color_path, bold);
-      }
-
-    } else {
-
-      bool inMnt;
-      if (strstr(path, "/mnt") != NULL) {
-
-        inMnt = true;
-
-      } else {
-
-        inMnt = false;
-      }
-
-      rem_curDir(path, Plen);
-
-      if (inMnt) {
-        printf("%s%s%s\\W/\\n", color_mnt, path, bold);
-
-      } else if (Plen > 1) {
-        printf("%s%s%s\\W/\\n", color_root, path, bold);
-
-      } else {
-        printf("%s%s\\W\\n", color_root, bold);
-      }
-    }
-  }
+  rem_curDir(path, Plen);
 
   if (git_enabled) {
-
-    if (git_is_accessible() && in_repo()) {
+    if (git_is_accessible() && in_repo()){
 
       char branch_name[MAX_BRANCH_LEN];
       get_branch(&branch_name[0]);
 
-      printf("  %s└┬ %s%s%s  %s", color_usr, color_time, branch_name, color_path, reset);
+      printf("%s%s%s  ", color_path, branch_name, color_usr);
+
+
+      switch (pathstate) {
+
+        case noHome:
+          printf("%s%s%s\\W/\\n", color_path, path, bold);
+          break;
+
+        case Home:
+          if (Plen > 1) {
+            printf("%s%s%s\\W/\\n", color_path, path, bold);
+          } else {
+            printf("%s%s\\W/\\n", color_path, bold);
+          }
+          break;
+
+        case Mnt:
+          printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+          break;
+
+        case Root:
+          if (Plen > 1) {
+            printf("%s%s%s\\W/\\n", color_root, path, bold);
+          } else {
+            printf("%s%s\\W\\n", color_root, bold);
+          }
+          break;
+      }
 
       if (statusbar_enabled) {
 
@@ -177,15 +175,18 @@ int main(int argc, char **argv) {
         committed = Committed();
         fetched = Fetched();
 
-        ///////////// Uncomment to debug status bar. //////////////
-        //untracked = 2;
-        //unstaged = 3;
-        //staged = 3;
-        //committed = 3;
-        //fetched = 2;
-        ///////////////////////////////////////////////////////////
+        if (false) { // Change to true to test status bar.
+          untracked = 2;
+          unstaged = 3;
+          staged = 3;
+          committed = 3;
+          fetched = 2;
+        }
 
         if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
+
+          printf("  %s┗┳[%s", color_usr, reset);
+          //printf("%s[", color_usr);
 
           // Pointers to assign colors of the icons for each theme.
           char *color_untracked = &yellow[0];
@@ -232,10 +233,9 @@ int main(int argc, char **argv) {
           if (committed > 0)  ct++;
           if (fetched > 0)  ct++;
 
-          printf("%s[", color_usr);
 
           if (untracked > 0) {
-            printf("%s%s %d", color_untracked, reset, untracked);
+            printf(" %s%s %d ", color_untracked, reset, untracked);
             // We stop printing the separators at ct = 1
             // because we want the last print to be ']' not '|'.
             if (ct > 0 && ct != 1)  {
@@ -244,14 +244,14 @@ int main(int argc, char **argv) {
             }
           }
           if (unstaged > 0) {
-            printf("%s%s %d", color_unstaged, reset, unstaged);
+            printf(" %s%s %d ", color_unstaged, reset, unstaged);
             if (ct > 0 && ct != 1)  {
               printf("%s|", color_usr);
               ct--;
             }
           }
           if (staged > 0) {
-            printf("%s󱝣%s %d", color_staged, reset, staged);
+            printf(" %s󱝣%s %d ", color_staged, reset, staged);
 
             if (ct > 0 && ct != 1)  {
               printf("%s|", color_usr);
@@ -259,7 +259,7 @@ int main(int argc, char **argv) {
             }
           }
           if (committed > 0) {
-            printf("%s%s %d", color_committed, reset, committed);
+            printf(" %s%s %d ", color_committed, reset, committed);
 
             if (ct > 0 && ct != 1)  {
               printf("%s|", color_usr);
@@ -267,19 +267,76 @@ int main(int argc, char **argv) {
             }
           }
           if (fetched > 0) {
-            printf("%s%s %d", color_fetched, reset, fetched);
+            printf(" %s%s %d ", color_fetched, reset, fetched);
 
             if (ct > 0 && ct != 1)  {
               printf("%s|", color_usr);
               ct--;
             }
           }
-          printf("%s]", color_usr);
+          printf("%s]\\n ", color_usr);
         }
       }
-      printf("\\n ");
+    } else { // Not in repo
+
+      switch (pathstate) {
+
+        case noHome:
+          printf("%s%s%s\\W/\\n", color_path, path, bold);
+          break;
+
+        case Home:
+          if (Plen > 1) {
+            printf("%s%s%s\\W/\\n", color_path, path, bold);
+          } else {
+            printf("%s%s\\W/\\n", color_path, bold);
+          }
+          break;
+
+        case Mnt:
+          printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+          break;
+
+        case Root:
+          if (Plen > 1) {
+            printf("%s%s%s\\W/\\n", color_root, path, bold);
+          } else {
+            printf("%s%s\\W\\n", color_root, bold);
+          }
+          break;
+      }
+    }
+
+  } else { // If git is disabled
+
+    switch (pathstate) {
+
+      case noHome:
+        printf("%s%s%s\\W/\\n", color_path, path, bold);
+        break;
+
+      case Home:
+        if (Plen > 1) {
+          printf("%s%s%s\\W/\\n", color_path, path, bold);
+        } else {
+          printf("%s%s\\W/\\n", color_path, bold);
+        }
+        break;
+
+      case Mnt:
+        printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+        break;
+
+      case Root:
+        if (Plen > 1) {
+          printf("%s%s%s\\W/\\n", color_root, path, bold);
+        } else {
+          printf("%s%s\\W\\n", color_root, bold);
+        }
+        break;
     }
   }
-  printf("  %s%s└ >$ %s", bold, color_usr, reset);
+
+  printf("  %s%s┗>$ %s", bold, color_usr, reset);
   return 0;
 }

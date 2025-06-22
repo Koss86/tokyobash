@@ -1,4 +1,4 @@
-.SILENT: gcc clang
+.SILENT: gcc clang install
 
 gcc: src/tokyobash.c src/lib/tokyobashlib.c
 
