@@ -16,16 +16,18 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    Themes theme;
-    bool statusbar_enabled;
-    bool git_enabled;
     char *pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME\\n");
         exit(1);
     }
 
-    parse_config(pHome, &theme, &statusbar_enabled, &git_enabled);
+    bool debugsb;
+    Themes theme;
+    bool statusbar_enabled;
+    bool git_enabled;
+
+    parse_config(&debugsb, pHome, &theme, &statusbar_enabled, &git_enabled);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
@@ -56,6 +58,12 @@ int main(int argc, char **argv) {
     char *color_mnt = &reset[0];
     char *color_root = &reset[0];
 
+    char *color_untracked = &yellow[0];
+    char *color_unstaged = &reset[0];
+    char *color_staged = &reset[0];
+    char *color_committed = &reset[0];
+    char *color_fetched = &reset[0];
+
     switch (theme) {
 
         case Tokyonight:
@@ -64,6 +72,10 @@ int main(int argc, char **argv) {
             color_path = &blue[0];
             color_mnt = &orange[0];
             color_root = &light_red[0];
+            color_unstaged = &orange[0];
+            color_staged = &orchid[0];
+            color_committed = &lime_green[0];
+            color_fetched = &dark_orange[0];
             break;
 
         case Catppuccin:
@@ -72,6 +84,10 @@ int main(int argc, char **argv) {
             color_path = &light_purple[0];
             color_mnt = &blue[0];
             color_root = &orange[0];
+            color_unstaged = &orange[0];
+            color_staged = &blue[0];
+            color_committed = &lime_green[0];
+            color_fetched = &light_red[0];
             break;
 
         case Kanagawa:
@@ -80,6 +96,10 @@ int main(int argc, char **argv) {
             color_path = &khaki[0];
             color_mnt = &desat_lime[0];
             color_root = &light_purple[0];
+            color_unstaged = &dark_orange[0];
+            color_staged = &purple[0];
+            color_committed = &green[0];
+            color_fetched = &light_red[0];
             break;
 
         case Orange:
@@ -88,6 +108,10 @@ int main(int argc, char **argv) {
             color_path = &white[0];
             color_mnt = &orange[0];
             color_root = &light_red[0];
+            color_unstaged = &red[0];
+            color_staged = &blue[0];
+            color_committed = &green[0];
+            color_fetched = &red[0];
             break;
     }
 
@@ -130,135 +154,106 @@ int main(int argc, char **argv) {
 
     rem_curDir(path, Plen);
 
-    if (git_enabled) {
-        if (git_is_accessible() && in_repo()){
-
-            char branch_name[MAX_BRANCH_LEN];
-            get_branch(&branch_name[0]);
-
-            printf("%s%s%s  ", color_path, branch_name, color_usr);
-
-            printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
-
-            if (statusbar_enabled) {
-
-                int untracked, unstaged, staged, committed, fetched;
-                untracked = unstaged = staged = committed = fetched = 0;
-
-                get_status_of(&staged, &unstaged, &untracked);
-                committed = Committed();
-                fetched = Fetched();
-
-                if (false) { // Change to true to test status bar.
-                    untracked = 2;
-                    unstaged = 3;
-                    staged = 3;
-                    committed = 3;
-                    fetched = 2;
-                }
-
-                if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
-
-                    printf("  %s┗┳[%s", color_usr, reset);
-
-                    // Pointers to assign colors of the icons for each theme.
-                    char *color_untracked = &yellow[0];
-                    char *color_unstaged = &reset[0];
-                    char *color_staged = &reset[0];
-                    char *color_committed = &reset[0];
-                    char *color_fetched = &reset[0];
-
-                    switch (theme) {
-
-                        case Tokyonight:
-                            color_unstaged = &orange[0];
-                            color_staged = &orchid[0];
-                            color_committed = &lime_green[0];
-                            color_fetched = &dark_orange[0];
-                            break;
-
-                        case Catppuccin:
-                            color_unstaged = &orange[0];
-                            color_staged = &blue[0];
-                            color_committed = &lime_green[0];
-                            color_fetched = &light_red[0];
-                            break;
-
-                        case Kanagawa:
-                            color_unstaged = &dark_orange[0];
-                            color_staged = &purple[0];
-                            color_committed = &green[0];
-                            color_fetched = &light_red[0];
-                            break;
-
-                        case Orange:
-                            color_unstaged = &orange[0];
-                            color_staged = &blue[0];
-                            color_committed = &green[0];
-                            color_fetched = &red[0];
-                            break;
-                    }
-
-                    int ct = 0;
-                    if (untracked > 0)  ct++;
-                    if (unstaged > 0)  ct++;
-                    if (staged > 0)  ct++;
-                    if (committed > 0)  ct++;
-                    if (fetched > 0)  ct++;
-
-
-                    if (untracked > 0) {
-                        printf(" %s%s %d ", color_untracked, reset, untracked);
-                        // We stop printing the separators at ct = 1
-                        // because we want the last print to be ']' not '|'.
-                        if (ct > 0 && ct != 1)  {
-                            printf("%s|", color_usr);
-                            ct--;
-                        }
-                    }
-                    if (unstaged > 0) {
-                        printf(" %s%s %d ", color_unstaged, reset, unstaged);
-                        if (ct > 0 && ct != 1)  {
-                            printf("%s|", color_usr);
-                            ct--;
-                        }
-                    }
-                    if (staged > 0) {
-                        printf(" %s󱝣%s %d ", color_staged, reset, staged);
-
-                        if (ct > 0 && ct != 1)  {
-                            printf("%s|", color_usr);
-                            ct--;
-                        }
-                    }
-                    if (committed > 0) {
-                        printf(" %s%s %d ", color_committed, reset, committed);
-
-                        if (ct > 0 && ct != 1)  {
-                            printf("%s|", color_usr);
-                            ct--;
-                        }
-                    }
-                    if (fetched > 0) {
-                        printf(" %s%s %d ", color_fetched, reset, fetched);
-
-                        if (ct > 0 && ct != 1)  {
-                            printf("%s|", color_usr);
-                            ct--;
-                        }
-                    }
-                    printf("%s]\\n ", color_usr);
-                }
-            }
-        } else { // Not in repo
-
-            printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
-
-        }
-
-    } else { // If git is disabled
+    // Not sure how yet, but I feel like this could be improved
+    if (!git_is_accessible()) {
 
         printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+
+    } else {
+
+        if (!git_enabled){
+
+            printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+
+        } else {
+
+            if (!in_repo()) {
+
+                printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+
+            } else { 
+                // In a repo with git enabled and accessible
+                char branch_name[MAX_BRANCH_LEN];
+                get_branch(&branch_name[0]);
+
+                printf("%s%s%s  ", color_path, branch_name, color_usr);
+
+                printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+
+                if (statusbar_enabled) {
+
+                    int untracked, unstaged, staged, committed, fetched;
+                    untracked = unstaged = staged = committed = fetched = 0;
+
+                    get_status_of(&staged, &unstaged, &untracked);
+                    committed = Committed();
+                    fetched = Fetched();
+
+                    if (debugsb) {
+                        untracked = 2;
+                        unstaged = 3;
+                        staged = 3;
+                        committed = 3;
+                        fetched = 2;
+                    }
+
+                    if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
+
+                        printf("  %s┗┳[ %s", color_usr, reset);
+
+                        int ct = 0;
+                        if (untracked > 0)  ct++;
+                        if (unstaged > 0)  ct++;
+                        if (staged > 0)  ct++;
+                        if (committed > 0)  ct++;
+                        if (fetched > 0)  ct++;
+
+                        if (untracked > 0) {
+                            printf("%s%s %d", color_untracked, reset, untracked);
+                            // We stop printing the separators at ct = 1
+                            // because we want the last print to be ']' not '|'.
+                            if (ct > 0 && ct != 1)  {
+                                printf("%s|", color_usr);
+                                ct--;
+                            }
+                        }
+                        if (unstaged > 0) {
+                            printf("%s%s %d", color_unstaged, reset, unstaged);
+
+                            if (ct > 0 && ct != 1)  {
+                                printf("%s|", color_usr);
+                                ct--;
+                            }
+                        }
+                        if (staged > 0) {
+                            printf("%s󱝣%s %d", color_staged, reset, staged);
+
+                            if (ct > 0 && ct != 1)  {
+                                printf("%s|", color_usr);
+                                ct--;
+                            }
+                        }
+                        if (committed > 0) {
+                            printf("%s%s %d", color_committed, reset, committed);
+
+                            if (ct > 0 && ct != 1)  {
+                                printf("%s|", color_usr);
+                                ct--;
+                            }
+                        }
+                        if (fetched > 0) {
+                            printf("%s%s %d", color_fetched, reset, fetched);
+
+                            if (ct > 0 && ct != 1)  {
+                                printf("%s|", color_usr);
+                                ct--;
+                            }
+                        }
+                        printf(" %s]\\n ", color_usr);
+                    }
+                }
+            }
+        }
     }
     printf("  %s%s┗>$ %s", bold, color_usr, reset);
     return 0;

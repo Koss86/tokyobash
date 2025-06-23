@@ -35,12 +35,12 @@ void printpath(PathState pathstate, char *path, char *color_path, char *color_mn
     }
 }
 
-void parse_config(char *pHome, Themes *theme, bool *statusbar, bool *git) { 
+void parse_config(bool *debugsb, char *pHome, Themes *theme, bool *statusbar, bool *git) { 
 
     char path [PATH_MAX];
     char filepath[] = "/.config/tokyobash/config";
     int Hleng = strlen(pHome);
-    int Fleng = strlen(filepath);
+    int Fleng = 25;
 
     for (int i = 0; i < Hleng+Fleng; i++) {
         if (i < Hleng) {
@@ -75,6 +75,7 @@ void parse_config(char *pHome, Themes *theme, bool *statusbar, bool *git) {
             indx = 0;
             if (valbuf[0] >= 'a' && valbuf[0] <= 'z') {
                 if ((strncmp(keybuf, "theme", 5)) == 0) {
+
                     if ((strncmp(valbuf, "tokyonight", 10)) == 0) {
                         *theme = Tokyonight;
                     } else if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
@@ -89,16 +90,25 @@ void parse_config(char *pHome, Themes *theme, bool *statusbar, bool *git) {
             } else {
 
                 if ((strncmp(keybuf, "statusbar", 9)) == 0) {
+
                     if (valbuf[0] == '0') {
                         *statusbar = false;
                     } else if (valbuf[0] == '1'){
                         *statusbar = true;
                     }
                 } else if ((strncmp(keybuf, "git", 3)) == 0) {
+
                     if (valbuf[0] == '0') {
                         *git = false;
                     } else if ( valbuf[0] == '1') {
                         *git = true;
+                    }
+                } else if ((strncmp(keybuf, "debugsb", 7)) == 0) {
+
+                    if (valbuf[0] == '0') {
+                        *debugsb = false;
+                    } else if (valbuf[0] == '1') {
+                        *debugsb = true;
                     }
                 } // add else if's for future optoins with int vals here.
             }

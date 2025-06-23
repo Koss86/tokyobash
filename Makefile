@@ -2,11 +2,11 @@
 
 gcc: src/tokyobash.c src/lib/tokyobashlib.c
 
-	gcc -Wall -O3 -o tokyobash src/tokyobash.c src/lib/tokyobashlib.c -Isrc/include
+	gcc -O3 -o tokyobash src/tokyobash.c src/lib/tokyobashlib.c -Isrc/include
 
 clang: src/tokyobash.c src/lib/tokyobashlib.c
 
-	clang -Wall -O3 -o tokyobash src/tokyobash.c src/lib/tokyobashlib.c -Isrc/include
+	clang -O3 -o tokyobash src/tokyobash.c src/lib/tokyobashlib.c -Isrc/include
 
 install: tokyobash config
 
