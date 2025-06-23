@@ -1,4 +1,7 @@
-debugsb = 0
-theme =tokyonight
-git= 1
-statusbar =1
+theme = tokyonight
+
+git = 1
+
+statusbar = 1
+
+debug = 0

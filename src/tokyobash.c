@@ -22,12 +22,12 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    bool debugsb;
+    bool debug;
     Themes theme;
     bool statusbar_enabled;
     bool git_enabled;
 
-    parse_config(&debugsb, pHome, &theme, &statusbar_enabled, &git_enabled);
+    parse_config(&debug, pHome, &theme, &statusbar_enabled, &git_enabled);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
@@ -119,27 +119,26 @@ int main(int argc, char **argv) {
     PathState pathstate;
 
     if (pHome == NULL) {
+
         pathstate = noHome;
 
     } else {
+
         int Hlen = strlen(pHome);
-
         if (strstr(path, pHome) != NULL) {
-
             replace_home(path, pHome, Plen, Hlen);
             Plen = (Plen - Hlen) + 1;
         }
 
         if (path[0] == '~') {
+
             pathstate = Home;
 
         } else {
 
             if (strstr(path, "/mnt") != NULL) {
                 pathstate = Mnt;
-
             } else {
-
                 pathstate = Root;
             }
         }
@@ -154,104 +153,89 @@ int main(int argc, char **argv) {
 
     rem_curDir(path, Plen);
 
-    // Not sure how yet, but I feel like this could be improved
-    if (!git_is_accessible()) {
+    if (!git_is_accessible() || !git_enabled || !in_repo()) {
 
         printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
 
     } else {
 
-        if (!git_enabled){
+        char branch_name[MAX_BRANCH_LEN];
+        get_branch(&branch_name[0]);
 
-            printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+        printf("%s%s%s  ", color_path, branch_name, color_usr);
 
-        } else {
+        printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
 
-            if (!in_repo()) {
+        if (statusbar_enabled || debug) {
 
-                printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+            int untracked, unstaged, staged, committed, fetched;
+            untracked = unstaged = staged = committed = fetched = 0;
 
-            } else { 
-                // In a repo with git enabled and accessible
-                char branch_name[MAX_BRANCH_LEN];
-                get_branch(&branch_name[0]);
+            get_status_of(&staged, &unstaged, &untracked);
+            committed = Committed();
+            fetched = Fetched();
 
-                printf("%s%s%s  ", color_path, branch_name, color_usr);
+            if (debug) {
+                untracked = 2;
+                unstaged = 3;
+                staged = 3;
+                committed = 3;
+                fetched = 2;
+            }
 
-                printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+            if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
 
-                if (statusbar_enabled) {
+                printf("  %s┗┳[ %s", color_usr, reset);
 
-                    int untracked, unstaged, staged, committed, fetched;
-                    untracked = unstaged = staged = committed = fetched = 0;
+                int ct = 0;
+                if (untracked > 0)  ct++;
+                if (unstaged > 0)  ct++;
+                if (staged > 0)  ct++;
+                if (committed > 0)  ct++;
+                if (fetched > 0)  ct++;
 
-                    get_status_of(&staged, &unstaged, &untracked);
-                    committed = Committed();
-                    fetched = Fetched();
-
-                    if (debugsb) {
-                        untracked = 2;
-                        unstaged = 3;
-                        staged = 3;
-                        committed = 3;
-                        fetched = 2;
-                    }
-
-                    if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
-
-                        printf("  %s┗┳[ %s", color_usr, reset);
-
-                        int ct = 0;
-                        if (untracked > 0)  ct++;
-                        if (unstaged > 0)  ct++;
-                        if (staged > 0)  ct++;
-                        if (committed > 0)  ct++;
-                        if (fetched > 0)  ct++;
-
-                        if (untracked > 0) {
-                            printf("%s%s %d", color_untracked, reset, untracked);
-                            // We stop printing the separators at ct = 1
-                            // because we want the last print to be ']' not '|'.
-                            if (ct > 0 && ct != 1)  {
-                                printf("%s|", color_usr);
-                                ct--;
-                            }
-                        }
-                        if (unstaged > 0) {
-                            printf("%s%s %d", color_unstaged, reset, unstaged);
-
-                            if (ct > 0 && ct != 1)  {
-                                printf("%s|", color_usr);
-                                ct--;
-                            }
-                        }
-                        if (staged > 0) {
-                            printf("%s󱝣%s %d", color_staged, reset, staged);
-
-                            if (ct > 0 && ct != 1)  {
-                                printf("%s|", color_usr);
-                                ct--;
-                            }
-                        }
-                        if (committed > 0) {
-                            printf("%s%s %d", color_committed, reset, committed);
-
-                            if (ct > 0 && ct != 1)  {
-                                printf("%s|", color_usr);
-                                ct--;
-                            }
-                        }
-                        if (fetched > 0) {
-                            printf("%s%s %d", color_fetched, reset, fetched);
-
-                            if (ct > 0 && ct != 1)  {
-                                printf("%s|", color_usr);
-                                ct--;
-                            }
-                        }
-                        printf(" %s]\\n ", color_usr);
+                if (untracked > 0) {
+                    printf("%s%s %d", color_untracked, reset, untracked);
+                    // We stop printing the separators at ct = 1
+                    // because we want the last print to be ']' not '|'.
+                    if (ct > 0 && ct != 1)  {
+                        printf("%s|", color_usr);
+                        ct--;
                     }
                 }
+                if (unstaged > 0) {
+                    printf("%s%s %d", color_unstaged, reset, unstaged);
+
+                    if (ct > 0 && ct != 1)  {
+                        printf("%s|", color_usr);
+                        ct--;
+                    }
+                }
+                if (staged > 0) {
+                    printf("%s󱝣%s %d", color_staged, reset, staged);
+
+                    if (ct > 0 && ct != 1)  {
+                        printf("%s|", color_usr);
+                        ct--;
+                    }
+                }
+                if (committed > 0) {
+                    printf("%s%s %d", color_committed, reset, committed);
+
+                    if (ct > 0 && ct != 1)  {
+                        printf("%s|", color_usr);
+                        ct--;
+                    }
+                }
+                if (fetched > 0) {
+                    printf("%s%s %d", color_fetched, reset, fetched);
+
+                    if (ct > 0 && ct != 1)  {
+                        printf("%s|", color_usr);
+                        ct--;
+                    }
+                }
+                printf(" %s]\\n ", color_usr);
             }
         }
     }
