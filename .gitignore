@@ -1,4 +1,5 @@
 tokyobash
 .editorconfig
+*.o
 *.bak
 *.out

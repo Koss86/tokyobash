@@ -131,11 +131,8 @@ int main(int argc, char **argv) {
         }
 
         if (path[0] == '~') {
-
             pathstate = Home;
-
         } else {
-
             if (strstr(path, "/mnt") != NULL) {
                 pathstate = Mnt;
             } else {
@@ -153,9 +150,30 @@ int main(int argc, char **argv) {
 
     rem_curDir(path, Plen);
 
-    if (!git_is_accessible() || !git_enabled || !in_repo()) {
+    if (!git_enabled || !git_is_accessible() || !in_repo()) {
 
-        printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+        switch (pathstate) {
+            case noHome:
+                printf("%s%s%s\\W/\\n", color_path, path, bold);
+                break;
+            case Home:
+                if (Plen > 1) {
+                    printf("%s%s%s\\W/\\n", color_path, path, bold);
+                } else {
+                    printf("%s%s\\W/\\n", color_path, bold);
+                }
+                break;
+            case Mnt:
+                printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+                break;
+            case Root:
+                if (Plen > 1) {
+                    printf("%s%s%s\\W/\\n", color_root, path, bold);
+                } else {
+                    printf("%s%s\\W\\n", color_root, bold);
+                }
+                break;
+        }
 
     } else {
 
@@ -164,7 +182,28 @@ int main(int argc, char **argv) {
 
         printf("%s%s%s  ", color_path, branch_name, color_usr);
 
-        printpath(pathstate, path, color_path, color_mnt, color_root, bold, Plen);
+        switch (pathstate) {
+            case noHome:
+                printf("%s%s%s\\W/\\n", color_path, path, bold);
+                break;
+            case Home:
+                if (Plen > 1) {
+                    printf("%s%s%s\\W/\\n", color_path, path, bold);
+                } else {
+                    printf("%s%s\\W/\\n", color_path, bold);
+                }
+                break;
+            case Mnt:
+                printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+                break;
+            case Root:
+                if (Plen > 1) {
+                    printf("%s%s%s\\W/\\n", color_root, path, bold);
+                } else {
+                    printf("%s%s\\W\\n", color_root, bold);
+                }
+                break;
+        }
 
         if (statusbar_enabled || debug) {
 
@@ -185,7 +224,7 @@ int main(int argc, char **argv) {
 
             if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
 
-                printf("  %s┗┳[ %s", color_usr, reset);
+                printf("  %s┗┳[%s", color_usr, reset);
 
                 int ct = 0;
                 if (untracked > 0)  ct++;
@@ -193,6 +232,12 @@ int main(int argc, char **argv) {
                 if (staged > 0)  ct++;
                 if (committed > 0)  ct++;
                 if (fetched > 0)  ct++;
+
+                int space = 0;
+                if (ct > 1) {
+                    printf(" ");
+                    space++;
+                }
 
                 if (untracked > 0) {
                     printf("%s%s %d", color_untracked, reset, untracked);
@@ -235,7 +280,10 @@ int main(int argc, char **argv) {
                         ct--;
                     }
                 }
-                printf(" %s]\\n ", color_usr);
+                if (space) {
+                    printf(" ");
+                }
+                printf("%s%s]\\n ",bold,  color_usr);
             }
         }
     }

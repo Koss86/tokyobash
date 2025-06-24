@@ -54,7 +54,7 @@ void parse_config(bool *debugsb, char *pHome, Themes *theme, bool *statusbar, bo
 
     FILE *config = fopen(path, "r");
     if (config == NULL) {
-        perror("Tokyobash config not found.\\n");
+        perror("Tokyobash config not found");
         exit(-1);
     }
 
