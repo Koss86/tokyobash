@@ -12,14 +12,14 @@ int main(int argc, char **argv) {
     getcwd(path, sizeof(path));
     // Check to make sure we got the path
     if (getcwd(path, sizeof(path)) == NULL) {
-        perror("tokyobash error: failed to retrieve path\\n");
-        exit(1);
+        perror("tokyobash error: failed to retrieve path");
+        exit(-1);
     }
 
     char *pHome = getenv("HOME");
     if (pHome == NULL) {
-        perror("tokyobash error: failed to retrieve $HOME\\n");
-        exit(1);
+        perror("tokyobash error: failed to retrieve $HOME");
+        exit(-1);
     }
 
     bool debug;

@@ -224,6 +224,7 @@ bool shouldFetch() {
         int i_cbuf = atoi(cbuf);
 
         int diff = i_cbuf - i_fbuf;
+        // Adjust to change time between fetches.
         if (diff > 44) {
             return true;
         }

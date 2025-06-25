@@ -5,7 +5,7 @@ SRC = src/tokyobash.c src/lib/tokyobashlib.c
 OBJ = tokyobash.o tokyobashlib.o
 CONFIG_FILE = config
 CONFIGDIR = ~/.config/tokyobash
-PREFIX =
+prefix =
 
 all: $(BIN)
 
@@ -22,7 +22,7 @@ tokyobashlib.o: src/lib/tokyobashlib.c
 
 install: $(BIN) $(CONFIG_FILE)
 
-ifeq ($(PREFIX),)
+ifeq ($(prefix),)
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
 	@echo "$(CONFIG_FILE) successfully placed at $(CONFIGDIR)"
@@ -30,9 +30,9 @@ ifeq ($(PREFIX),)
 else
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
-	@cp -r $(BINDIR) $(PREFIX)
+	@cp -r $(BINDIR) $(prefix)
 	@echo "$(CONFIG_FILE) successfully placed at $(CONFIGDIR)"
-	@echo "$(BIN) successfully placed at $(PREFIX)/$(BINDIR)"
+	@echo "$(BIN) successfully placed at $(prefix)/$(BINDIR)"
 endif
 
 clean:
