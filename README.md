@@ -15,7 +15,7 @@ If current directory is a repository it will display the current branch name:
 <details>
   <summary>Screenshot</summary>
   
-  ![tokyobash_tokyonight_1](https://github.com/user-attachments/assets/edd76f0c-1de6-4d04-8d26-6bc3f3223e18)
+  ![tokyobash_tokyonight_1](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
 
 </details>
 
@@ -29,22 +29,37 @@ And it will abbreviate paths longer than 50 characters.
 
 ## Installation
 
-Easiest way would be to have gcc and make on your system.
-In the root tokyobash directory, just run `make`. This will
-compile a tokyoBash binary in current directory. If you dont
-have make use this gcc command:
+Easiest way would be to have gcc and make installed.
+
+In the root tokyobash directory, type:
+
+  -`make`, will compile a tokyoBash binary and place it in repo_location/tokyobash/bin.
+
+  -`make install`, will compile tokyobash and copy the config file to ~/.config/tokyobash if ones not already present.
+
+  -`make install prefix=custom/path`, will compile tokyobash, copy config file, then copy tokyobash to prefix/bin.
+As an example, when I build a new binary I use `make install prefix=$HOME/.local`
+
+If you dont have make use these gcc commands:
 ```
-gcc -O3 -o tokyoBash src/tokyobash.c src/lib/libtokyobash.c
+gcc -O2 -c src/tokyobash.c
+gcc -O2 -c src/lib/tokyobashlib.c
+gcc -O2 tokyobash.o tokyobashlib.o -o tokyobash
 ```
+You will have to manually create ~/.config/tokyobash and copy the config file from the repo to there.
+
+The config file is REQUIRED and tokyobash will not work without it!
+
+##
+
 Now add this to your .bashrc or .bash_profile:
 
 ```bash
-theme="theme_name"
 
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $theme)"'
+export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
 
 ```
-Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary and 'theme_name' with the name of your chosen theme.
+Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary.
 
 Save then restart your terminal!
 
@@ -54,18 +69,18 @@ You can currently choose between 3 different themes.
 
   Tokyonight:
   
-  ![tokyobash_git](https://github.com/user-attachments/assets/edd76f0c-1de6-4d04-8d26-6bc3f3223e18)
+  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
 ##
 
   Catppuccin:
   
-![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/920fc45a-e999-4b82-8607-56c4463f84d4)
+![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
 
 ##
 
   Kanagawa:
   
-  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/31b6bb5d-990e-4b1a-9100-8ca06d888c7d)
+  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
 
 To pick a theme, add `theme="theme_name"` somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
 ```bash
