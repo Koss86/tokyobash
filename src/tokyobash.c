@@ -22,12 +22,38 @@ int main(int argc, char **argv) {
         exit(-1);
     }
 
+    int Plen = strlen(path);
+    int Hlen = strlen(pHome);
+    PathState pathstate;
+
+    if (strstr(path, pHome) != NULL) {
+        replace_home(path, pHome, Plen, Hlen);
+        Plen = (Plen - Hlen) + 1;
+    }
+
+    if (path[0] == '~') {
+        pathstate = Home;
+    } else {
+        if (strstr(path, "/mnt") != NULL) {
+            pathstate = Mnt;
+        } else {
+            pathstate = Root;
+        }
+    }
+
+    if (Plen > ABV_PATH_LEN_T) {
+        abrv_path(path, Plen);
+        Plen = ABV_PATH_LEN_T;
+    }
+
     bool debug;
     Themes theme;
     bool statusbar_enabled;
+    bool branchname;
     bool git_enabled;
 
-    parse_config(&debug, pHome, &theme, &statusbar_enabled, &git_enabled);
+    parse_config(&debug, &theme, &statusbar_enabled,
+                 &git_enabled, &branchname, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
@@ -115,37 +141,6 @@ int main(int argc, char **argv) {
             break;
     }
 
-    int Plen = strlen(path);
-    PathState pathstate;
-
-    if (pHome == NULL) {
-
-        pathstate = noHome;
-
-    } else {
-
-        int Hlen = strlen(pHome);
-        if (strstr(path, pHome) != NULL) {
-            replace_home(path, pHome, Plen, Hlen);
-            Plen = (Plen - Hlen) + 1;
-        }
-
-        if (path[0] == '~') {
-            pathstate = Home;
-        } else {
-            if (strstr(path, "/mnt") != NULL) {
-                pathstate = Mnt;
-            } else {
-                pathstate = Root;
-            }
-        }
-    }
-
-    if (Plen > ABV_PATH_LEN_T) {
-        abrv_path(path, Plen);
-        Plen = ABV_PATH_LEN_T;
-    }
-
     printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
 
     rem_curDir(path, Plen);
@@ -153,9 +148,7 @@ int main(int argc, char **argv) {
     if (!git_enabled || !git_is_accessible() || !in_repo()) {
 
         switch (pathstate) {
-            case noHome:
-                printf("%s%s%s\\W/\\n", color_path, path, bold);
-                break;
+
             case Home:
                 if (Plen > 1) {
                     printf("%s%s%s\\W/\\n", color_path, path, bold);
@@ -163,9 +156,11 @@ int main(int argc, char **argv) {
                     printf("%s%s\\W/\\n", color_path, bold);
                 }
                 break;
+
             case Mnt:
                 printf("%s%s%s\\W/\\n", color_mnt, path, bold);
                 break;
+
             case Root:
                 if (Plen > 1) {
                     printf("%s%s%s\\W/\\n", color_root, path, bold);
@@ -177,15 +172,14 @@ int main(int argc, char **argv) {
 
     } else {
 
-        char branch_name[MAX_BRANCH_LEN];
-        get_branch(&branch_name[0]);
-
-        printf("%s%s%s  ", color_path, branch_name, color_usr);
+        if (branchname) {
+            char branch_name[MAX_BRANCH_LEN];
+            get_branch(&branch_name[0]);
+            printf("%s%s%s  ", color_path, branch_name, color_usr);
+        }
 
         switch (pathstate) {
-            case noHome:
-                printf("%s%s%s\\W/\\n", color_path, path, bold);
-                break;
+
             case Home:
                 if (Plen > 1) {
                     printf("%s%s%s\\W/\\n", color_path, path, bold);
@@ -193,9 +187,11 @@ int main(int argc, char **argv) {
                     printf("%s%s\\W/\\n", color_path, bold);
                 }
                 break;
+
             case Mnt:
                 printf("%s%s%s\\W/\\n", color_mnt, path, bold);
                 break;
+
             case Root:
                 if (Plen > 1) {
                     printf("%s%s%s\\W/\\n", color_root, path, bold);

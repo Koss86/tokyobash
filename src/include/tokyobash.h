@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 typedef enum PathState {
-  noHome, Home, Mnt, Root,
+  Home, Mnt, Root,
 } PathState;
 
 typedef enum Themes {
@@ -17,11 +17,10 @@ typedef enum Themes {
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50
 
-void parse_config(bool *debugsb, char *pHome, Themes *theme, bool *statusbar, bool *git);
+void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool *branchname, char *pHome, int Hlen);
 void replace_home(char *path, char *home, int Plen, int Hlen);
 void abrv_path(char *path, int Plen);
 void rem_curDir(char *path, int Plen);
-void printpath(PathState pathstate, char *path, char *color_path, char *color_mnt, char *color_root, char *bold, int Plen);
 
 bool git_is_accessible();
 bool in_repo();

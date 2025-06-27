@@ -6,41 +6,10 @@
 
 #include "../include/tokyobash.h"
 
-void printpath(PathState pathstate, char *path, char *color_path, char *color_mnt, char *color_root, char *bold, int Plen) {
-
-    switch (pathstate) {
-
-        case noHome:
-            printf("%s%s%s\\W/\\n", color_path, path, bold);
-            break;
-
-        case Home:
-            if (Plen > 1) {
-                printf("%s%s%s\\W/\\n", color_path, path, bold);
-            } else {
-                printf("%s%s\\W/\\n", color_path, bold);
-            }
-            break;
-
-        case Mnt:
-            printf("%s%s%s\\W/\\n", color_mnt, path, bold);
-            break;
-
-        case Root:
-            if (Plen > 1) {
-                printf("%s%s%s\\W/\\n", color_root, path, bold);
-            } else {
-                printf("%s%s\\W\\n", color_root, bold);
-            }
-            break;
-    }
-}
-
-void parse_config(bool *debugsb, char *pHome, Themes *theme, bool *statusbar, bool *git) { 
+void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool *branchname, char *pHome, int Hleng) { 
 
     char path [PATH_MAX];
     char filepath[] = "/.config/tokyobash/config";
-    int Hleng = strlen(pHome);
     int Fleng = 25;
 
     for (int i = 0; i < Hleng+Fleng; i++) {
@@ -104,14 +73,22 @@ void parse_config(bool *debugsb, char *pHome, Themes *theme, bool *statusbar, bo
                     } else if ( valbuf[0] == '1') {
                         *git = true;
                     }
-                } else if ((strncmp(keybuf, "debug", 5)) == 0) {
+                } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
+                    if (valbuf[0] == '0') {
+                        *branchname = false;
+                    } else if (valbuf[0] == '1') {
+                        *branchname = true;
+                    }
+                } // add else if's here for future optoins with int vals.
+
+                else if ((strncmp(keybuf, "debug", 5)) == 0) {
 
                     if (valbuf[0] == '0') {
                         *debugsb = false;
                     } else if (valbuf[0] == '1') {
                         *debugsb = true;
                     }
-                } // add else if's here for future optoins with int vals.
+                }
             }
             continue;
         }
