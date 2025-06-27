@@ -3,89 +3,160 @@ A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/
 
 Requires a [Nerd Font](https://www.nerdfonts.com) for the penguin and git icons.
 ## Features
-Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
 
+#### Highlights
+Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
+<details>
+<summary>Screenshot</summary>
+  
 ![Screenshot_display](https://github.com/user-attachments/assets/f331bb4d-6a9d-4378-aa94-0f26bb2aed78)
 
-Also, if current directory is a repository it will show the current branch name:
-![tokyobash_git](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
+</details>
 
-And finally, it will abbreviate paths longer than 50 characters.
+##
 
-![tokyobash_2](https://github.com/user-attachments/assets/380b6184-6d09-4616-8278-6d7c01b70cc0)
+#### Abbreviate Path
+Abbreviates paths longer than 50 characters.
+<details>
+<summary>Screenshot</summary>
 
-## Themes
+![tokyobash_arbv](https://github.com/user-attachments/assets/f8e4d0a6-7ce0-46f4-946d-c786fd0d6933)
 
+</details>
+
+##
+
+#### Git Branch Name
+If current directory is a repository it will display the current branch name:
+<details>
+  <summary>Screenshot</summary>
+  
+  ![tokyobash_tokyonight_1](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
+
+</details>
+
+##
+
+#### Git Status Bar
+An icon bar that shows changes to current repository.
+
+<details>
+  <summary>Screenshot</summary>
+
+  ![tokyobash_statusbar](https://github.com/user-attachments/assets/a94962ee-7279-4cc3-acd5-1e97b9a74e4a)
+  
+</details>
+
+Displays the number of untracked files, files with unstaged changes, staged changes, number of commits, and if any commits available from remote. The latter will only fetch commits if repo has not been updated for 45 minutes.
+
+The status bar will only display when there are changes to repo. And only show items that were changed. Is disabled by default, can be enabled via [Config](#config) setting.
+
+<details>
+  <summary>Icon Descriptions</summary>
+  
+  ![tokyobash_statusbarExp](https://github.com/user-attachments/assets/f3cce450-e44f-46aa-a4a2-b75f0145a9d5)
+  
+</details>
+  
+
+##
+
+#### Themes
 You can currently choose between 3 different themes.
+<details>
+  <summary>Tokyonight</summary>
 
-  Tokyonight:
-  
   ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
-##
-
-  Catppuccin:
-
-  ![tokyobash_catppuccin](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
-##
-
-  Kanagawa:
   
-  ![tokyobash_kanagawa](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
+</details>
+<details>
+  <summary>Catppuccin</summary>
 
+  ![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
+  
+</details>
 
+<details>
+  <summary>Kanagawa</summary>
 
-To pick a theme, add `theme="theme_name"` somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
-```bash
-#For Tokyonight
-theme="tokyonight"
-#For Catppuccin
-theme="catppuccin"
-#For Kanagawa
-theme="kanagawa"
-
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS $theme)"'
-```
-Tokyobash will default to Tokyonight even if no theme variable is created or passed. 
-
+  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
+  
+</details>
 
 ## Installation
-You will need a C compiler. Either gcc or clang should be fine.
 
-Navigate to the directory containing tokyobash.c in your terminal and type:
+The easiest way would be to have make and gcc or clang installed on your system.
+
+In the root of the tokyobash repository, there are 3 commands to use:
+
+  -`make` :Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
+
+  -`make install` :Will compile tokyobash and copy the config file to `~/.config/tokyobash` if one is not already present.
+
+  -`make install prefix=custom/path` :Will compile tokyobash, copy config file, then copy tokyobash to `prefix/bin`.
+
+#### No Make
+
+If you dont have make, use these gcc commands:
 ```
-gcc -o tokyoBash tokyobash.c
+gcc -c src/tokyobash.c
+gcc -c src/lib/tokyobashlib.c
+gcc -O3 tokyobash.o tokyobashlib.o -o tokyobash
 ```
 
-If you're using clang, just replace gcc with clang and it will work the same.
-This will create the binary whose path you'll need for the configuration below.
+For clang:
+
+```
+clang -c src/tokyobash.c
+clang -c src/lib/tokyobashlib.c
+clang -O3 tokyobash.o tokyobashlib.o -o tokyobash
+```
+
+You will need to manually create the directory tokyobash/  in the directory ~/.config and copy the config file there.
+Path to config file should be `~/.config/tokyobash/config`.
+
+The config file is REQUIRED and tokyobash will NOT WORK without it!
+
+##
 
 Now add this to your .bashrc or .bash_profile:
 
 ```bash
-SECONDS=0
-theme="theme_name"
 
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS $theme)"'
+export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
 
-alias clear='reset_and_clear'
-reset_and_clear() {
-  SECONDS=0
-  command clear
-}
+# If tokyobash was placed somewhere that's in your $PATH,
+# then your PROMPT_COMMAND can look like this.
+
+export PROMPT_COMMAND='PS1="$(tokyobash)"'
+
 ```
-Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary.
+Now replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
 
 Save then restart your terminal!
-<details>
-<summary>Remove blank line spacer</summary>
-  
-If you don't like the blank line spacer, you can remove the SECONDS from your .bashrc or .bash_profile file. It should work the same, just without the spacing.
 
-SECONDS is only used for aesthetic reasons. I like the look of a blank line between each prompt. But, it has to be printed before the other printfs are called. If not, it will cause the input field to be below where intended. But printing it first leaves the issues of a blank line at the top upon opening, and the same when `clear` is used.
+## Config
 
-  In bash, SECONDS just adds 1 to itself every second the terminal is open. So we then know when the terminal has just opened, and we set up an alias to reset SECONDS when `clear` is called. Then we check if SECONDS is >1 to print the newline or not.
+Config file uses standard key=value pairs.
 
-</details>
+`#` works like `//` in C for commenting.
+Spaces, single, and double quotes are ignored.
+
+`1 = enabled` `0 = disabled`
+
+Default config:
+```
+theme       = tokyonight
+#theme      = catppuccin
+#theme      = kanagawa
+
+git         = 1 # Turns all git integration on/off
+branchname  = 1 # Turn the display of branch name on/off
+statusbar   = 0 # Turn git status bar on/off
+```
+
+Setting git = 0 disables all git integration. This supercedes the branchname and statusbar settings.
+So, if branchname = 1, and statusbar = 1. While git is set to 0, then neither branchname or statusbar are displayed.
 
 ##
 
@@ -93,7 +164,6 @@ SECONDS is only used for aesthetic reasons. I like the look of a blank line betw
 I'm not sure if this will run on all linux distros. I believe it should work on most if not all.
 
 I'm also new to programming so any feedback is welcomed.
-
+So if I'm doing somthing stupid (I'm sure I am somewhere) please let me know.
 
 All screenshots were taken with: [ghostty](https://www.ghostty.org) terminal with tokyonight theme
-

@@ -1,1 +1,5 @@
-tokyoBash
+tokyobash
+.editorconfig
+*.o
+*.bak
+*.out
