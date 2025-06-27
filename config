@@ -1,7 +1,6 @@
-theme = tokyonight
-
-git = 1
-
-statusbar = 1
-
-debug = 0
+theme      = tokyonight
+#theme      = catppuccin
+#theme      = kanagawa
+git        = 1
+branchname = 1
+statusbar  = 1
