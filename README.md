@@ -3,6 +3,8 @@ A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/
 
 Requires a [Nerd Font](https://www.nerdfonts.com) for the penguin and git icons.
 ## Features
+
+#### Highlights
 Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
 <details>
 <summary>Screenshot</summary>
@@ -11,6 +13,20 @@ Highlights the current directory and changes color depending on whether you're i
 
 </details>
 
+##
+
+#### Abbreviate Path
+Abbreviates paths longer than 50 characters.
+<details>
+<summary>Screenshot</summary>
+
+![tokyobash_arbv](https://github.com/user-attachments/assets/f8e4d0a6-7ce0-46f4-946d-c786fd0d6933)
+
+</details>
+
+##
+
+#### Git Branch Name
 If current directory is a repository it will display the current branch name:
 <details>
   <summary>Screenshot</summary>
@@ -19,36 +35,87 @@ If current directory is a repository it will display the current branch name:
 
 </details>
 
-And it will abbreviate paths longer than 50 characters.
+##
+
+#### Git Status Bar
+An icon bar that shows changes to current repository.
+
 <details>
-<summary>Screenshot</summary>
+  <summary>Screenshot</summary>
 
-![tokyobash_arbv](https://github.com/user-attachments/assets/f8e4d0a6-7ce0-46f4-946d-c786fd0d6933)
+  ![tokyobash_statusbar](https://github.com/user-attachments/assets/a94962ee-7279-4cc3-acd5-1e97b9a74e4a)
+  
+</details>
 
+Displays the number of untracked files, files with unstaged changes, staged changes, number of commits, and if any commits available from remote. The latter will only fetch commits if repo has not been updated for 45 minutes.
+
+The status bar will only display when there are changes to repo. And only show items that were changed. Is disabled by default, can be enabled via [Config](#config) setting.
+
+<details>
+  <summary>Icon Descriptions</summary>
+  
+  ![tokyobash_statusbarExp](https://github.com/user-attachments/assets/f3cce450-e44f-46aa-a4a2-b75f0145a9d5)
+  
+</details>
+  
+
+##
+
+#### Themes
+You can currently choose between 3 different themes.
+<details>
+  <summary>Tokyonight</summary>
+
+  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
+  
+</details>
+<details>
+  <summary>Catppuccin</summary>
+
+  ![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
+  
+</details>
+
+<details>
+  <summary>Kanagawa</summary>
+
+  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
+  
 </details>
 
 ## Installation
 
-Easiest way would be to have gcc and make installed.
+The easiest way would be to have make and gcc or clang installed on your system.
 
-In the root tokyobash directory, type:
+In the root of the tokyobash repository, there are 3 commands to use:
 
-  -`make`, will compile a tokyoBash binary and place it in repo_location/tokyobash/bin.
+  -`make` :Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
 
-  -`make install`, will compile tokyobash and copy the config file to ~/.config/tokyobash if ones not already present.
+  -`make install` :Will compile tokyobash and copy the config file to `~/.config/tokyobash` if one is not already present.
 
-  -`make install prefix=custom/path`, will compile tokyobash, copy config file, then copy tokyobash to prefix/bin.
-As an example, when I build a new binary I use `make install prefix=$HOME/.local`
+  -`make install prefix=custom/path` :Will compile tokyobash, copy config file, then copy tokyobash to `prefix/bin`.
 
-If you dont have make use these gcc commands:
+#### No Make
+
+If you dont have make, use these gcc commands:
 ```
-gcc -O2 -c src/tokyobash.c
-gcc -O2 -c src/lib/tokyobashlib.c
-gcc -O2 tokyobash.o tokyobashlib.o -o tokyobash
+gcc -c src/tokyobash.c
+gcc -c src/lib/tokyobashlib.c
+gcc -O3 tokyobash.o tokyobashlib.o -o tokyobash
 ```
-You will have to manually create ~/.config/tokyobash and copy the config file from the repo to there.
 
-The config file is REQUIRED and tokyobash will not work without it!
+For clang:
+
+```
+clang -c src/tokyobash.c
+clang -c src/lib/tokyobashlib.c
+clang -O3 tokyobash.o tokyobashlib.o -o tokyobash
+```
+
+You will need to manually create the directory tokyobash/  in the directory ~/.config and copy the config file there.
+Path to config file should be `~/.config/tokyobash/config`.
+
+The config file is REQUIRED and tokyobash will NOT WORK without it!
 
 ##
 
@@ -58,43 +125,38 @@ Now add this to your .bashrc or .bash_profile:
 
 export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
 
+# If tokyobash was placed somewhere that's in your $PATH,
+# then your PROMPT_COMMAND can look like this.
+
+export PROMPT_COMMAND='PS1="$(tokyobash)"'
+
 ```
-Then replace 'path/to/tokyobash/binary' above with the acutal path to the compiled tokyobash binary.
+Now replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
 
 Save then restart your terminal!
 
-## Themes
+## Config
 
-You can currently choose between 3 different themes.
+Config file uses standard key=value pairs.
 
-  Tokyonight:
-  
-  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
-##
+`#` works like `//` in C for commenting.
+Spaces, single, and double quotes are ignored.
 
-  Catppuccin:
-  
-![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
+`1 = enabled` `0 = disabled`
 
-##
-
-  Kanagawa:
-  
-  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
-
-To pick a theme, add `theme="theme_name"` somewhere above the `export PROMPT_COMMAND` line in your .bashrc or .bash_profile. Then pass it to the tokyobash binary as an argument, like so:
-```bash
-##Just for example, only choose one##
-#For Tokyonight
-theme="tokyonight"
-#For Catppuccin
-theme="catppuccin"
-#For Kanagawa
-theme="kanagawa"
-
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary $SECONDS $theme)"'
+Default config:
 ```
-If no theme is chosen, all text colors will be defualt.
+theme       = tokyonight
+#theme      = catppuccin
+#theme      = kanagawa
+
+git         = 1 # Turns all git integration on/off
+branchname  = 1 # Turn the display of branch name on/off
+statusbar   = 0 # Turn git status bar on/off
+```
+
+Setting git = 0 disables all git integration. This supercedes the branchname and statusbar settings.
+So, if branchname = 1, and statusbar = 1. While git is set to 0, then neither branchname or statusbar are displayed.
 
 ##
 
@@ -102,6 +164,6 @@ If no theme is chosen, all text colors will be defualt.
 I'm not sure if this will run on all linux distros. I believe it should work on most if not all.
 
 I'm also new to programming so any feedback is welcomed.
-
+So if I'm doing somthing stupid (I'm sure I am somewhere) please let me know.
 
 All screenshots were taken with: [ghostty](https://www.ghostty.org) terminal with tokyonight theme
