@@ -89,11 +89,11 @@ The easiest way would be to have make and gcc or clang installed on your system.
 
 In the root of the tokyobash repository, there are 3 commands to use:
 
-  -`make` :Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
+  -`make` Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
 
-  -`make install` :Will compile tokyobash and copy the config file to `~/.config/tokyobash` if one is not already present.
+  -`make install` Will compile tokyobash, generate the config file, then copy config to `~/.config/tokyobash` if one is not already present.
 
-  -`make install prefix=custom/path` :Will compile tokyobash, copy config file, then copy tokyobash to `prefix/bin`.
+  -`make install prefix=custom/path` Will compile tokyobash, generate/copy config file, then copy tokyobash to `prefix/bin`.
 
 #### No Make
 
@@ -112,8 +112,13 @@ clang -c src/lib/tokyobashlib.c
 clang -O3 tokyobash.o tokyobashlib.o -o tokyobash
 ```
 
-You will need to manually create the directory tokyobash/  in the directory ~/.config and copy the config file there.
-Path to config file should be `~/.config/tokyobash/config`.
+Copy and paste this into your terminal to create the config directory and file:
+
+```
+mkdir ~/.config/tokyobash/ && printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\n' > ~/.config/tokyobash/config
+```
+
+Path to config file needs be `~/.config/tokyobash/config`.
 
 The config file is REQUIRED and tokyobash will NOT WORK without it!
 
