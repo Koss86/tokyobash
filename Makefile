@@ -47,6 +47,9 @@ else
 	@echo "$(BIN) successfully built and copied to '$(prefix)/$(BINDIR)'."
 endif
 
+$(CONFIG_FILE):
+	@printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\n' > $(CONFIG_FILE)
+
 clean:
-	$(RM)r $(BINDIR) $(OBJ)
+	$(RM)r $(BINDIR) $(OBJ) $(CONFIG_FILE)
 
