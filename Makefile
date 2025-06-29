@@ -4,7 +4,7 @@ BIN = tokyobash
 BINDIR = bin
 OBJ = tokyobash.o tokyobashlib.o
 CONFIG_FILE = config
-CONFIGDIR = ~/.config/tokyobash
+CONFIGDIR = ~/.config/tokyobashtest
 prefix =
 CXX =
 COMP_VERSION := $(shell gcc --version)
@@ -37,6 +37,7 @@ install: $(BIN) $(CONFIG_FILE)
 
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
+	@$(RM) $(CONFIG_FILE)
 	@echo "$(CONFIG_FILE) file placed in '$(CONFIGDIR)'."
 	@echo "  -will not overwrite an existing config file."
 
@@ -46,6 +47,9 @@ else
 	@cp -r $(BINDIR) $(prefix)
 	@echo "$(BIN) successfully built and copied to '$(prefix)/$(BINDIR)'."
 endif
+
+$(CONFIG_FILE):
+	@printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\n' > $(CONFIG_FILE)
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)
