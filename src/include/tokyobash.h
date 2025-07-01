@@ -24,7 +24,7 @@ void rem_curDir(char *path, int Plen);
 
 bool git_is_accessible();
 bool in_repo();
-bool get_branch(char *branch_name);
+void get_branch(char *branch_name);
 int Committed();
 int Fetched();
 void get_status_of(int *staged, int *unstaged, int *untracked);

@@ -357,7 +357,6 @@ bool git_is_accessible() {
     pclose(file);
     return (strstr(buf, "git version") != NULL);
 }
-
 // If current directory is a repository, return true.
 bool in_repo() {
 
@@ -377,20 +376,17 @@ bool in_repo() {
     pclose(file);
     return (strncmp(buf, "true", 4) == 0);
 }
-
 // Place branch name into provided buffer.
-bool get_branch(char *branch_name) {
+void get_branch(char *branch_name) {
 
     FILE *file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
     if (file == NULL) {
-
-        return false;
+        exit(-1);
     }
 
     if (fgets(branch_name, MAX_BRANCH_LEN, file) == NULL) {
-
         pclose(file);
-        return false;
+        exit(-1);
     }
 
     int len = strlen(branch_name);
@@ -399,5 +395,4 @@ bool get_branch(char *branch_name) {
         branch_name[len - 1] = '\0';
     }
     pclose(file);
-    return true;
 }

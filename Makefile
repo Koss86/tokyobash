@@ -5,7 +5,7 @@ BINDIR = bin
 OBJ = tokyobash.o tokyobashlib.o
 CONFIG_FILE = config
 CONFIGDIR = ~/.config/tokyobash
-PREFIX =
+prefix =
 CXX =
 COMP_VERSION := $(shell gcc --version)
 
@@ -41,11 +41,11 @@ install: $(BIN) $(CONFIG_FILE)
 	@echo "$(CONFIG_FILE) file built and copied to '$(CONFIGDIR)'."
 	@echo "  -will not overwrite an existing config file."
 
-ifeq ($(PREFIX),)
+ifeq ($(prefix),)
 	@echo "$(BIN) binary successfully built and located in '$(PWD)/$(BINDIR)'."
 else
-	@cp -r $(BINDIR) $(PREFIX)
-	@echo "$(BIN) successfully built and copied to '$(PREFIX)/$(BINDIR)'."
+	@cp -r $(BINDIR) $(prefix)
+	@echo "$(BIN) successfully built and copied to '$(prefix)/$(BINDIR)'."
 endif
 
 $(CONFIG_FILE):
