@@ -6,46 +6,29 @@ Requires a [Nerd Font](https://www.nerdfonts.com) for the penguin and git icons.
 
 #### Highlights
 Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
-<details>
-<summary>Screenshot</summary>
   
-![Screenshot_display](https://github.com/user-attachments/assets/f331bb4d-6a9d-4378-aa94-0f26bb2aed78)
-
-</details>
+![tokyobash_01](https://github.com/user-attachments/assets/f8f1f02f-abf7-4a15-b024-491dcbb8675f)
 
 ##
 
 #### Abbreviate Path
 Abbreviates paths longer than 50 characters.
-<details>
-<summary>Screenshot</summary>
 
-![tokyobash_arbv](https://github.com/user-attachments/assets/f8e4d0a6-7ce0-46f4-946d-c786fd0d6933)
-
-</details>
+![tokyobash_02](https://github.com/user-attachments/assets/b3b94ac8-b229-442d-a684-4afb493649dc)
 
 ##
 
 #### Git Branch Name
 If current directory is a repository it will display the current branch name:
-<details>
-  <summary>Screenshot</summary>
   
-  ![tokyobash_tokyonight_1](https://github.com/user-attachments/assets/dd4d42ff-7daa-435f-8b42-457fc9c774a7)
-
-</details>
+![tokyobash_03](https://github.com/user-attachments/assets/7a47c858-b828-4b0e-96d9-bff82d4d7d48)
 
 ##
 
 #### Git Status Bar
 An icon bar that shows changes to current repository.
 
-<details>
-  <summary>Screenshot</summary>
-
   ![tokyobash_statusbar](https://github.com/user-attachments/assets/a94962ee-7279-4cc3-acd5-1e97b9a74e4a)
-  
-</details>
 
 Displays the number of untracked files, files with unstaged changes, staged changes, number of commits, and if any commits available from remote. The latter will only fetch commits if repo has not been updated for 45 minutes.
 
@@ -63,25 +46,18 @@ The status bar will only display when there are changes to repo. And only show i
 
 #### Themes
 You can currently choose between 3 different themes.
-<details>
-  <summary>Tokyonight</summary>
 
-  ![tokyobash_git](https://github.com/user-attachments/assets/339a549e-4c68-42ab-95f7-a5660e3ed322)
+Tokyonight:
   
-</details>
-<details>
-  <summary>Catppuccin</summary>
+![tokyobash_03](https://github.com/user-attachments/assets/75182622-9ce7-43a4-9fd0-d9f431105b26)
 
-  ![tokyobash_catppuccin_1](https://github.com/user-attachments/assets/f1619806-32bf-4364-936f-a3263b7dc8a2)
-  
-</details>
+Catppuccin:
 
-<details>
-  <summary>Kanagawa</summary>
+![tokyobash_catppuccin](https://github.com/user-attachments/assets/b99bbb0f-fe02-4c12-906b-51229efa3cb4)
 
-  ![tokyobash_kanagawa_1](https://github.com/user-attachments/assets/9d026d34-54cc-4cbe-9be5-5ffc61cc9055)
-  
-</details>
+Kanagawa:
+
+![tokyobash_kanagawa](https://github.com/user-attachments/assets/3bc22047-44d2-4674-a20d-01537a94b5d7)
 
 ## Installation
 
