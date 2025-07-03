@@ -46,15 +46,10 @@ int main(int argc, char **argv) {
         Plen = ABV_PATH_LEN_T;
     }
 
-    bool debug;
-    Themes theme;
-    bool statusbar_enabled;
-    bool branchname;
-    bool git_enabled;
-    UserFetchOpts fetchSettings;
+    ConfigSettings usrConfig;
 
     // TODO: User var that controls how long between fetches.
-    parse_config(&debug, &theme, &statusbar_enabled, &git_enabled, &branchname, &fetchSettings, pHome, Hlen);
+    parse_config(&usrConfig, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
@@ -91,7 +86,7 @@ int main(int argc, char **argv) {
     char *color_committed = &reset[0];
     char *color_fetched = &reset[0];
 
-    switch (theme) {
+    switch (usrConfig.theme) {
 
         case Tokyonight:
             color_usr = &cyan[0];
@@ -146,7 +141,7 @@ int main(int argc, char **argv) {
 
     rem_curDir(path, Plen);
 
-    if (!git_enabled || !git_is_accessible() || !in_repo()) {
+    if (!usrConfig.git || !git_is_accessible() || !in_repo()) {
         // Skip branch name and status bar and just print the path.
         switch (pathstate) {
 
@@ -173,7 +168,7 @@ int main(int argc, char **argv) {
 
     } else {
 
-        if (branchname) {
+        if (usrConfig.branchname) {
             char branch_name[MAX_BRANCH_LEN];
             get_branch(&branch_name[0]);
             printf("%s%s%s  ", color_path, branch_name, color_usr);
@@ -202,16 +197,16 @@ int main(int argc, char **argv) {
                 break;
         }
 
-        if (statusbar_enabled || debug) {
+        if (usrConfig.statusbar || usrConfig.debug) {
 
             int untracked, unstaged, staged, committed, fetched;
             untracked = unstaged = staged = committed = fetched = 0;
 
             get_status_of(&staged, &unstaged, &untracked);
             committed = Committed();
-            fetched = Fetched(&fetchSettings);
+            fetched = Fetched(&usrConfig.fetchSettings);
 
-            if (debug) {
+            if (usrConfig.debug) {
                 untracked = 2;
                 unstaged = 3;
                 staged = 3;

@@ -6,7 +6,7 @@
 
 #include "tokyobash.h"
 
-void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool *branchname, UserFetchOpts *fetchSettings, char *pHome, int Hleng) { 
+void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) { 
 
     char path [PATH_MAX];
     char filepath[] = "/.config/tokyobash/config";
@@ -21,8 +21,8 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
     }
     path[Hleng+Fleng] = '\0';
 
-    FILE *config = fopen(path, "r");
-    if (config == NULL) {
+    FILE *file = fopen(path, "r");
+    if (file == NULL) {
         perror("Tokyobash config not found");
         exit(-1);
     }
@@ -37,7 +37,7 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
     int userFetch;
     Fetchtimer fetchTimeState;
 
-    while ((c = fgetc(config)) != EOF) {
+    while ((c = fgetc(file)) != EOF) {
 
         if (c == ' ' || c == '\'' || c == '"') continue;
 
@@ -50,13 +50,13 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
                 if ((strncmp(keybuf, "theme", 5)) == 0) {
 
                     if ((strncmp(valbuf, "tokyonight", 10)) == 0) {
-                        *theme = Tokyonight;
+                        usrConfig->theme = Tokyonight;
                     } else if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
-                        *theme = Catppuccin;
+                        usrConfig->theme = Catppuccin;
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
-                        *theme = Kanagawa;
+                        usrConfig->theme = Kanagawa;
                     } else if ((strncmp(valbuf, "orange", 6)) == 0) {
-                        *theme = Orange;
+                        usrConfig->theme = Orange;
                     }
                 } // add else if's here for future options with char vals.
 
@@ -65,68 +65,68 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
                 if ((strncmp(keybuf, "statusbar", 9)) == 0) {
 
                     if (valbuf[0] == '0') {
-                        *statusbar = false;
+                        usrConfig->statusbar = false;
                     } else if (valbuf[0] == '1'){
-                        *statusbar = true;
+                        usrConfig->statusbar = true;
                     }
                 } else if ((strncmp(keybuf, "git", 3)) == 0) {
 
                     if (valbuf[0] == '0') {
-                        *git = false;
+                        usrConfig->git = false;
                     } else if ( valbuf[0] == '1') {
-                        *git = true;
+                        usrConfig->git = true;
                     }
                 } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
                     if (valbuf[0] == '0') {
-                        *branchname = false;
+                        usrConfig->branchname = false;
                     } else if (valbuf[0] == '1') {
-                        *branchname = true;
+                        usrConfig->branchname = true;
                     }
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
                     if (valbuf[1] == 'm' || valbuf[2] == 'm') {
 
-                        fetchSettings->state = Minute;
+                        usrConfig->fetchSettings.state = Minute;
 
                         if (valbuf[2] == 'm') {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         } else {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
                     } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
 
-                        fetchSettings->state = Hour;
+                        usrConfig->fetchSettings.state = Hour;
 
                         if (valbuf[2] == 'h') {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         } else {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
                     } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
 
-                        fetchSettings->state = Day;
+                        usrConfig->fetchSettings.state = Day;
 
                         if (valbuf[2] == 'd') {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         } else {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
-                            fetchSettings->amount = atoi(fetchbuf);
+                            usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
                     }
                 } // add else if's here for future optoins with int vals.
@@ -134,9 +134,9 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
                 else if ((strncmp(keybuf, "debug", 5)) == 0) {
 
                     if (valbuf[0] == '0') {
-                        *debugsb = false;
+                        usrConfig->debug = false;
                     } else if (valbuf[0] == '1') {
-                        *debugsb = true;
+                        usrConfig->debug = true;
                     }
                 }
             }
@@ -158,7 +158,7 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
         }
     }
 }
-bool shouldFetch(UserFetchOpts *fetchSettings) {
+bool shouldFetch(FetchOpts *fetchSettings) {
 
     time_t now = time(0);
     struct tm *time_struct = localtime(&now); 
@@ -261,7 +261,7 @@ bool shouldFetch(UserFetchOpts *fetchSettings) {
 // Checks when last time the repo was updated,
 // calls fetch if longer than user specified. Then,
 // returns number of commits if any from remote.
-int Fetched(UserFetchOpts *fetchSettings) {
+int Fetched(FetchOpts *fetchSettings) {
 
     if (shouldFetch(fetchSettings)) {
         FILE *gitFetch = popen("git fetch 2>/dev/null", "r");
