@@ -4,9 +4,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "../include/tokyobash.h"
+#include "tokyobash.h"
 
-void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool *branchname, char *pHome, int Hleng) { 
+void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool *branchname, UserFetchOpts *fetchSettings, char *pHome, int Hleng) { 
 
     char path [PATH_MAX];
     char filepath[] = "/.config/tokyobash/config";
@@ -33,6 +33,9 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
     int indx = 0;
     char keybuf[64];
     char valbuf[64];
+    char fetchbuf[3];
+    int userFetch;
+    Fetchtimer fetchTimeState;
 
     while ((c = fgetc(config)) != EOF) {
 
@@ -79,6 +82,53 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
                     } else if (valbuf[0] == '1') {
                         *branchname = true;
                     }
+                } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
+
+                    if (valbuf[1] == 'm' || valbuf[2] == 'm') {
+
+                        fetchSettings->state = Minute;
+
+                        if (valbuf[2] == 'm') {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = valbuf[1];
+                            fetchbuf[2] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        } else {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        }
+
+                    } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+
+                        fetchSettings->state = Hour;
+
+                        if (valbuf[2] == 'h') {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = valbuf[1];
+                            fetchbuf[2] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        } else {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        }
+
+                    } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
+
+                        fetchSettings->state = Day;
+
+                        if (valbuf[2] == 'd') {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = valbuf[1];
+                            fetchbuf[2] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        } else {
+                            fetchbuf[0] = valbuf[0];
+                            fetchbuf[1] = '\0';
+                            fetchSettings->amount = atoi(fetchbuf);
+                        }
+                    }
                 } // add else if's here for future optoins with int vals.
 
                 else if ((strncmp(keybuf, "debug", 5)) == 0) {
@@ -108,7 +158,7 @@ void parse_config(bool *debugsb, Themes *theme, bool *statusbar, bool *git, bool
         }
     }
 }
-bool shouldFetch() {
+bool shouldFetch(UserFetchOpts *fetchSettings) {
 
     time_t now = time(0);
     struct tm *time_struct = localtime(&now); 
@@ -209,12 +259,11 @@ bool shouldFetch() {
     return false;
 }
 // Checks when last time the repo was updated,
-// if 45mins or longer, fetch is called. Then,
-// whether fetch was called or not, it will return
-// how many commits are ready to be pulled.
-int Fetched() {
+// calls fetch if longer than user specified. Then,
+// returns number of commits if any from remote.
+int Fetched(UserFetchOpts *fetchSettings) {
 
-    if (shouldFetch()) {
+    if (shouldFetch(fetchSettings)) {
         FILE *gitFetch = popen("git fetch 2>/dev/null", "r");
         pclose(gitFetch);
     }
