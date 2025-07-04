@@ -115,7 +115,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if (valbuf[1] == 'm' || valbuf[2] == 'm') {
+                    if (valbuf[0] != '-' && valbuf[1] == 'm' || valbuf[2] == 'm') {
 
                         usrConfig->fetchSettings.state = Minute;
 
@@ -130,7 +130,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+                    } else if (valbuf[0] != '-' && valbuf[1] == 'h' || valbuf[2] == 'h') {
 
                         usrConfig->fetchSettings.state = Hour;
 
@@ -145,7 +145,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
+                    } else if (valbuf[0] != '-' && valbuf[1] == 'd' || valbuf[2] == 'd') {
 
                         usrConfig->fetchSettings.state = Day;
 
@@ -159,7 +159,9 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[1] = '\0';
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
+
                     } else {
+                        // Justin Case
                         usrConfig->fetchSettings.state = Minute;
                         usrConfig->fetchSettings.amount = 55;
                     }
