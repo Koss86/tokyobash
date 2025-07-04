@@ -22,12 +22,12 @@ typedef struct FetchOpts {
 } FetchOpts;
 
 typedef struct ConfigSettings {
-    Themes theme;
     bool git;
+    bool debug;
+    Themes theme;
     bool statusbar;
     bool branchname;
     FetchOpts fetchSettings;
-    bool debug;
 } ConfigSettings;
 
 #define MAX_BRANCH_LEN 256

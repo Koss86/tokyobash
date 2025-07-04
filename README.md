@@ -95,7 +95,7 @@ The config file is REQUIRED and tokyobash will NOT WORK without it!
 
 ##
 
-Now add this to your .bashrc or .bash_profile:
+Now add this to your .bashrc:
 
 ```bash
 
