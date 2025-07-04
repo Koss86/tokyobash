@@ -65,11 +65,11 @@ The easiest way would be to have make and gcc or clang installed on your system.
 
 In the root of the tokyobash repository, there are 3 commands to use:
 
-  -`make` :Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
+  -`make` Will compile the tokyobash binary and place it in `repo_location/tokyobash/bin`.
 
-  -`make install` :Will compile tokyobash and copy the config file to `~/.config/tokyobash` if one is not already present.
+  -`make install` Will compile tokyobash and copy the config file to `~/.config/tokyobash` if one is not already present.
 
-  -`make install prefix=custom/path` :Will compile tokyobash, copy config file, then copy tokyobash to `prefix/bin`.
+  -`make install prefix=custom/path` Will compile tokyobash, copy config file, then copy tokyobash to `prefix/bin`.
 
 #### No Make
 
@@ -88,7 +88,7 @@ clang -c src/lib/tokyobashlib.c
 clang -O3 tokyobash.o tokyobashlib.o -o tokyobash
 ```
 
-You will need to manually create the directory tokyobash/  in the directory ~/.config and copy the config file there.
+You will need to manually create the directory tokyobash/  in `$XDG_CONFIG_HOME` if it's set. If not, create it in `~/.config` and copy the config file there.
 Path to config file should be `~/.config/tokyobash/config`.
 
 The config file is REQUIRED and tokyobash will NOT WORK without it!
@@ -129,10 +129,20 @@ theme       = tokyonight
 git         = 1 # Turns all git integration on/off
 branchname  = 1 # Turn the display of branch name on/off
 statusbar   = 0 # Turn git status bar on/off
+fetchtimer  = 1h # See below.
 ```
 
 Setting git = 0 disables all git integration. This supercedes the branchname and statusbar settings.
 So, if branchname = 1, and statusbar = 1. While git is set to 0, then neither branchname or statusbar are displayed.
+
+fetchtimer will accept `#d`, `#h`, OR `#m`. d = days (1-29) h = hours (1-23) and m = minutes (1-59).
+
+For example:
+
+If `fetchtimer = 24m`, and `stat .git/FETCH_HEAD` reports that its been over 24 minutes since last update, fetch will be called.
+
+Currently hours don't work quite right. For example if you have fetchtimer set to 3h. Meaning you want to update every 3 hours. And you last updated at 11:30pm. After midnight,
+the date change will cause the repo to update again, but should work as expected afterwards.
 
 ##
 

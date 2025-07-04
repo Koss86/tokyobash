@@ -115,7 +115,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if (valbuf[0] != '-' && valbuf[1] == 'm' || valbuf[2] == 'm') {
+                    if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'm' || valbuf[2] == 'm') {
 
                         usrConfig->fetchSettings.state = Minute;
 
@@ -123,14 +123,20 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
+
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
+                            if (usrConfig->fetchSettings.amount >= 60) {
+                                usrConfig->fetchSettings.amount = 59;
+                            }
+
                         } else {
+
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[0] != '-' && valbuf[1] == 'h' || valbuf[2] == 'h') {
+                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'h' || valbuf[2] == 'h') {
 
                         usrConfig->fetchSettings.state = Hour;
 
@@ -138,14 +144,20 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
+
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
+                            if (usrConfig->fetchSettings.amount >= 24) {
+                                usrConfig->fetchSettings.amount = 23;
+                            }
+
                         } else {
+
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[0] != '-' && valbuf[1] == 'd' || valbuf[2] == 'd') {
+                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'd' || valbuf[2] == 'd') {
 
                         usrConfig->fetchSettings.state = Day;
 
@@ -153,8 +165,14 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = valbuf[1];
                             fetchbuf[2] = '\0';
+
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
+                            if (usrConfig->fetchSettings.amount >= 30) {
+                                usrConfig->fetchSettings.amount = 29;
+                            }
+
                         } else {
+
                             fetchbuf[0] = valbuf[0];
                             fetchbuf[1] = '\0';
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
@@ -163,7 +181,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                     } else {
                         // Justin Case
                         usrConfig->fetchSettings.state = Minute;
-                        usrConfig->fetchSettings.amount = 55;
+                        usrConfig->fetchSettings.amount = 59;
                     }
                 } // add else if's here for future optoins with int vals.
 
@@ -288,7 +306,12 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
             int i_fbuf = atoi(fbuf);
             int i_cbuf = atoi(cbuf);
-            int diff = i_cbuf - i_fbuf;
+            int diff;
+            if (i_cbuf > i_fbuf) {
+                diff = i_cbuf - i_fbuf;
+            } else {
+                diff = i_fbuf - i_cbuf;
+            }
 
             if (diff > fetchSettings->amount) {
                 return true;
@@ -318,7 +341,12 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
             int i_fbuf = atoi(fbuf);
             int i_cbuf = atoi(cbuf);
-            int diff = i_cbuf - i_fbuf;
+            int diff;
+            if (i_cbuf > i_fbuf) {
+                diff = i_cbuf - i_fbuf;
+            } else {
+                diff = i_fbuf - i_cbuf;
+            }
 
             if (diff > fetchSettings->amount) {
                 return true;
@@ -349,7 +377,12 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
             int i_fbuf = atoi(fbuf);
             int i_cbuf = atoi(cbuf);
-            int diff = i_cbuf - i_fbuf;
+            int diff;
+            if (i_cbuf > i_fbuf) {
+                diff = i_cbuf - i_fbuf;
+            } else {
+                diff = i_fbuf - i_cbuf;
+            }
 
             if (diff > fetchSettings->amount) {
                 return true;
