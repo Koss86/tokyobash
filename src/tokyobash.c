@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,15 +41,12 @@ int main(int argc, char **argv) {
             pathstate = Root;
         }
     }
-
     if (Plen > ABV_PATH_LEN_T) {
         abrv_path(path, Plen);
         Plen = ABV_PATH_LEN_T;
     }
 
     ConfigSettings usrConfig;
-
-    // TODO: User var that controls how long between fetches.
     parse_config(&usrConfig, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";

@@ -4,7 +4,7 @@ BIN = tokyobash
 BINDIR = bin
 OBJ = tokyobash.o tokyobashlib.o
 CONFIG_FILE = config
-CONFIGDIR = ~/.config/tokyobash
+CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/tokyobash
 prefix =
 CXX =
 COMP_VERSION := $(shell gcc --version)
@@ -48,8 +48,10 @@ else
 	@echo "$(BIN) successfully built and copied to '$(prefix)/$(BINDIR)'."
 endif
 
+	@$(RM)r $(BINDIR) $(OBJ)
+
 $(CONFIG_FILE):
-	@printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\n' > $(CONFIG_FILE)
+	@printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d\n' > $(CONFIG_FILE)
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)

@@ -9,17 +9,40 @@
 void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) { 
 
     char path [PATH_MAX];
-    char filepath[] = "/.config/tokyobash/config";
-    int Fleng = 25;
+    char *pConfig = getenv("XDG_CONFIG_HOME");
+    char filepath[PATH_MAX] = "/tokyobash/config";
 
-    for (int i = 0; i < Hleng+Fleng; i++) {
-        if (i < Hleng) {
-            path[i] = pHome[i];
-            continue;
+    int Flen = 17;
+    if (pConfig == NULL || pConfig[0] == '\0') {
+        Flen = 25;
+        strncpy(filepath, "/.config/tokyobash/config", Flen);
+
+        for (int i = 0; i < Hleng+Flen; i++) {
+            if (i < Hleng) {
+                path[i] = pHome[i];
+                continue;
+            }
+            path[i] = filepath[i-Hleng];
         }
-        path[i] = filepath[i-Hleng];
+        path[Hleng+Flen] = '\0';
+
+    } else {
+
+        int Clen = strlen(pConfig);
+        if (pConfig[Clen-1] == '/') {
+            pConfig[Clen-1] = '\0';
+            Clen--;
+        }
+
+        for (int i = 0; i< Clen+Flen; i++) {
+            if (i < Clen) {
+                path[i] = pConfig[i];
+                continue;
+            }
+            path[i] = filepath[i-Clen];
+        }
+        path[Clen+Flen] = '\0';
     }
-    path[Hleng+Fleng] = '\0';
 
     FILE *file = fopen(path, "r");
     if (file == NULL) {
@@ -47,14 +70,18 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
             valbuf[indx] = '\0';
             indx = 0;
             if (valbuf[0] >= 'a' && valbuf[0] <= 'z') {
+
                 if ((strncmp(keybuf, "theme", 5)) == 0) {
 
                     if ((strncmp(valbuf, "tokyonight", 10)) == 0) {
                         usrConfig->theme = Tokyonight;
+
                     } else if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
                         usrConfig->theme = Catppuccin;
+
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
                         usrConfig->theme = Kanagawa;
+
                     } else if ((strncmp(valbuf, "orange", 6)) == 0) {
                         usrConfig->theme = Orange;
                     }
@@ -69,6 +96,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                     } else if (valbuf[0] == '1'){
                         usrConfig->statusbar = true;
                     }
+
                 } else if ((strncmp(keybuf, "git", 3)) == 0) {
 
                     if (valbuf[0] == '0') {
@@ -76,12 +104,15 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                     } else if ( valbuf[0] == '1') {
                         usrConfig->git = true;
                     }
+
                 } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
+
                     if (valbuf[0] == '0') {
                         usrConfig->branchname = false;
                     } else if (valbuf[0] == '1') {
                         usrConfig->branchname = true;
                     }
+
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
                     if (valbuf[1] == 'm' || valbuf[2] == 'm') {
@@ -128,6 +159,9 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[1] = '\0';
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
+                    } else {
+                        usrConfig->fetchSettings.state = Minute;
+                        usrConfig->fetchSettings.amount = 55;
                     }
                 } // add else if's here for future optoins with int vals.
 
@@ -198,6 +232,8 @@ bool shouldFetch(FetchOpts *fetchSettings) {
             continue;
         }
 
+        // Date and time we want are on the 7th line,
+        // so after 6 \n we are on the line we want to be.
         if (newline == 6 && c == ' ') {
             space++;
             if (space == 1) {
@@ -230,32 +266,98 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
     if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) return true; // Year
     if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
+
+    if (fetchSettings->state == Day) {
+
+        if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) {
+
+            char fbuf[3];
+            char cbuf[3];
+
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    fbuf[i] = '\0';
+                    cbuf[i] = '\0';
+                    break;
+                }
+                fbuf[i] = fetch_date[8+i];
+                cbuf[i] = cur_date[8+i];
+            }
+
+            int i_fbuf = atoi(fbuf);
+            int i_cbuf = atoi(cbuf);
+            int diff = i_cbuf - i_fbuf;
+
+            if (diff > fetchSettings->amount) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) return true; // Day
+
+    if (fetchSettings->state == Hour) {
+
+        if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) {
+
+            char fbuf[3];
+            char cbuf[3];
+
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    fbuf[i] = '\0';
+                    cbuf[i] = '\0';
+                    break;
+                }
+                fbuf[i] = fetch_time[0+i];
+                cbuf[i] = cur_time[0+i];
+            }
+
+            int i_fbuf = atoi(fbuf);
+            int i_cbuf = atoi(cbuf);
+            int diff = i_cbuf - i_fbuf;
+
+            if (diff > fetchSettings->amount) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
     if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) return true; // Hour
 
-    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {            // Minute
+    if (fetchSettings->state == Minute) {
 
-        char fbuf[3];
-        char cbuf[3];
-        for (int i = 0; i < 3; i++) {
-            if (i == 2) {
-                fbuf[i] = '\0';
-                cbuf[i] = '\0';
-                break;
+        if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {
+
+            char fbuf[3];
+            char cbuf[3];
+
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    fbuf[i] = '\0';
+                    cbuf[i] = '\0';
+                    break;
+                }
+                fbuf[i] = fetch_time[3+i];
+                cbuf[i] = cur_time[3+i];
             }
-            fbuf[i] = fetch_time[3+i];
-            cbuf[i] = cur_time[3+i];
-        }
 
-        int i_fbuf = atoi(fbuf);
-        int i_cbuf = atoi(cbuf);
+            int i_fbuf = atoi(fbuf);
+            int i_cbuf = atoi(cbuf);
+            int diff = i_cbuf - i_fbuf;
 
-        int diff = i_cbuf - i_fbuf;
-        // Adjust to change time between fetches.
-        if (diff > 44) {
-            return true;
+            if (diff > fetchSettings->amount) {
+                return true;
+            }
+
         }
+        return false;
     }
+    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) return true; // Minute
+
     return false;
 }
 // Checks when last time the repo was updated,
