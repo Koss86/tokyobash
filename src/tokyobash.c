@@ -47,6 +47,10 @@ int main(int argc, char **argv) {
     }
 
     ConfigSettings usrConfig;
+    usrConfig.fetchSettings.state = Hour;
+    usrConfig.fetchSettings.amount = 1;
+    usrConfig.git = 1;
+    usrConfig.branchname = 1;
     parse_config(&usrConfig, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";
