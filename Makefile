@@ -37,18 +37,17 @@ install: $(BIN) $(CONFIG_FILE)
 
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
-	@$(RM) $(CONFIG_FILE)
-	@echo "$(CONFIG_FILE) file built and copied to '$(CONFIGDIR)'."
+	@echo "$(CONFIG_FILE) file created and moved to '$(CONFIGDIR)'."
 	@echo "  -will not overwrite an existing config file."
 
 ifeq ($(prefix),)
 	@echo "$(BIN) binary successfully built and located in '$(PWD)/$(BINDIR)'."
 else
 	@cp -r $(BINDIR) $(prefix)
-	@echo "$(BIN) successfully built and copied to '$(prefix)/$(BINDIR)'."
+	@echo "$(BIN) successfully built and moved to '$(prefix)/$(BINDIR)'."
 endif
 
-	@$(RM)r $(BINDIR) $(OBJ)
+	@$(RM)r $(BINDIR) $(OBJ) $(CONFIG_FILE)
 
 $(CONFIG_FILE):
 	@printf 'theme      = tokyonight\n#theme     = catppuccin\n#theme     = kanagawa\n\ngit        = 1\nbranchname = 1\nstatusbar  = 0\nfetchtimer = 1d\n' > $(CONFIG_FILE)
