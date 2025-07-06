@@ -46,8 +46,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
     FILE *file = fopen(path, "r");
     if (file == NULL) {
-        perror("Tokyobash config not found");
-        exit(-1);
+        return;
     }
 
     char c;
