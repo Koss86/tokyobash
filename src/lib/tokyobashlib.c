@@ -283,114 +283,147 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
     pclose(fetch_status);
 
+    char fbuf[3];
+    char cbuf[3];
+    int i_fbuf;
+    int i_cbuf;
+    int dayDif;
+    int hrDif;
+    int minDif;
+
     if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) return true; // Year
     if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
 
-    if (fetchSettings->state == Day) {
+    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) {  // Day
 
-        if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) {
 
-            char fbuf[3];
-            char cbuf[3];
-
-            for (int i = 0; i < 3; i++) {
-                if (i == 2) {
-                    fbuf[i] = '\0';
-                    cbuf[i] = '\0';
-                    break;
-                }
-                fbuf[i] = fetch_date[8+i];
-                cbuf[i] = cur_date[8+i];
+        for (int i = 0; i < 3; i++) {
+            if (i == 2) {
+                fbuf[i] = '\0';
+                cbuf[i] = '\0';
+                break;
             }
-
-            int i_fbuf = atoi(fbuf);
-            int i_cbuf = atoi(cbuf);
-            int diff;
-            if (i_cbuf > i_fbuf) {
-                diff = i_cbuf - i_fbuf;
-            } else {
-                diff = i_fbuf - i_cbuf;
-            }
-
-            if (diff > fetchSettings->amount) {
-                return true;
-            }
+            fbuf[i] = fetch_date[8+i];
+            cbuf[i] = cur_date[8+i];
         }
-        return false;
+        i_fbuf = atoi(fbuf);
+        i_cbuf = atoi(cbuf);
+
+        dayDif = i_cbuf - i_fbuf;
+
+        if (fetchSettings->state == Day) {
+
+            if (dayDif >= fetchSettings->amount) {
+                // If dif is same as what user set, we need
+                // to check for false positives.
+                if (dayDif == fetchSettings->amount) {
+
+                    for (int i = 0; i < 3; i++) {
+                        if (i == 2) {
+                            fbuf[i] = '\0';
+                            cbuf[i] = '\0';
+                            break;
+                        }
+                        fbuf[i] = fetch_time[0+i];
+                        cbuf[i] = cur_time[0+i];
+                    }
+                    i_fbuf = atoi(fbuf);
+                    i_cbuf = atoi(cbuf);
+
+                    hrDif = (24 - i_fbuf) + i_cbuf;
+
+                    if (hrDif >= 24) {
+
+                        for (int i = 0; i < 3; i++) {
+                            if (i == 2) {
+                                fbuf[i] = '\0';
+                                cbuf[i] = '\0';
+                                break;
+                            }
+                            fbuf[i] = fetch_time[3+i];
+                            cbuf[i] = cur_time[3+i];
+                        }
+                        i_fbuf = atoi(fbuf);
+                        i_cbuf = atoi(cbuf); 
+
+                        minDif = (60 - i_fbuf) + i_cbuf;
+
+                        if (minDif >= 60) {
+                            return true;
+                        } else { return false; }
+
+                    } else { return false; }
+
+                } else { return true; }
+
+            } else { return false; }
+
+        } else if (dayDif > 1) { return true; }
     }
 
-    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) return true; // Day
+    if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) { // Hour
 
-    if (fetchSettings->state == Hour) {
-
-        if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) {
-
-            char fbuf[3];
-            char cbuf[3];
-
-            for (int i = 0; i < 3; i++) {
-                if (i == 2) {
-                    fbuf[i] = '\0';
-                    cbuf[i] = '\0';
-                    break;
-                }
-                fbuf[i] = fetch_time[0+i];
-                cbuf[i] = cur_time[0+i];
+        for (int i = 0; i < 3; i++) {
+            if (i == 2) {
+                fbuf[i] = '\0';
+                cbuf[i] = '\0';
+                break;
             }
-
-            int i_fbuf = atoi(fbuf);
-            int i_cbuf = atoi(cbuf);
-            int diff;
-            if (i_cbuf > i_fbuf) {
-                diff = i_cbuf - i_fbuf;
-            } else {
-                diff = i_fbuf - i_cbuf;
-            }
-
-            if (diff > fetchSettings->amount) {
-                return true;
-            }
-
+            fbuf[i] = fetch_time[0+i];
+            cbuf[i] = cur_time[0+i];
         }
-        return false;
+        i_fbuf = atoi(fbuf);
+        i_cbuf = atoi(cbuf);
+
+        hrDif = (24 - i_fbuf) + i_cbuf;
+
+        if (fetchSettings->state == Hour) {
+
+            if (hrDif >= fetchSettings->amount) {
+
+                if (hrDif == fetchSettings->amount) {
+                    for (int i = 0; i < 3; i++) {
+                        if (i == 2) {
+                            fbuf[i] = '\0';
+                            cbuf[i] = '\0';
+                            break;
+                        }
+                        fbuf[i] = fetch_time[3+i];
+                        cbuf[i] = cur_time[3+i];
+                    }
+                    i_fbuf = atoi(fbuf);
+                    i_cbuf = atoi(cbuf); 
+
+                    minDif = (60 - i_fbuf) + i_cbuf;
+                    if (minDif >= 60) {
+                        return true;
+                    } else { return false; }
+
+                } else { return true; }
+
+            } else { return false; }
+
+        } else if (hrDif > 1) { return true; }
     }
 
-    if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) return true; // Hour
+    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {  // Minute
 
-    if (fetchSettings->state == Minute) {
-
-        if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {
-
-            char fbuf[3];
-            char cbuf[3];
-
-            for (int i = 0; i < 3; i++) {
-                if (i == 2) {
-                    fbuf[i] = '\0';
-                    cbuf[i] = '\0';
-                    break;
-                }
-                fbuf[i] = fetch_time[3+i];
-                cbuf[i] = cur_time[3+i];
+        for (int i = 0; i < 3; i++) {
+            if (i == 2) {
+                fbuf[i] = '\0';
+                cbuf[i] = '\0';
+                break;
             }
-
-            int i_fbuf = atoi(fbuf);
-            int i_cbuf = atoi(cbuf);
-            int diff;
-            if (i_cbuf > i_fbuf) {
-                diff = i_cbuf - i_fbuf;
-            } else {
-                diff = i_fbuf - i_cbuf;
-            }
-
-            if (diff > fetchSettings->amount) {
-                return true;
-            }
-
+            fbuf[i] = fetch_time[3+i];
+            cbuf[i] = cur_time[3+i];
         }
-        return false;
+        i_fbuf = atoi(fbuf);
+        i_cbuf = atoi(cbuf);
+
+        if (((60 - i_fbuf) + i_cbuf) >= fetchSettings->amount) {
+            return true;
+        }
     }
-    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) return true; // Minute
 
     return false;
 }
