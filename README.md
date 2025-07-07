@@ -149,20 +149,21 @@ theme       = tokyonight
 git         = 1 # Turns all git integration on/off
 branchname  = 1 # Turn the display of branch name on/off
 statusbar   = 0 # Turn git status bar on/off
+time        = 1 # Turn the display of current time on/off
 fetchtimer  = 1d # See below.
 ```
-
-Setting git = 0 disables all git integration. This supersedes the branchname and statusbar settings.
-So, if branchname = 1, and statusbar = 1, while git is set to 0. Then branchname and statusbar are not displayed.
 
 `fetchtimer` will accept `#d`, `#h`, or `#m`. `d = days` `h = hours` and `m = minutes`.
 
 For example:
 
-  - If `fetchtimer = 24m`, and `stat .git/FETCH_HEAD` reports that its been over 24 minutes since last update, fetch will be called.
-  - If `fetchtimer = 2h` fetch will be called every 2 hours.
-  - If `fetchtimer = 3d` repo will update every 3 days.
-  - `fetchtimer = 1h30m` is not vaild and will probably cause an error. Only one `Day`, `Hour`, or `Minute` value pair allowed.
+  - If `fetchtimer = 25m` repo will update after 25 minutes.
+  - If `fetchtimer = 2h` repo will update after 2 hours.
+  - If `fetchtimer = 3d` repo will update after 3 days.
+  - `fetchtimer = 1h30m` is not vaild and will probably cause an error. Only one `Day`, `Hour`, or `Minute` modifier allowed.
+
+Setting git = 0 disables all git integration. This supersedes the branchname and statusbar settings.
+So, if branchname = 1, and statusbar = 1, while git is set to 0. Then branchname and statusbar are not displayed.
 
 ##
 

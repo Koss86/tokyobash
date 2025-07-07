@@ -14,12 +14,14 @@ int main(int argc, char **argv) {
     // Check to make sure we got the path
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
+        printf("\\u@\\h: ");
         exit(-1);
     }
 
     char *pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
+        printf("\\u@\\h: ");
         exit(-1);
     }
 
@@ -41,18 +43,22 @@ int main(int argc, char **argv) {
             pathstate = Root;
         }
     }
+
     if (Plen > ABV_PATH_LEN_T) {
         abrv_path(path, Plen);
         Plen = ABV_PATH_LEN_T;
     }
 
     ConfigSettings usrConfig;
-    usrConfig.fetchSettings.state = Hour;
-    usrConfig.fetchSettings.amount = 1;
     usrConfig.git = 1;
-    usrConfig.branchname = 1;
-    usrConfig.statusbar = 0;
+    usrConfig.time = 1;
     usrConfig.debug = 0;
+    usrConfig.statusbar = 0;
+    usrConfig.branchname = 1;
+    usrConfig.theme = Tokyonight;
+    usrConfig.fetchSettings.amount = 1;
+    usrConfig.fetchSettings.state = Hour;
+
     parse_config(&usrConfig, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";
@@ -141,7 +147,11 @@ int main(int argc, char **argv) {
             break;
     }
 
-    printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
+    printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+
+    if (usrConfig.time) { 
+        printf("%s[\\t] ", color_time); 
+    }
 
     rem_curDir(path, Plen);
 

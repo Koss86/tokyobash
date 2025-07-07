@@ -23,6 +23,7 @@ typedef struct FetchOpts {
 
 typedef struct ConfigSettings {
     bool git;
+    bool time;
     bool debug;
     Themes theme;
     bool statusbar;

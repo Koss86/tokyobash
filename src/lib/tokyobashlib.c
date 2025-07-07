@@ -28,20 +28,21 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
     } else {
 
-        int Clen = strlen(pConfig);
-        if (pConfig[Clen-1] == '/') {
-            pConfig[Clen-1] = '\0';
-            Clen--;
+        int Cleng = strlen(pConfig);
+        // This check may not be needed but it's here just in case.
+        if (pConfig[Cleng-1] == '/') {
+            pConfig[Cleng-1] = '\0';
+            Cleng--;
         }
 
-        for (int i = 0; i< Clen+Flen; i++) {
-            if (i < Clen) {
+        for (int i = 0; i < Cleng+Flen; i++) {
+            if (i < Cleng) {
                 path[i] = pConfig[i];
                 continue;
             }
-            path[i] = filepath[i-Clen];
+            path[i] = filepath[i-Cleng];
         }
-        path[Clen+Flen] = '\0';
+        path[Cleng+Flen] = '\0';
     }
 
     FILE *file = fopen(path, "r");
@@ -52,18 +53,26 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
     char c;
     int inkey = 1;
     int invalue = 0;
+    int incomment = 0;
     int indx = 0;
     char keybuf[64];
     char valbuf[64];
     char fetchbuf[3];
-    int userFetch;
     Fetchtimer fetchTimeState;
 
     while ((c = fgetc(file)) != EOF) {
 
         if (c == ' ' || c == '\'' || c == '"') continue;
+        if ( c == '#') { 
+            incomment = 1;
+            continue;
+        }
 
         if ( c == '\n') {
+            if (incomment) {
+                incomment = 0;
+                continue;
+            }
             inkey = 1;
             invalue = 0;
             valbuf[indx] = '\0';
@@ -124,8 +133,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[2] = '\0';
 
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
-                            if (usrConfig->fetchSettings.amount >= 60) {
-                                usrConfig->fetchSettings.amount = 59;
+                            if (usrConfig->fetchSettings.amount > 60) {
+                                usrConfig->fetchSettings.amount = 60;
                             }
 
                         } else {
@@ -145,8 +154,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[2] = '\0';
 
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
-                            if (usrConfig->fetchSettings.amount >= 24) {
-                                usrConfig->fetchSettings.amount = 23;
+                            if (usrConfig->fetchSettings.amount > 24) {
+                                usrConfig->fetchSettings.amount = 24;
                             }
 
                         } else {
@@ -166,8 +175,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             fetchbuf[2] = '\0';
 
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
-                            if (usrConfig->fetchSettings.amount >= 30) {
-                                usrConfig->fetchSettings.amount = 29;
+                            if (usrConfig->fetchSettings.amount > 31) {
+                                usrConfig->fetchSettings.amount = 31;
                             }
 
                         } else {
@@ -179,9 +188,18 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                     } else {
                         // Justin Case
-                        usrConfig->fetchSettings.state = Minute;
-                        usrConfig->fetchSettings.amount = 59;
+                        usrConfig->fetchSettings.state = Hour;
+                        usrConfig->fetchSettings.amount = 1;
                     }
+
+                } else if ((strncmp(keybuf, "time", 4)) == 0) {
+
+                    if (valbuf[0] == '0') {
+                        usrConfig->time = false;
+                    } else if (valbuf[0] == '1') {
+                        usrConfig->time = true;
+                    }
+
                 } // add else if's here for future optoins with int vals.
 
                 else if ((strncmp(keybuf, "debug", 5)) == 0) {
@@ -195,6 +213,9 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
             }
             continue;
         }
+
+        if (incomment) { continue; }
+
         if (c == '=') {
             invalue = 1;
             inkey = 0;
@@ -219,16 +240,16 @@ bool shouldFetch(FetchOpts *fetchSettings) {
     char cur_date[11];
     char cur_time[9];
 
-    if (!strftime(cur_date, sizeof(cur_date), "%Y-%m-%d", time_struct))
-    {
+    if (!strftime(cur_date, sizeof(cur_date), "%Y-%m-%d", time_struct)) {
         return false;
     }
-    if (!strftime(cur_time, sizeof(cur_time), "%X", time_struct))
-    {
+
+    if (!strftime(cur_time, sizeof(cur_time), "%X", time_struct)) {
         return false;
     }
 
     FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+
     if (fetch_status == NULL) {
         return false;
     }
@@ -295,7 +316,6 @@ bool shouldFetch(FetchOpts *fetchSettings) {
     if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
 
     if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) {  // Day
-
 
         for (int i = 0; i < 3; i++) {
             if (i == 2) {
