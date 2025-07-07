@@ -1,10 +1,11 @@
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "include/tokyobash.h"
+#include "lib/tokyobash.h"
 
 int main(int argc, char **argv) {
 
@@ -13,12 +14,14 @@ int main(int argc, char **argv) {
     // Check to make sure we got the path
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
+        printf("\\u@\\h: ");
         exit(-1);
     }
 
     char *pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
+        printf("\\u@\\h: ");
         exit(-1);
     }
 
@@ -46,14 +49,17 @@ int main(int argc, char **argv) {
         Plen = ABV_PATH_LEN_T;
     }
 
-    bool debug;
-    Themes theme;
-    bool statusbar_enabled;
-    bool branchname;
-    bool git_enabled;
+    ConfigSettings usrConfig;
+    usrConfig.git = 1;
+    usrConfig.time = 1;
+    usrConfig.debug = 0;
+    usrConfig.statusbar = 0;
+    usrConfig.branchname = 1;
+    usrConfig.theme = Tokyonight;
+    usrConfig.fetchSettings.amount = 1;
+    usrConfig.fetchSettings.state = Hour;
 
-    parse_config(&debug, &theme, &statusbar_enabled,
-                 &git_enabled, &branchname, pHome, Hlen);
+    parse_config(&usrConfig, pHome, Hlen);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
@@ -90,7 +96,7 @@ int main(int argc, char **argv) {
     char *color_committed = &reset[0];
     char *color_fetched = &reset[0];
 
-    switch (theme) {
+    switch (usrConfig.theme) {
 
         case Tokyonight:
             color_usr = &cyan[0];
@@ -141,12 +147,16 @@ int main(int argc, char **argv) {
             break;
     }
 
-    printf("%s%s\\u@\\h%s:%s [\\t] ", bold, color_usr, reset, color_time);
+    printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+
+    if (usrConfig.time) { 
+        printf("%s[\\t] ", color_time); 
+    }
 
     rem_curDir(path, Plen);
 
-    if (!git_enabled || !git_is_accessible() || !in_repo()) {
-
+    if (!usrConfig.git || !git_is_accessible() || !in_repo()) {
+        // Skip branch name and status bar and just print the path.
         switch (pathstate) {
 
             case Home:
@@ -172,7 +182,7 @@ int main(int argc, char **argv) {
 
     } else {
 
-        if (branchname) {
+        if (usrConfig.branchname) {
             char branch_name[MAX_BRANCH_LEN];
             get_branch(&branch_name[0]);
             printf("%s%s%s  ", color_path, branch_name, color_usr);
@@ -201,16 +211,16 @@ int main(int argc, char **argv) {
                 break;
         }
 
-        if (statusbar_enabled || debug) {
+        if (usrConfig.statusbar || usrConfig.debug) {
 
             int untracked, unstaged, staged, committed, fetched;
             untracked = unstaged = staged = committed = fetched = 0;
 
             get_status_of(&staged, &unstaged, &untracked);
             committed = Committed();
-            fetched = Fetched();
+            fetched = Fetched(&usrConfig.fetchSettings);
 
-            if (debug) {
+            if (usrConfig.debug) {
                 untracked = 2;
                 unstaged = 3;
                 staged = 3;
@@ -231,13 +241,14 @@ int main(int argc, char **argv) {
 
                 int space = 0;
                 if (ct > 1) {
+                    // Empty space used here and at end for a little
+                    // separation if more than 1 item populates statusbar.
                     printf(" ");
                     space++;
                 }
-
                 if (untracked > 0) {
                     printf("%s%s %d", color_untracked, reset, untracked);
-                    // We stop printing the separators at ct = 1
+                    // We stop printing the dividers at ct = 1
                     // because we want the last print to be ']' not '|'.
                     if (ct > 0 && ct != 1)  {
                         printf("%s|", color_usr);
