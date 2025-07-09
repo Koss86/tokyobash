@@ -6,9 +6,9 @@
 
 #include "tokyobash.h"
 
-void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) { 
+void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
-    char path [PATH_MAX];
+    char path[PATH_MAX];
     char *pConfig = getenv("XDG_CONFIG_HOME");
     char filepath[PATH_MAX] = "/tokyobash/config";
 
@@ -17,32 +17,32 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
         Flen = 25;
         strncpy(filepath, "/.config/tokyobash/config", Flen);
 
-        for (int i = 0; i < Hleng+Flen; i++) {
+        for (int i = 0; i < Hleng + Flen; i++) {
             if (i < Hleng) {
                 path[i] = pHome[i];
                 continue;
             }
-            path[i] = filepath[i-Hleng];
+            path[i] = filepath[i - Hleng];
         }
-        path[Hleng+Flen] = '\0';
+        path[Hleng + Flen] = '\0';
 
     } else {
 
         int Cleng = strlen(pConfig);
         // This check may not be needed but it's here just in case.
-        if (pConfig[Cleng-1] == '/') {
-            pConfig[Cleng-1] = '\0';
+        if (pConfig[Cleng - 1] == '/') {
+            pConfig[Cleng - 1] = '\0';
             Cleng--;
         }
 
-        for (int i = 0; i < Cleng+Flen; i++) {
+        for (int i = 0; i < Cleng + Flen; i++) {
             if (i < Cleng) {
                 path[i] = pConfig[i];
                 continue;
             }
-            path[i] = filepath[i-Cleng];
+            path[i] = filepath[i - Cleng];
         }
-        path[Cleng+Flen] = '\0';
+        path[Cleng + Flen] = '\0';
     }
 
     FILE *file = fopen(path, "r");
@@ -62,15 +62,19 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
     while ((c = fgetc(file)) != EOF) {
 
-        if (c == ' ' || c == '\'' || c == '"') continue;
-        if ( c == '#') { 
+        if (c == ' ' || c == '\'' || c == '"')
+            continue;
+        if (c == '#') {
             incomment = 1;
             continue;
         }
 
-        if ( c == '\n') {
+        if (c == '\n') {
             if (incomment) {
                 incomment = 0;
+                inkey = 1;
+                invalue = 0;
+                indx = 0;
                 continue;
             }
             inkey = 1;
@@ -101,7 +105,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                     if (valbuf[0] == '0') {
                         usrConfig->statusbar = false;
-                    } else if (valbuf[0] == '1'){
+                    } else if (valbuf[0] == '1') {
                         usrConfig->statusbar = true;
                     }
 
@@ -109,7 +113,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                     if (valbuf[0] == '0') {
                         usrConfig->git = false;
-                    } else if ( valbuf[0] == '1') {
+                    } else if (valbuf[0] == '1') {
                         usrConfig->git = true;
                     }
 
@@ -123,7 +127,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'm' || valbuf[2] == 'm') {
+                    if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'm' ||
+                        valbuf[2] == 'm') {
 
                         usrConfig->fetchSettings.state = Minute;
 
@@ -144,7 +149,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'h' || valbuf[2] == 'h') {
+                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'h' ||
+                               valbuf[2] == 'h') {
 
                         usrConfig->fetchSettings.state = Hour;
 
@@ -165,7 +171,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                             usrConfig->fetchSettings.amount = atoi(fetchbuf);
                         }
 
-                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'd' || valbuf[2] == 'd') {
+                    } else if (valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'd' ||
+                               valbuf[2] == 'd') {
 
                         usrConfig->fetchSettings.state = Day;
 
@@ -214,7 +221,9 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
             continue;
         }
 
-        if (incomment) { continue; }
+        if (incomment) {
+            continue;
+        }
 
         if (c == '=') {
             invalue = 1;
@@ -235,7 +244,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
 bool shouldFetch(FetchOpts *fetchSettings) {
 
     time_t now = time(0);
-    struct tm *time_struct = localtime(&now); 
+    struct tm *time_struct = localtime(&now);
 
     char cur_date[11];
     char cur_time[9];
@@ -312,10 +321,14 @@ bool shouldFetch(FetchOpts *fetchSettings) {
     int hrDif;
     int minDif;
 
-    if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) return true; // Year
-    if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) return true; // Month
+    if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) { // Year
+        return true;
+    }
+    if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) { // Month
+        return true;
+    }
 
-    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) {  // Day
+    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) { // Day
 
         for (int i = 0; i < 3; i++) {
             if (i == 2) {
@@ -323,62 +336,64 @@ bool shouldFetch(FetchOpts *fetchSettings) {
                 cbuf[i] = '\0';
                 break;
             }
-            fbuf[i] = fetch_date[8+i];
-            cbuf[i] = cur_date[8+i];
+            fbuf[i] = fetch_date[8 + i];
+            cbuf[i] = cur_date[8 + i];
         }
         i_fbuf = atoi(fbuf);
         i_cbuf = atoi(cbuf);
 
         dayDif = i_cbuf - i_fbuf;
 
-        if (fetchSettings->state == Day) {
+        if (fetchSettings->state == Day && dayDif > fetchSettings->amount ||
+            fetchSettings->state != Day && dayDif > 1) {
 
-            if (dayDif >= fetchSettings->amount) {
-                // If dif is same as what user set, we need
-                // to check for false positives.
-                if (dayDif == fetchSettings->amount) {
+            return true;
 
-                    for (int i = 0; i < 3; i++) {
-                        if (i == 2) {
-                            fbuf[i] = '\0';
-                            cbuf[i] = '\0';
-                            break;
-                        }
-                        fbuf[i] = fetch_time[0+i];
-                        cbuf[i] = cur_time[0+i];
+        } else if (fetchSettings->state == Day && dayDif < fetchSettings->amount) {
+
+            return false;
+
+        } else if (fetchSettings->state == Day) {
+
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    fbuf[i] = '\0';
+                    cbuf[i] = '\0';
+                    break;
+                }
+                fbuf[i] = fetch_time[0 + i];
+                cbuf[i] = cur_time[0 + i];
+            }
+            i_fbuf = atoi(fbuf);
+            i_cbuf = atoi(cbuf);
+
+            hrDif = (24 - i_fbuf) + i_cbuf;
+
+            if (hrDif > 24) {
+                return true;
+            } else if (hrDif < 24) {
+                return false;
+            } else {
+
+                for (int i = 0; i < 3; i++) {
+                    if (i == 2) {
+                        fbuf[i] = '\0';
+                        cbuf[i] = '\0';
+                        break;
                     }
-                    i_fbuf = atoi(fbuf);
-                    i_cbuf = atoi(cbuf);
+                    fbuf[i] = fetch_time[3 + i];
+                    cbuf[i] = cur_time[3 + i];
+                }
+                i_fbuf = atoi(fbuf);
+                i_cbuf = atoi(cbuf);
 
-                    hrDif = (24 - i_fbuf) + i_cbuf;
-
-                    if (hrDif >= 24) {
-
-                        for (int i = 0; i < 3; i++) {
-                            if (i == 2) {
-                                fbuf[i] = '\0';
-                                cbuf[i] = '\0';
-                                break;
-                            }
-                            fbuf[i] = fetch_time[3+i];
-                            cbuf[i] = cur_time[3+i];
-                        }
-                        i_fbuf = atoi(fbuf);
-                        i_cbuf = atoi(cbuf); 
-
-                        minDif = (60 - i_fbuf) + i_cbuf;
-
-                        if (minDif >= 60) {
-                            return true;
-                        } else { return false; }
-
-                    } else { return false; }
-
-                } else { return true; }
-
-            } else { return false; }
-
-        } else if (dayDif > 1) { return true; }
+                if (i_cbuf >= i_fbuf) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) { // Hour
@@ -389,44 +404,50 @@ bool shouldFetch(FetchOpts *fetchSettings) {
                 cbuf[i] = '\0';
                 break;
             }
-            fbuf[i] = fetch_time[0+i];
-            cbuf[i] = cur_time[0+i];
+            fbuf[i] = fetch_time[0 + i];
+            cbuf[i] = cur_time[0 + i];
         }
         i_fbuf = atoi(fbuf);
         i_cbuf = atoi(cbuf);
 
-        hrDif = (24 - i_fbuf) + i_cbuf;
+        if (i_cbuf > i_fbuf) {
+            hrDif = i_cbuf - i_fbuf;
+        } else {
+            hrDif = (24 - i_fbuf) + i_cbuf;
+        }
 
-        if (fetchSettings->state == Hour) {
+        if (fetchSettings->state == Hour && hrDif > fetchSettings->amount ||
+            fetchSettings->state != Hour && hrDif > 1) {
 
-            if (hrDif >= fetchSettings->amount) {
+            return true;
 
-                if (hrDif == fetchSettings->amount) {
-                    for (int i = 0; i < 3; i++) {
-                        if (i == 2) {
-                            fbuf[i] = '\0';
-                            cbuf[i] = '\0';
-                            break;
-                        }
-                        fbuf[i] = fetch_time[3+i];
-                        cbuf[i] = cur_time[3+i];
-                    }
-                    i_fbuf = atoi(fbuf);
-                    i_cbuf = atoi(cbuf); 
+        } else if (fetchSettings->state == Hour && hrDif < fetchSettings->amount) {
 
-                    minDif = (60 - i_fbuf) + i_cbuf;
-                    if (minDif >= 60) {
-                        return true;
-                    } else { return false; }
+            return false;
 
-                } else { return true; }
+        } else if (fetchSettings->state == Hour) {
 
-            } else { return false; }
+            for (int i = 0; i < 3; i++) {
+                if (i == 2) {
+                    fbuf[i] = '\0';
+                    cbuf[i] = '\0';
+                    break;
+                }
+                fbuf[i] = fetch_time[3 + i];
+                cbuf[i] = cur_time[3 + i];
+            }
+            i_fbuf = atoi(fbuf);
+            i_cbuf = atoi(cbuf);
 
-        } else if (hrDif > 1) { return true; }
+            if (i_cbuf >= i_fbuf) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
-    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) {  // Minute
+    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) { // Minute
 
         for (int i = 0; i < 3; i++) {
             if (i == 2) {
@@ -434,17 +455,24 @@ bool shouldFetch(FetchOpts *fetchSettings) {
                 cbuf[i] = '\0';
                 break;
             }
-            fbuf[i] = fetch_time[3+i];
-            cbuf[i] = cur_time[3+i];
+            fbuf[i] = fetch_time[3 + i];
+            cbuf[i] = cur_time[3 + i];
         }
         i_fbuf = atoi(fbuf);
         i_cbuf = atoi(cbuf);
 
-        if (((60 - i_fbuf) + i_cbuf) >= fetchSettings->amount) {
-            return true;
+        if (i_cbuf > i_fbuf) {
+            minDif = i_cbuf - i_fbuf;
+        } else {
+            minDif = (60 - i_fbuf) + i_cbuf;
+        }
+
+        if (fetchSettings->state == Minute) {
+            if (minDif >= fetchSettings->amount) {
+                return true;
+            }
         }
     }
-
     return false;
 }
 // Checks when last time the repo was updated,
@@ -515,7 +543,7 @@ void get_status_of(int *staged, int *unstaged, int *untracked) {
         } else {
             if (c == 'M' || c == 'D') {
                 unst++;
-            } //else if (c == 'U') to track files with merge conflicts.
+            } // else if (c == 'U') to track files with merge conflicts.
         }
 
         if (state == 0) {

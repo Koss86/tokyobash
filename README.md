@@ -20,7 +20,7 @@ Abbreviates paths longer than 50 characters.
 
 #### Git Branch Name
 If current directory is a repository it will display the current branch name:
-  
+ 
 ![tokyobash_03](https://github.com/user-attachments/assets/7a47c858-b828-4b0e-96d9-bff82d4d7d48)
 
 ##
@@ -40,8 +40,10 @@ Displays (in order):
 
 ![tokyobash_statusbarExp](https://github.com/user-attachments/assets/f3cce450-e44f-46aa-a4a2-b75f0145a9d5)
 
-The status bar will only display when there are changes to the repo. And only show items that were changed. It is disabled by default, but can be enabled via the [Config](#config) setting.
-  
+The status bar will only display when there are changes to the repo. And only show items that were changed.
+
+It is disabled by default, but can be enabled via the [Config](#config) setting.
+ 
 ##
 
 #### Themes

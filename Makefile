@@ -45,9 +45,10 @@ ifeq ($(prefix),)
 else
 	@cp -r $(BINDIR) $(prefix)
 	@echo "$(BIN) successfully built and moved to '$(prefix)/$(BINDIR)'."
+	@$(RM)r $(BINDIR)
 endif
 
-	@$(RM)r $(BINDIR) $(OBJ) $(CONFIG_FILE)
+	@$(RM) $(OBJ) $(CONFIG_FILE)
 
 $(CONFIG_FILE):
 	@printf 'theme      = tokyonight\n#theme     = catppuccin\n#theme     = kanagawa\n\ngit        = 1\nbranchname = 1\nstatusbar  = 0\ntime       = 1\nfetchtimer = 1d\n' > $(CONFIG_FILE)
