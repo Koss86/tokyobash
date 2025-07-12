@@ -141,11 +141,11 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
         getDaysInMonth(&daysInFMonth, timeData.fetch_month);
 
-        if (timeData.curnt_day > timeData.fetch_day) {
-            dayDif = timeData.curnt_day - timeData.fetch_day;
-        } else {
-            dayDif = (daysInFMonth - timeData.fetch_day) + timeData.curnt_day;
-        }
+        // if (timeData.curnt_day > timeData.fetch_day) {
+        dayDif = timeData.curnt_day - timeData.fetch_day;
+        // } else {
+        //     dayDif = (daysInFMonth - timeData.fetch_day) + timeData.curnt_day;
+        // }
 
         if ((fetchSettings->state == Day && dayDif > fetchSettings->limit) ||
             (fetchSettings->state != Day && dayDif > 1)) {
@@ -158,7 +158,11 @@ bool shouldFetch(FetchOpts *fetchSettings) {
 
         } else if (fetchSettings->state == Day) {
 
-            hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+            if (timeData.curnt_hour > timeData.fetch_hour) {
+                hrDif = timeData.curnt_hour - timeData.fetch_hour;
+            } else {
+                hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+            }
 
             if (hrDif > HOURS_IN_DAY) {
 

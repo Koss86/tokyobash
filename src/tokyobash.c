@@ -56,8 +56,8 @@ int main(void) {
     usrConfig.statusbar = 0;
     usrConfig.branchname = 1;
     usrConfig.theme = Tokyonight;
-    usrConfig.fetchSettings.limit = 1;
-    usrConfig.fetchSettings.state = Day;
+    usrConfig.fetchConfig.limit = 1;
+    usrConfig.fetchConfig.state = Day;
 
     parse_config(&usrConfig, pHome, Hlen);
 
@@ -218,7 +218,7 @@ int main(void) {
 
             get_status_of(&staged, &unstaged, &untracked);
             committed = Committed();
-            fetched = Fetched(&usrConfig.fetchSettings);
+            fetched = Fetched(&usrConfig.fetchConfig);
 
             if (usrConfig.debug) {
                 untracked = 2;
