@@ -9,8 +9,8 @@ void getDaysInMonth(int *daysInMonth, int month);
 
 int main() {
     FetchOpts settings;
-    settings.state = Minute;
-    settings.limit = 15;
+    settings.state = Hour;
+    settings.limit = 3;
     if (shouldFetch(&settings)) {
         printf("True\n");
     } else {
@@ -36,7 +36,6 @@ bool shouldFetch(FetchOpts *fetchConfig) {
     int dayDif = 0;
     int hrDif = 0;
     int minDif = 0;
-    int secDif = 0;
 
     IntTimesnDates timeData;
     extractTimeData(&timeData, curnt_date, curnt_time, fetch_date, fetch_time);
@@ -53,7 +52,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
     if (timeData.curnt_month != timeData.fetch_month) { // Month
 
-        if (timeData.curnt_month > timeData.fetch_month) {
+        if (timeData.curnt_month >= timeData.fetch_month) {
             monthDif = timeData.curnt_month - timeData.fetch_month;
         } else {
             monthDif = (MONTHS_IN_YR - timeData.fetch_month) + timeData.curnt_month;
@@ -69,7 +68,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
     if (timeData.curnt_day != timeData.fetch_day) { // Day
 
-        if (timeData.curnt_day > timeData.fetch_day) {
+        if (timeData.curnt_day >= timeData.fetch_day) {
             dayDif = timeData.curnt_day - timeData.fetch_day;
         } else {
             getDaysInMonth(&days_in_month, timeData.fetch_month);
@@ -89,11 +88,11 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
         } else if (fetchConfig->state == Day) {
 
-            // if (timeData.curnt_hour > timeData.fetch_hour) {
-            // hrDif = timeData.curnt_hour - timeData.fetch_hour;
-            //} else {
-            hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
-            //}
+            if (timeData.curnt_hour >= timeData.fetch_hour) {
+                hrDif = timeData.curnt_hour - timeData.fetch_hour;
+            } else {
+                hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+            }
 
             printf("in Day: hrDif = %i\n", hrDif);
 
@@ -103,7 +102,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
                 return false;
             } else {
 
-                if (timeData.curnt_min > timeData.fetch_min) {
+                if (timeData.curnt_min >= timeData.fetch_min) {
                     minDif = timeData.curnt_min - timeData.fetch_min;
                 } else {
                     minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
@@ -124,7 +123,10 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
     if (timeData.curnt_hour != timeData.fetch_hour || fetchConfig->state == Hour) { // Hour
 
-        if (timeData.curnt_hour > timeData.fetch_hour) {
+        // iss:calling fetch when current and fetch times are the same.
+        // Which means once fetch is called, its called EVERY time. So thats bad.
+        // fix: chage '>' to '>=' in 'if (timeData.curnt_hour > timeData.fetch_hour)'
+        if (timeData.curnt_hour >= timeData.fetch_hour) {
             hrDif = timeData.curnt_hour - timeData.fetch_hour;
         } else {
             hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
@@ -157,7 +159,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
     if (timeData.curnt_min != timeData.fetch_min || fetchConfig->state == Minute) { // Minute
 
-        if (timeData.curnt_min > timeData.fetch_min) {
+        if (timeData.curnt_min >= timeData.fetch_min) {
             minDif = timeData.curnt_min - timeData.fetch_min;
         } else {
             minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
@@ -179,70 +181,73 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_time[],
                      char fetch_date[], char fetch_time[]) {
 
-    char cbuf[3];
-    char fbuf[3];
-    int YrIndx = 2;
-    int MonthIndx = 5;
-    int DayIndx = 8;
-    int HrIndx = 0;
-    int MinIndx = 3;
+    const int YR_INDX = 2;
+    const int MONTH_INDX = 5;
+    const int DAY_INDX = 8;
+    const int HR_INDX = 0;
+    const int MIN_INDX = 3;
 
-    for (int i = 0; i < 3; i++) {
-        if (i == 2) {
+    const int BUF_SIZE = 3;
+
+    char cbuf[BUF_SIZE];
+    char fbuf[BUF_SIZE];
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
             cbuf[i] = '\0';
             fbuf[i] = '\0';
             break;
         }
-        cbuf[i] = curnt_date[YrIndx + i];
-        fbuf[i] = fetch_date[YrIndx + i];
+        cbuf[i] = curnt_date[YR_INDX + i];
+        fbuf[i] = fetch_date[YR_INDX + i];
     }
     dateData->curnt_year = atoi(cbuf);
     dateData->fetch_year = atoi(fbuf);
 
-    for (int i = 0; i < 3; i++) {
-        if (i == 2) {
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
             cbuf[i] = '\0';
             fbuf[i] = '\0';
             break;
         }
-        cbuf[i] = curnt_date[MonthIndx + i];
-        fbuf[i] = fetch_date[MonthIndx + i];
+        cbuf[i] = curnt_date[MONTH_INDX + i];
+        fbuf[i] = fetch_date[MONTH_INDX + i];
     }
     dateData->curnt_month = atoi(cbuf);
     dateData->fetch_month = atoi(fbuf);
 
-    for (int i = 0; i < 3; i++) {
-        if (i == 2) {
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
             cbuf[i] = '\0';
             fbuf[i] = '\0';
             break;
         }
-        cbuf[i] = curnt_date[DayIndx + i];
-        fbuf[i] = fetch_date[DayIndx + i];
+        cbuf[i] = curnt_date[DAY_INDX + i];
+        fbuf[i] = fetch_date[DAY_INDX + i];
     }
     dateData->curnt_day = atoi(cbuf);
     dateData->fetch_day = atoi(fbuf);
 
-    for (int i = 0; i < 3; i++) {
-        if (i == 2) {
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
             cbuf[i] = '\0';
             fbuf[i] = '\0';
             break;
         }
-        cbuf[i] = curnt_time[HrIndx + i];
-        fbuf[i] = fetch_time[HrIndx + i];
+        cbuf[i] = curnt_time[HR_INDX + i];
+        fbuf[i] = fetch_time[HR_INDX + i];
     }
     dateData->curnt_hour = atoi(cbuf);
     dateData->fetch_hour = atoi(fbuf);
 
-    for (int i = 0; i < 3; i++) {
-        if (i == 2) {
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
             cbuf[i] = '\0';
             fbuf[i] = '\0';
             break;
         }
-        cbuf[i] = curnt_time[MinIndx + i];
-        fbuf[i] = fetch_time[MinIndx + i];
+        cbuf[i] = curnt_time[MIN_INDX + i];
+        fbuf[i] = fetch_time[MIN_INDX + i];
     }
     dateData->curnt_min = atoi(cbuf);
     dateData->fetch_min = atoi(fbuf);

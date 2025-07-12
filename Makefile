@@ -1,5 +1,5 @@
 .PHONY: all install clean
-CFLAGS = -O3 -Wall -Wextra -pedantic -fstack-protector-strong -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -Wno-conversion -fno-common -Wno-unused-result -Wimplicit-fallthrough -fdiagnostics-color=always
+CFLAGS = -O3 -Wall -Wextra -pedantic -fstack-protector-strong -std=gnu99 -Wshadow -Wconversion -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -Wno-conversion -fno-common -Wno-unused-result -Wimplicit-fallthrough -fdiagnostics-color=always
 BIN = tokyobash
 BINDIR = bin
 OBJ = tokyobash.o tokyobashlib.o git.o fetch.o
