@@ -57,7 +57,7 @@ int main(void) {
     usrConfig.branchname = 1;
     usrConfig.theme = Tokyonight;
     usrConfig.fetchConfig.limit = 1;
-    usrConfig.fetchConfig.state = Day;
+    usrConfig.fetchConfig.modifier = Day;
 
     parse_config(&usrConfig, pHome, Hlen);
 

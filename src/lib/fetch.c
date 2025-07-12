@@ -146,16 +146,16 @@ bool shouldFetch(FetchOpts *fetchConfig) {
             dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
         }
 
-        if ((fetchConfig->state == Day && dayDif > fetchConfig->limit) ||
-            (fetchConfig->state != Day && dayDif > 1)) {
+        if ((fetchConfig->modifier == Day && dayDif > fetchConfig->limit) ||
+            (fetchConfig->modifier != Day && dayDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->state == Day && dayDif < fetchConfig->limit) {
+        } else if (fetchConfig->modifier == Day && dayDif < fetchConfig->limit) {
 
             return false;
 
-        } else if (fetchConfig->state == Day) {
+        } else if (fetchConfig->modifier == Day) {
 
             if (timeData.curnt_hour >= timeData.fetch_hour) {
                 hrDif = timeData.curnt_hour - timeData.fetch_hour;
@@ -187,7 +187,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
         }
     }
 
-    if (timeData.curnt_hour != timeData.fetch_hour || fetchConfig->state == Hour) { // Hour
+    if (timeData.curnt_hour != timeData.fetch_hour || fetchConfig->modifier == Hour) { // Hour
 
         if (timeData.curnt_hour >= timeData.fetch_hour) {
             hrDif = timeData.curnt_hour - timeData.fetch_hour;
@@ -195,16 +195,16 @@ bool shouldFetch(FetchOpts *fetchConfig) {
             hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
         }
 
-        if ((fetchConfig->state == Hour && hrDif > fetchConfig->limit) ||
-            (fetchConfig->state != Hour && hrDif > 1)) {
+        if ((fetchConfig->modifier == Hour && hrDif > fetchConfig->limit) ||
+            (fetchConfig->modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->state == Hour && hrDif < fetchConfig->limit) {
+        } else if (fetchConfig->modifier == Hour && hrDif < fetchConfig->limit) {
 
             return false;
 
-        } else if (fetchConfig->state == Hour) {
+        } else if (fetchConfig->modifier == Hour) {
 
             minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
 
@@ -216,7 +216,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
         }
     }
 
-    if (timeData.curnt_min != timeData.fetch_min || fetchConfig->state == Minute) { // Minute
+    if (timeData.curnt_min != timeData.fetch_min || fetchConfig->modifier == Minute) { // Minute
 
         if (timeData.curnt_min >= timeData.fetch_min) {
             minDif = timeData.curnt_min - timeData.fetch_min;
@@ -224,7 +224,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
             minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
         }
 
-        if (fetchConfig->state == Minute && dayDif > 0) {
+        if (fetchConfig->modifier == Minute && dayDif > 0) {
             if (minDif >= fetchConfig->limit) {
                 return true;
             }

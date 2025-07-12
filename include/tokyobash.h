@@ -25,10 +25,10 @@ typedef enum {
     Minute,
     Hour,
     Day,
-} Fetchtimer;
+} FetchModifier;
 
 typedef struct {
-    Fetchtimer state;
+    FetchModifier modifier;
     int limit;
 } FetchOpts;
 
