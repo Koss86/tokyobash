@@ -4,7 +4,7 @@ int main(void) {
 
     char path[PATH_MAX];
     getcwd(path, sizeof(path));
-    // Check to make sure we got the path
+
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
         printf("\\u@\\h: ");

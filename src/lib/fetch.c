@@ -1,7 +1,4 @@
 #include "../../include/tokyobash.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 // Checks when last the repo was updated,
 // calls fetch if longer than user specified in
@@ -155,7 +152,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
             return false;
 
-        } else if (fetchConfig->modifier == Day) {
+        } else if (fetchConfig->modifier == Day) { // and dayDif and limit are equal
 
             if (timeData.curnt_hour >= timeData.fetch_hour) {
                 hrDif = timeData.curnt_hour - timeData.fetch_hour;
@@ -163,17 +160,11 @@ bool shouldFetch(FetchOpts *fetchConfig) {
                 hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
             }
 
-            if (hrDif > HOURS_IN_DAY) {
-                return true;
-            } else if (hrDif < HOURS_IN_DAY) {
-                return false;
-            } else {
+            if (hrDif > 1) {
 
-                if (timeData.curnt_min >= timeData.fetch_min) {
-                    minDif = timeData.curnt_min - timeData.fetch_min;
-                } else {
-                    minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
-                }
+                return false;
+
+            } else {
 
                 if (timeData.curnt_min >= timeData.fetch_min) {
 
@@ -206,11 +197,12 @@ bool shouldFetch(FetchOpts *fetchConfig) {
 
         } else if (fetchConfig->modifier == Hour) {
 
-            minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
-
             if (timeData.curnt_min >= timeData.fetch_min) {
+
                 return true;
+
             } else {
+
                 return false;
             }
         }
@@ -219,13 +211,18 @@ bool shouldFetch(FetchOpts *fetchConfig) {
     if (timeData.curnt_min != timeData.fetch_min || fetchConfig->modifier == Minute) { // Minute
 
         if (timeData.curnt_min >= timeData.fetch_min) {
+
             minDif = timeData.curnt_min - timeData.fetch_min;
+
         } else {
+
             minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
         }
 
-        if (fetchConfig->modifier == Minute && dayDif > 0) {
+        if (fetchConfig->modifier == Minute /*&& dayDif > 0*/) {
+
             if (minDif >= fetchConfig->limit) {
+
                 return true;
             }
         }

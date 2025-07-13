@@ -1,8 +1,4 @@
 #include "../../include/tokyobash.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 // If git is available, return true.
 bool git_is_accessible(void) {
 
@@ -11,14 +7,12 @@ bool git_is_accessible(void) {
 
         return false;
     }
-
     char buf[64];
     if (fgets(buf, sizeof(buf), file) == NULL) {
 
         pclose(file);
         return false;
     }
-
     pclose(file);
     return (strstr(buf, "git version") != NULL);
 }
@@ -30,7 +24,6 @@ bool in_repo(void) {
 
         return false;
     }
-
     char buf[16];
     if (fgets(buf, sizeof(buf), file) == NULL) {
 

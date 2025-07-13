@@ -1,9 +1,3 @@
-#include <linux/limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #include "../../include/tokyobash.h"
 
 void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
