@@ -1,7 +1,12 @@
 #ifndef TOKYOBASH_H
 #define TOKYOBASH_H
 
+#include <limits.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #define MAX_BRANCH_LEN 256
 #define ABV_PATH_LEN1 24
