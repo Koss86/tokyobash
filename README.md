@@ -74,7 +74,7 @@ In the root of the tokyobash repository, there are 3 commands to use:
 
   -`make install` Will build tokyobash and create the config file in `$XDG_CONFIG_HOME/tokyobash` if one is not already present:
 
-  - If `$XDG_CONFIG_HOME` is not set, the config directory path will default to `~/.config/tokyobash`
+  - If `$XDG_CONFIG_HOME` is not set, the config directory path will default to `$HOME/.config/tokyobash`
 
   -`make install prefix=custom/path` Will compile tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
 
@@ -99,18 +99,18 @@ You will need to manually create the directory `tokyobash` in `$XDG_CONFIG_HOME`
 
 Try these commands in your terminal:
 
- - If using `XDG_CONFIG_HOME`:
-  ```
-  mkdir -p $XDG_CONFIG_HOME/tokyobash/
-  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
-  cp -n config $XDG_CONFIG_HOME/tokyobash/
-  rm config
-  ```
-  - If not using `XDG_CONFIG_HOME`:
+  - If  `XDG_CONFIG_HOME` is set:
   ```
   mkdir -p ~/.config/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/
+  rm config
+  ```
+ - If `XDG_CONFIG_HOME` not set:
+  ```
+  mkdir -p $XDG_CONFIG_HOME/tokyobash/
+  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
+  cp -n config $XDG_CONFIG_HOME/tokyobash/
   rm config
   ```
   

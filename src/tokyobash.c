@@ -1,17 +1,10 @@
-#include <limits.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "../include/tokyobash.h"
 
-#include "lib/tokyobash.h"
-
-int main(int argc, char **argv) {
+int main(void) {
 
     char path[PATH_MAX];
     getcwd(path, sizeof(path));
-    // Check to make sure we got the path
+
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
         printf("\\u@\\h: ");
@@ -30,7 +23,7 @@ int main(int argc, char **argv) {
     PathState pathstate;
 
     if (strstr(path, pHome) != NULL) {
-        replace_home(path, pHome, Plen, Hlen);
+        replace_home(path, Plen, Hlen);
         Plen = (Plen - Hlen) + 1;
     }
 
@@ -56,8 +49,8 @@ int main(int argc, char **argv) {
     usrConfig.statusbar = 0;
     usrConfig.branchname = 1;
     usrConfig.theme = Tokyonight;
-    usrConfig.fetchSettings.amount = 1;
-    usrConfig.fetchSettings.state = Hour;
+    usrConfig.fetchConfig.limit = 1;
+    usrConfig.fetchConfig.modifier = Day;
 
     parse_config(&usrConfig, pHome, Hlen);
 
@@ -149,8 +142,8 @@ int main(int argc, char **argv) {
 
     printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
 
-    if (usrConfig.time) { 
-        printf("%s[\\t] ", color_time); 
+    if (usrConfig.time) {
+        printf("%s[\\t] ", color_time);
     }
 
     rem_curDir(path, Plen);
@@ -218,7 +211,7 @@ int main(int argc, char **argv) {
 
             get_status_of(&staged, &unstaged, &untracked);
             committed = Committed();
-            fetched = Fetched(&usrConfig.fetchSettings);
+            fetched = Fetched(&usrConfig.fetchConfig);
 
             if (usrConfig.debug) {
                 untracked = 2;
@@ -233,11 +226,16 @@ int main(int argc, char **argv) {
                 printf("  %s┗┳[%s", color_usr, reset);
 
                 int ct = 0;
-                if (untracked > 0)  ct++;
-                if (unstaged > 0)  ct++;
-                if (staged > 0)  ct++;
-                if (committed > 0)  ct++;
-                if (fetched > 0)  ct++;
+                if (untracked > 0)
+                    ct++;
+                if (unstaged > 0)
+                    ct++;
+                if (staged > 0)
+                    ct++;
+                if (committed > 0)
+                    ct++;
+                if (fetched > 0)
+                    ct++;
 
                 int space = 0;
                 if (ct > 1) {
@@ -250,7 +248,7 @@ int main(int argc, char **argv) {
                     printf("%s%s %d", color_untracked, reset, untracked);
                     // We stop printing the dividers at ct = 1
                     // because we want the last print to be ']' not '|'.
-                    if (ct > 0 && ct != 1)  {
+                    if (ct > 0 && ct != 1) {
                         printf("%s|", color_usr);
                         ct--;
                     }
@@ -258,7 +256,7 @@ int main(int argc, char **argv) {
                 if (unstaged > 0) {
                     printf("%s%s %d", color_unstaged, reset, unstaged);
 
-                    if (ct > 0 && ct != 1)  {
+                    if (ct > 0 && ct != 1) {
                         printf("%s|", color_usr);
                         ct--;
                     }
@@ -266,7 +264,7 @@ int main(int argc, char **argv) {
                 if (staged > 0) {
                     printf("%s󱝣%s %d", color_staged, reset, staged);
 
-                    if (ct > 0 && ct != 1)  {
+                    if (ct > 0 && ct != 1) {
                         printf("%s|", color_usr);
                         ct--;
                     }
@@ -274,7 +272,7 @@ int main(int argc, char **argv) {
                 if (committed > 0) {
                     printf("%s%s %d", color_committed, reset, committed);
 
-                    if (ct > 0 && ct != 1)  {
+                    if (ct > 0 && ct != 1) {
                         printf("%s|", color_usr);
                         ct--;
                     }
@@ -282,7 +280,7 @@ int main(int argc, char **argv) {
                 if (fetched > 0) {
                     printf("%s%s %d", color_fetched, reset, fetched);
 
-                    if (ct > 0 && ct != 1)  {
+                    if (ct > 0 && ct != 1) {
                         printf("%s|", color_usr);
                         ct--;
                     }
@@ -290,7 +288,7 @@ int main(int argc, char **argv) {
                 if (space) {
                     printf(" ");
                 }
-                printf("%s%s]\\n ",bold,  color_usr);
+                printf("%s%s]\\n ", bold, color_usr);
             }
         }
     }

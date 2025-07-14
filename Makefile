@@ -1,8 +1,8 @@
 .PHONY: all install clean
-CFLAGS = -O3
+CFLAGS = -O3 -Wall -Wextra -pedantic -fstack-protector-strong -std=gnu99 -Wshadow -Wconversion -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -Wno-conversion -fno-common -Wno-unused-result -Wimplicit-fallthrough -fdiagnostics-color=always
 BIN = tokyobash
 BINDIR = bin
-OBJ = tokyobash.o tokyobashlib.o
+OBJ = tokyobash.o tokyobashlib.o gitlib.o fetchlib.o
 CONFIG_FILE = config
 CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/$(BIN)
 prefix =
@@ -33,12 +33,18 @@ tokyobash.o: src/tokyobash.c
 tokyobashlib.o: src/lib/tokyobashlib.c
 	@$(CXX) $(CFLAGS) -c src/lib/tokyobashlib.c
 
+gitlib.o: src/lib/gitlib.c
+	@$(CXX) $(CFLAGS) -c src/lib/gitlib.c
+
+fetchlib.o: src/lib/fetchlib.c
+	@$(CXX) $(CFLAGS) -c src/lib/fetchlib.c
+
 install: $(BIN) $(CONFIG_FILE)
 
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
-	@echo "$(CONFIG_FILE) file created and moved to '$(CONFIGDIR)'."
-	@echo "  -will not overwrite an existing config file."
+	@echo "$(CONFIG_FILE) file created and copied to '$(CONFIGDIR)'."
+	@echo "  -will not overwrite pre-existing config file."
 
 ifeq ($(prefix),)
 	@echo "$(BIN) binary successfully built and located in '$(PWD)/$(BINDIR)'."

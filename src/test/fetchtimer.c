@@ -1,166 +1,372 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../include/tokyobash.h"
 
-#include "../lib/tokyobash.h"
+typedef struct {
+    char curnt_date[11];
+    char fetch_date[11];
+    char curnt_time[9];
+    char fetch_time[9];
+    bool expected;
+    FetchOpts settings;
+} Tester;
 
-bool shouldFetch(FetchOpts* fetchSettings);
+bool shouldFetchTest(Tester *fetchConfig);
+void extractTimeData(IntTimesnDates *, char[], char[], char[], char[]);
+void getDaysInMonth(int *daysInMonth, int month);
+
+#define TEST_SIZE 18
 
 int main() {
-    FetchOpts settings;
-    settings.state = Hour;
-    settings.amount = 12;
-    if (shouldFetch(&settings)) {
-        printf("True\n");
-    } else {
-        printf("False\n");
-    }
-}
 
-bool shouldFetch(FetchOpts* fetchSettings) {
-
-    char cur_date[] = "2025-03-15";
-    char fetch_date[] = "2025-03-14";
-
-    char cur_time[] = "11:55:43";
-    char fetch_time[] = "23:55:22";
-
-    char fbuf[3];
-    char cbuf[3];
-    int i_fbuf;
-    int i_cbuf;
-    int dayDif;
-    int hrDif;
-    int minDif;
-
-    if (fetch_date[2] != cur_date[2] || fetch_date[3] != cur_date[3]) { // Year
-        return true;
-    }
-    if (fetch_date[5] != cur_date[5] || fetch_date[6] != cur_date[6]) { // Month
-        return true;
+    Tester *times;
+    if ((times = malloc(sizeof(Tester) * TEST_SIZE)) == NULL) {
+        perror("malloc failed.");
+        exit(1);
     }
 
-    if (fetch_date[8] != cur_date[8] || fetch_date[9] != cur_date[9]) { // Day
+    int in = 0;
+    ///////// Day Tests ///////////
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-03");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "23:50:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
 
-        for (int i = 0; i < 3; i++) {
-            if (i == 2) {
-                fbuf[i] = '\0';
-                cbuf[i] = '\0';
-                break;
-            }
-            fbuf[i] = fetch_date[8 + i];
-            cbuf[i] = cur_date[8 + i];
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-03");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "23:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-03");
+    strcpy(times[in].fetch_date, "2025-02-27");
+    strcpy(times[in].curnt_time, "23:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-02");
+    strcpy(times[in].fetch_date, "2025-02-27");
+    strcpy(times[in].curnt_time, "23:35:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-04-03");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "23:23:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    ///////// Hour Tests ///////////
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "02:50:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "02:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "02:23:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "02:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:35:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    ///////// Minute Tests ///////////
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:05:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:09:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:00:43");
+    strcpy(times[in].fetch_time, "23:59:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-31");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "23:59:43");
+    strcpy(times[in].fetch_time, "23:58:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:05:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:05:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:02:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    int pass = 0;
+    int expectedtrue = 0;
+    for (int i = 0; i < TEST_SIZE; i++) {
+        printf("Test %i\nModifier: ", i + 1);
+        if (times[i].settings.modifier == Day) {
+            printf("Day");
+        } else if (times[i].settings.modifier == Hour) {
+            printf("Hour");
+        } else {
+            printf("Minute");
         }
-        i_fbuf = atoi(fbuf);
-        i_cbuf = atoi(cbuf);
+        printf("  Limit: %i\n", times[i].settings.limit);
+        printf("Current Date: %s\n", times[i].curnt_date);
+        printf("Fetch Date: %s\n", times[i].fetch_date);
+        printf("Current Time: %s\n", times[i].curnt_time);
+        printf("Fetch Time: %s\n\n", times[i].fetch_time);
 
-        dayDif = i_cbuf - i_fbuf;
-        printf("dayDif: %i\n", dayDif);
+        if (shouldFetchTest(&times[i])) {
 
-        if (fetchSettings->state == Day && dayDif > fetchSettings->amount ||
-            fetchSettings->state != Day && dayDif > 1) {
+            printf("\nResult: True");
+            pass++;
+
+            if (times[i].expected == false) {
+                printf(" TEST FAILED");
+            }
+
+        } else {
+
+            printf("\nResult: False");
+
+            if (times[i].expected == true) {
+                printf(" TEST FAILED");
+            }
+        }
+
+        printf("\n");
+
+        printf("Expected: ");
+        if (times[i].expected == true) {
+            printf("True\n");
+            expectedtrue++;
+        } else {
+            printf("False\n");
+        }
+
+        printf("\n");
+    }
+    printf("Passed: %i  Expected: %i \n", pass, expectedtrue);
+}
+bool shouldFetchTest(Tester *fetchConfig) {
+
+    const int MONTHS_IN_YR = 12;
+    const int HOURS_IN_DAY = 24;
+    const int MINS_IN_HOUR = 60;
+    int days_in_month = 0;
+
+    int yearDif = 0;
+    int monthDif = 0;
+    int dayDif = 0;
+    int hrDif = 0;
+    int minDif = 0;
+
+    IntTimesnDates timeData;
+    extractTimeData(&timeData, fetchConfig->curnt_date, fetchConfig->curnt_time,
+                    fetchConfig->fetch_date, fetchConfig->fetch_time);
+
+    if (timeData.curnt_year != timeData.fetch_year) { // Year
+
+        yearDif = timeData.curnt_year - timeData.fetch_year;
+        printf("in Year: yearDif = %i\n", yearDif);
+
+        if (yearDif > 1) {
+            return true;
+        }
+    }
+
+    if (timeData.curnt_month != timeData.fetch_month) { // Month
+
+        if (timeData.curnt_month >= timeData.fetch_month) {
+            monthDif = timeData.curnt_month - timeData.fetch_month;
+        } else {
+            monthDif = (MONTHS_IN_YR - timeData.fetch_month) + timeData.curnt_month;
+        }
+
+        printf("in Month: monthDif = %i\n", monthDif);
+
+        if (monthDif > 1) {
+
+            return true;
+        }
+    }
+
+    if (timeData.curnt_day != timeData.fetch_day) { // Day
+
+        if (timeData.curnt_day >= timeData.fetch_day) {
+            dayDif = timeData.curnt_day - timeData.fetch_day;
+        } else {
+            getDaysInMonth(&days_in_month, timeData.fetch_month);
+            dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+        }
+
+        printf("in Day: dayDif = %i\n", dayDif);
+
+        if ((fetchConfig->settings.modifier == Day && dayDif > fetchConfig->settings.limit) ||
+            (fetchConfig->settings.modifier != Day && dayDif > 1)) {
 
             return true;
 
-        } else if (fetchSettings->state == Day && dayDif < fetchSettings->amount) {
+        } else if (fetchConfig->settings.modifier == Day && dayDif < fetchConfig->settings.limit) {
 
             return false;
 
-        } else if (fetchSettings->state == Day) {
+        } else if (fetchConfig->settings.modifier == Day) { // and dayDif and limit are equal
 
-            for (int i = 0; i < 3; i++) {
-                if (i == 2) {
-                    fbuf[i] = '\0';
-                    cbuf[i] = '\0';
-                    break;
-                }
-                fbuf[i] = fetch_time[0 + i];
-                cbuf[i] = cur_time[0 + i];
+            if (timeData.curnt_hour >= timeData.fetch_hour) {
+                hrDif = timeData.curnt_hour - timeData.fetch_hour;
+            } else {
+                hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
             }
-            i_fbuf = atoi(fbuf);
-            i_cbuf = atoi(cbuf);
 
-            hrDif = (24 - i_fbuf) + i_cbuf;
-            printf("hrDif: %i\n", hrDif);
+            printf("in Day: hrDif = %i\n", hrDif);
 
-            if (hrDif > 24) {
-                return true;
-            } else if (hrDif < 24) {
+            if (hrDif > 1) {
+
                 return false;
+
             } else {
 
-                for (int i = 0; i < 3; i++) {
-                    if (i == 2) {
-                        fbuf[i] = '\0';
-                        cbuf[i] = '\0';
-                        break;
-                    }
-                    fbuf[i] = fetch_time[3 + i];
-                    cbuf[i] = cur_time[3 + i];
-                }
-                i_fbuf = atoi(fbuf);
-                i_cbuf = atoi(cbuf);
-
-                minDif = i_cbuf - i_fbuf;
-                printf("minDif: %i\n", minDif);
-
-                if (i_cbuf >= i_fbuf) {
-                    return true;
+                if (timeData.curnt_min >= timeData.fetch_min) {
+                    minDif = timeData.curnt_min - timeData.fetch_min;
                 } else {
+                    minDif = timeData.fetch_min - timeData.curnt_min;
+                }
+                printf("in Day: minDif = %i\n", minDif);
+
+                if (timeData.curnt_min >= timeData.fetch_min) {
+
+                    return true;
+
+                } else {
+
                     return false;
                 }
             }
         }
     }
 
-    if (fetch_time[0] != cur_time[0] || fetch_time[1] != cur_time[1]) { // Hour
+    if (timeData.curnt_hour != timeData.fetch_hour ||
+        fetchConfig->settings.modifier == Hour) { // Hour
 
-        for (int i = 0; i < 3; i++) {
-            if (i == 2) {
-                fbuf[i] = '\0';
-                cbuf[i] = '\0';
-                break;
-            }
-            fbuf[i] = fetch_time[0 + i];
-            cbuf[i] = cur_time[0 + i];
-        }
-        i_fbuf = atoi(fbuf);
-        i_cbuf = atoi(cbuf);
-
-        if (i_cbuf > i_fbuf) {
-            hrDif = i_cbuf - i_fbuf;
+        if (timeData.curnt_hour >= timeData.fetch_hour) {
+            hrDif = timeData.curnt_hour - timeData.fetch_hour;
         } else {
-            hrDif = (24 - i_fbuf) + i_cbuf;
+            hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
         }
 
-        printf("hrDif: %i\n", hrDif);
+        printf("in Hour: hrDif = %i\n", hrDif);
 
-        if (fetchSettings->state == Hour && hrDif > fetchSettings->amount ||
-            fetchSettings->state != Hour && hrDif > 1) {
+        if ((fetchConfig->settings.modifier == Hour && hrDif > fetchConfig->settings.limit) ||
+            (fetchConfig->settings.modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (fetchSettings->state == Hour && hrDif < fetchSettings->amount) {
+        } else if (fetchConfig->settings.modifier == Hour && hrDif < fetchConfig->settings.limit) {
 
             return false;
 
-        } else if (fetchSettings->state == Hour) {
+        } else if (fetchConfig->settings.modifier == Hour) {
 
-            for (int i = 0; i < 3; i++) {
-                if (i == 2) {
-                    fbuf[i] = '\0';
-                    cbuf[i] = '\0';
-                    break;
-                }
-                fbuf[i] = fetch_time[3 + i];
-                cbuf[i] = cur_time[3 + i];
+            if (timeData.curnt_min >= timeData.fetch_min) {
+                minDif = timeData.curnt_min - timeData.fetch_min;
+            } else {
+                minDif = timeData.fetch_min - timeData.curnt_min;
             }
-            i_fbuf = atoi(fbuf);
-            i_cbuf = atoi(cbuf);
 
-            minDif = (60 - i_fbuf) + i_cbuf;
-            printf("minDif: %i\n", minDif);
+            printf("in Hour: minDif = %i\n", minDif);
 
-            if (i_cbuf >= i_fbuf) {
+            if (timeData.curnt_min >= timeData.fetch_min) {
                 return true;
             } else {
                 return false;
@@ -168,33 +374,110 @@ bool shouldFetch(FetchOpts* fetchSettings) {
         }
     }
 
-    if (fetch_time[3] != cur_time[3] || fetch_time[4] != cur_time[4]) { // Minute
+    if (timeData.curnt_min != timeData.fetch_min ||
+        fetchConfig->settings.modifier == Minute) { // Minute
 
-        for (int i = 0; i < 3; i++) {
-            if (i == 2) {
-                fbuf[i] = '\0';
-                cbuf[i] = '\0';
-                break;
-            }
-            fbuf[i] = fetch_time[3 + i];
-            cbuf[i] = cur_time[3 + i];
-        }
-        i_fbuf = atoi(fbuf);
-        i_cbuf = atoi(cbuf);
-
-        if (i_cbuf > i_fbuf) {
-            minDif = i_cbuf - i_fbuf;
+        if (timeData.curnt_min >= timeData.fetch_min) {
+            minDif = timeData.curnt_min - timeData.fetch_min;
         } else {
-            minDif = (60 - i_fbuf) + i_cbuf;
+            minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
         }
 
-        printf("minDif: %i\n", minDif);
+        printf("in Minute: minDif = %i\n", minDif);
 
-        if (fetchSettings->state == Minute) {
-            if (minDif >= fetchSettings->amount) {
+        // fix:fetch called when curnt & fetch times are equal
+        //  - added dayDiff check
+        if (fetchConfig->settings.modifier == Minute /*&& dayDif > 0*/) {
+            if (minDif >= fetchConfig->settings.limit) {
                 return true;
             }
         }
     }
     return false;
+}
+
+void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_time[],
+                     char fetch_date[], char fetch_time[]) {
+
+    const int YR_INDX = 2;
+    const int MONTH_INDX = 5;
+    const int DAY_INDX = 8;
+    const int HR_INDX = 0;
+    const int MIN_INDX = 3;
+
+    const int BUF_SIZE = 3;
+
+    char cbuf[BUF_SIZE];
+    char fbuf[BUF_SIZE];
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
+            cbuf[i] = '\0';
+            fbuf[i] = '\0';
+            break;
+        }
+        cbuf[i] = curnt_date[YR_INDX + i];
+        fbuf[i] = fetch_date[YR_INDX + i];
+    }
+    dateData->curnt_year = atoi(cbuf);
+    dateData->fetch_year = atoi(fbuf);
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
+            cbuf[i] = '\0';
+            fbuf[i] = '\0';
+            break;
+        }
+        cbuf[i] = curnt_date[MONTH_INDX + i];
+        fbuf[i] = fetch_date[MONTH_INDX + i];
+    }
+    dateData->curnt_month = atoi(cbuf);
+    dateData->fetch_month = atoi(fbuf);
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
+            cbuf[i] = '\0';
+            fbuf[i] = '\0';
+            break;
+        }
+        cbuf[i] = curnt_date[DAY_INDX + i];
+        fbuf[i] = fetch_date[DAY_INDX + i];
+    }
+    dateData->curnt_day = atoi(cbuf);
+    dateData->fetch_day = atoi(fbuf);
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
+            cbuf[i] = '\0';
+            fbuf[i] = '\0';
+            break;
+        }
+        cbuf[i] = curnt_time[HR_INDX + i];
+        fbuf[i] = fetch_time[HR_INDX + i];
+    }
+    dateData->curnt_hour = atoi(cbuf);
+    dateData->fetch_hour = atoi(fbuf);
+
+    for (int i = 0; i < BUF_SIZE; i++) {
+        if (i == BUF_SIZE - 1) {
+            cbuf[i] = '\0';
+            fbuf[i] = '\0';
+            break;
+        }
+        cbuf[i] = curnt_time[MIN_INDX + i];
+        fbuf[i] = fetch_time[MIN_INDX + i];
+    }
+    dateData->curnt_min = atoi(cbuf);
+    dateData->fetch_min = atoi(fbuf);
+}
+
+void getDaysInMonth(int *daysInMonth, int month) {
+
+    if (month == 4 || month == 6 || month == 9 || month == 11) {
+        *daysInMonth = 30;
+    } else if (month != 2) {
+        *daysInMonth = 31;
+    } else {
+        *daysInMonth = 28;
+    }
 }
