@@ -13,7 +13,7 @@ bool shouldFetchTest(Tester *fetchConfig);
 void extractTimeData(IntTimesnDates *, char[], char[], char[], char[]);
 void getDaysInMonth(int *daysInMonth, int month);
 
-#define TEST_SIZE 12
+#define TEST_SIZE 18
 
 int main() {
 
@@ -40,6 +40,24 @@ int main() {
     strcpy(times[in].curnt_date, "2025-04-03");
     strcpy(times[in].fetch_date, "2025-03-31");
     strcpy(times[in].curnt_time, "23:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-03");
+    strcpy(times[in].fetch_date, "2025-02-27");
+    strcpy(times[in].curnt_time, "23:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-02");
+    strcpy(times[in].fetch_date, "2025-02-27");
+    strcpy(times[in].curnt_time, "23:35:43");
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
@@ -89,6 +107,24 @@ int main() {
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "02:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 3;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:35:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
     ///////// Minute Tests ///////////
     times[in].settings.modifier = Minute;
     times[in].settings.limit = 15;
@@ -128,15 +164,35 @@ int main() {
 
     times[in].settings.modifier = Minute;
     times[in].settings.limit = 15;
-    times[in].expected = false;
+    times[in].expected = true;
     strcpy(times[in].curnt_date, "2025-04-01");
     strcpy(times[in].fetch_date, "2025-03-31");
-    strcpy(times[in].curnt_time, "00:03:43");
+    strcpy(times[in].curnt_time, "00:05:43");
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:05:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "00:02:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    int pass = 0;
+    int expectedtrue = 0;
     for (int i = 0; i < TEST_SIZE; i++) {
-        printf("%i Modifier: ", i);
+        printf("Test %i\nModifier: ", i + 1);
         if (times[i].settings.modifier == Day) {
             printf("Day");
         } else if (times[i].settings.modifier == Hour) {
@@ -144,31 +200,44 @@ int main() {
         } else {
             printf("Minute");
         }
-        printf("   Limit: %i\n", times[i].settings.limit);
+        printf("  Limit: %i\n", times[i].settings.limit);
         printf("Current Date: %s\n", times[i].curnt_date);
         printf("Fetch Date: %s\n", times[i].fetch_date);
         printf("Current Time: %s\n", times[i].curnt_time);
         printf("Fetch Time: %s\n\n", times[i].fetch_time);
 
         if (shouldFetchTest(&times[i])) {
-            printf("\nTrue\n");
+
+            printf("\nResult: True");
+            pass++;
+
+            if (times[i].expected == false) {
+                printf(" TEST FAILED");
+            }
+
         } else {
-            printf("\nFalse\n");
+
+            printf("\nResult: False");
+
+            if (times[i].expected == true) {
+                printf(" TEST FAILED");
+            }
         }
-        printf("Should be ");
+
+        printf("\n");
+
+        printf("Expected: ");
         if (times[i].expected == true) {
             printf("True\n");
+            expectedtrue++;
         } else {
             printf("False\n");
         }
 
         printf("\n");
     }
+    printf("Passed: %i  Expected: %i \n", pass, expectedtrue);
 }
-// Day: Change of month
-// Hour: Change of day and month
-// Minute: Change of Hour day and month
-
 bool shouldFetchTest(Tester *fetchConfig) {
 
     const int MONTHS_IN_YR = 12;
@@ -270,9 +339,6 @@ bool shouldFetchTest(Tester *fetchConfig) {
     if (timeData.curnt_hour != timeData.fetch_hour ||
         fetchConfig->settings.modifier == Hour) { // Hour
 
-        // iss:calling fetch when current and fetch times are the same.
-        // Which means once fetch is called, its called EVERY time. So thats bad.
-        // fix: chage '>' to '>=' in 'if (timeData.curnt_hour > timeData.fetch_hour)'
         if (timeData.curnt_hour >= timeData.fetch_hour) {
             hrDif = timeData.curnt_hour - timeData.fetch_hour;
         } else {
