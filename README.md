@@ -99,14 +99,14 @@ You will need to manually create the directory `tokyobash` in `$XDG_CONFIG_HOME`
 
 Try these commands in your terminal:
 
-  - If  `XDG_CONFIG_HOME` is set:
+- If `XDG_CONFIG_HOME` not set:
   ```
   mkdir -p ~/.config/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/
   rm config
   ```
- - If `XDG_CONFIG_HOME` not set:
+- If  `XDG_CONFIG_HOME` is set:
   ```
   mkdir -p $XDG_CONFIG_HOME/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
