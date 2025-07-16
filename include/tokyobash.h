@@ -14,31 +14,31 @@
 #define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50
 
-typedef enum {
+typedef enum PathState {
     Home,
     Mnt,
     Root,
 } PathState;
 
-typedef enum {
+typedef enum Themes {
     Tokyonight,
     Catppuccin,
     Kanagawa,
     Orange,
 } Themes;
 
-typedef enum {
+typedef enum FetchModifier {
     Minute,
     Hour,
     Day,
 } FetchModifier;
 
-typedef struct {
+typedef struct FetchOpts {
     FetchModifier modifier;
     int limit;
 } FetchOpts;
 
-typedef struct {
+typedef struct ConfigSettings {
     bool git;
     bool time;
     bool debug;
@@ -48,7 +48,7 @@ typedef struct {
     FetchOpts fetchConfig;
 } ConfigSettings;
 
-typedef struct {
+typedef struct IntTimesAndDates {
     int curnt_year;
     int curnt_month;
     int curnt_day;
