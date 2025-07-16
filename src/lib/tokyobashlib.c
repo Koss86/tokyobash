@@ -6,37 +6,37 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
     char *pConfig = getenv("XDG_CONFIG_HOME");
     char filepath[PATH_MAX] = "/tokyobash/config";
 
-    int Flen = 17;
+    int filePathLen = 17;
     if (pConfig == NULL || pConfig[0] == '\0') {
-        Flen = 25;
-        strncpy(filepath, "/.config/tokyobash/config", Flen + 1);
+        filePathLen = 25;
+        strncpy(filepath, "/.config/tokyobash/config", filePathLen + 1);
 
-        for (int i = 0; i < Hleng + Flen; i++) {
-            if (i < Hleng) {
+        for (int i = 0; i < homeLength + filePathLen; i++) {
+            if (i < homeLength) {
                 path[i] = pHome[i];
                 continue;
             }
-            path[i] = filepath[i - Hleng];
+            path[i] = filepath[i - homeLength];
         }
-        path[Hleng + Flen] = '\0';
+        path[homeLength + filePathLen] = '\0';
 
     } else {
 
-        int Cleng = strlen(pConfig);
+        int configPathLen = strlen(pConfig);
         // This check may not be needed but it's here just in case.
-        if (pConfig[Cleng - 1] == '/') {
-            pConfig[Cleng - 1] = '\0';
-            Cleng--;
+        if (pConfig[configPathLen - 1] == '/') {
+            pConfig[configPathLen - 1] = '\0';
+            configPathLen--;
         }
 
-        for (int i = 0; i < Cleng + Flen; i++) {
-            if (i < Cleng) {
+        for (int i = 0; i < configPathLen + filePathLen; i++) {
+            if (i < configPathLen) {
                 path[i] = pConfig[i];
                 continue;
             }
-            path[i] = filepath[i - Cleng];
+            path[i] = filepath[i - configPathLen];
         }
-        path[Cleng + Flen] = '\0';
+        path[configPathLen + filePathLen] = '\0';
     }
 
     FILE *file = fopen(path, "r");
@@ -45,14 +45,14 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
     }
 
     char c;
-    int inkey = 1;
-    int invalue = 0;
-    int incomment = 0;
+    bool inkey = true;
+    bool invalue = false;
+    bool incomment = false;
     int slash = 0;
     int indx = 0;
     char keybuf[64];
     char valbuf[64];
-    char fetchbuf[3];
+    char atoibuffer[3];
 
     while ((c = fgetc(file)) != EOF) {
 
@@ -61,26 +61,26 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                 slash++;
             }
             if (slash == 2) {
-                incomment = 1;
+                incomment = true;
                 slash = 0;
             }
             continue;
         }
         if (c == '#') {
-            incomment = 1;
+            incomment = true;
             continue;
         }
 
         if (c == '\n') {
             if (incomment) {
-                incomment = 0;
-                inkey = 1;
-                invalue = 0;
+                inkey = true;
+                incomment = false;
+                invalue = false;
                 indx = 0;
                 continue;
             }
-            inkey = 1;
-            invalue = 0;
+            inkey = true;
+            invalue = false;
             valbuf[indx] = '\0';
             indx = 0;
             if (valbuf[0] >= 'a' && valbuf[0] <= 'z') {
@@ -135,20 +135,20 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                         usrConfig->fetchConfig.modifier = Minute;
 
                         if (valbuf[2] == 'm') {
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = valbuf[1];
-                            fetchbuf[2] = '\0';
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = valbuf[1];
+                            atoibuffer[2] = '\0';
 
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                             if (usrConfig->fetchConfig.limit > 60) {
                                 usrConfig->fetchConfig.limit = 60;
                             }
 
                         } else {
 
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = '\0';
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                         }
 
                     } else if ((valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'h') ||
@@ -157,20 +157,20 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                         usrConfig->fetchConfig.modifier = Hour;
 
                         if (valbuf[2] == 'h') {
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = valbuf[1];
-                            fetchbuf[2] = '\0';
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = valbuf[1];
+                            atoibuffer[2] = '\0';
 
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                             if (usrConfig->fetchConfig.limit > 24) {
                                 usrConfig->fetchConfig.limit = 24;
                             }
 
                         } else {
 
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = '\0';
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                         }
 
                     } else if ((valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'd') ||
@@ -179,25 +179,25 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
                         usrConfig->fetchConfig.modifier = Day;
 
                         if (valbuf[2] == 'd') {
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = valbuf[1];
-                            fetchbuf[2] = '\0';
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = valbuf[1];
+                            atoibuffer[2] = '\0';
 
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                             if (usrConfig->fetchConfig.limit > 31) {
                                 usrConfig->fetchConfig.limit = 31;
                             }
 
                         } else {
 
-                            fetchbuf[0] = valbuf[0];
-                            fetchbuf[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(fetchbuf);
+                            atoibuffer[0] = valbuf[0];
+                            atoibuffer[1] = '\0';
+                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
                         }
 
                     } else {
                         // Justin Case
-                        usrConfig->fetchConfig.modifier = Hour;
+                        usrConfig->fetchConfig.modifier = Day;
                         usrConfig->fetchConfig.limit = 1;
                     }
 
@@ -228,8 +228,8 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
         }
 
         if (c == '=') {
-            invalue = 1;
-            inkey = 0;
+            invalue = true;
+            inkey = false;
             keybuf[indx] = '\0';
             indx = 0;
             continue;
@@ -248,13 +248,13 @@ void replace_home(char *path, int Plen, int Hlen) {
 
     path[0] = '~';
 
-    if (Plen == Hlen) {
+    if (pathLength == homeLength) {
         path[1] = '\0';
 
     } else {
-        int indx = Hlen;
+        int indx = homeLength;
 
-        for (int i = 1; i < Plen; i++) {
+        for (int i = 1; i < pathLength; i++) {
             path[i] = path[indx++];
         }
         path[indx] = '\0';
@@ -268,7 +268,7 @@ void abrv_path(char *path, int Plen) {
         path[i] = '.';
     }
 
-    int indx = Plen - ABV_PATH_LEN2;
+    int indx = pathLength - ABV_PATH_LEN2;
 
     for (int i = ABV_PATH_LEN1 + 3; i < ABV_PATH_LEN_T; i++) {
         path[i] = path[indx++];
@@ -280,7 +280,7 @@ void abrv_path(char *path, int Plen) {
 // highlighted.
 void rem_curDir(char *path, int Plen) {
 
-    for (int i = Plen - 1; i > -1; i--) {
+    for (int i = pathLength - 1; i > -1; i--) {
 
         if (path[i] == '/') {
             path[i + 1] = '\0';

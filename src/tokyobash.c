@@ -18,28 +18,28 @@ int main(void) {
         exit(-1);
     }
 
-    int Plen = strlen(path);
-    int Hlen = strlen(pHome);
-    PathState pathstate;
+    int pathLength = strlen(path);
+    int homeLength = strlen(pHome);
+    PathState pathState;
 
     if (strstr(path, pHome) != NULL) {
-        replace_home(path, Plen, Hlen);
-        Plen = (Plen - Hlen) + 1;
+        replace_home(path, pathLength, homeLength);
+        pathLength = (pathLength - homeLength) + 1;
     }
 
     if (path[0] == '~') {
-        pathstate = Home;
+        pathState = Home;
     } else {
         if (strstr(path, "/mnt") != NULL) {
-            pathstate = Mnt;
+            pathState = Mnt;
         } else {
-            pathstate = Root;
+            pathState = Root;
         }
     }
 
-    if (Plen > ABV_PATH_LEN_T) {
-        abrv_path(path, Plen);
-        Plen = ABV_PATH_LEN_T;
+    if (pathLength > ABV_PATH_LEN_T) {
+        abrv_path(path, pathLength);
+        pathLength = ABV_PATH_LEN_T;
     }
 
     ConfigSettings usrConfig;
@@ -96,7 +96,7 @@ int main(void) {
             color_time = &sky_blue[0];
             color_path = &blue[0];
             color_mnt = &orange[0];
-            color_root = &light_red[0];
+            color_root = &pink[0];
             color_unstaged = &orange[0];
             color_staged = &orchid[0];
             color_committed = &lime_green[0];
@@ -105,18 +105,18 @@ int main(void) {
 
         case Catppuccin:
             color_usr = &peach[0];
-            color_time = &pink[0];
+            color_time = &rose[0];
             color_path = &light_purple[0];
             color_mnt = &blue[0];
             color_root = &orange[0];
             color_unstaged = &orange[0];
             color_staged = &blue[0];
             color_committed = &lime_green[0];
-            color_fetched = &light_red[0];
+            color_fetched = &pink[0];
             break;
 
         case Kanagawa:
-            color_usr = &red[0];
+            color_usr = &desat_firebrick[0];
             color_time = &teal[0];
             color_path = &khaki[0];
             color_mnt = &desat_lime[0];
@@ -124,7 +124,7 @@ int main(void) {
             color_unstaged = &dark_orange[0];
             color_staged = &purple[0];
             color_committed = &green[0];
-            color_fetched = &light_red[0];
+            color_fetched = &pink[0];
             break;
 
         case Orange:
@@ -132,7 +132,7 @@ int main(void) {
             color_time = &beige[0];
             color_path = &white[0];
             color_mnt = &orange[0];
-            color_root = &light_red[0];
+            color_root = &pink[0];
             color_unstaged = &red[0];
             color_staged = &blue[0];
             color_committed = &green[0];
@@ -146,14 +146,14 @@ int main(void) {
         printf("%s[\\t] ", color_time);
     }
 
-    rem_curDir(path, Plen);
+    rem_curDir(path, pathLength);
 
     if (!usrConfig.git || !git_is_accessible() || !in_repo()) {
         // Skip branch name and status bar and just print the path.
-        switch (pathstate) {
+        switch (pathState) {
 
             case Home:
-                if (Plen > 1) {
+                if (pathLength > 1) {
                     printf("%s%s%s\\W/\\n", color_path, path, bold);
                 } else {
                     printf("%s%s\\W/\\n", color_path, bold);
@@ -165,7 +165,7 @@ int main(void) {
                 break;
 
             case Root:
-                if (Plen > 1) {
+                if (pathLength > 1) {
                     printf("%s%s%s\\W/\\n", color_root, path, bold);
                 } else {
                     printf("%s%s\\W\\n", color_root, bold);
@@ -181,10 +181,10 @@ int main(void) {
             printf("%s%s%s  ", color_path, branch_name, color_usr);
         }
 
-        switch (pathstate) {
+        switch (pathState) {
 
             case Home:
-                if (Plen > 1) {
+                if (pathLength > 1) {
                     printf("%s%s%s\\W/\\n", color_path, path, bold);
                 } else {
                     printf("%s%s\\W/\\n", color_path, bold);
@@ -196,7 +196,7 @@ int main(void) {
                 break;
 
             case Root:
-                if (Plen > 1) {
+                if (pathLength > 1) {
                     printf("%s%s%s\\W/\\n", color_root, path, bold);
                 } else {
                     printf("%s%s\\W\\n", color_root, bold);
