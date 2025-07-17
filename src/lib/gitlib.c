@@ -2,7 +2,7 @@
 // If git is available, return true.
 bool git_is_accessible(void) {
 
-    FILE *file;
+    FILE* file;
     if ((file = popen("git --version 2>/dev/null", "r")) == NULL) {
 
         return false;
@@ -19,7 +19,7 @@ bool git_is_accessible(void) {
 // If current directory is a repository, return true.
 bool in_repo(void) {
 
-    FILE *file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
+    FILE* file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
     if (file == NULL) {
 
         return false;
@@ -35,9 +35,9 @@ bool in_repo(void) {
     return (strncmp(buf, "true", 4) == 0);
 }
 // Place branch name into provided buffer.
-void get_branch(char *branch_name) {
+void get_branch(char* branch_name) {
 
-    FILE *file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
+    FILE* file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
     if (file == NULL) {
         exit(-1);
     }
@@ -57,7 +57,7 @@ void get_branch(char *branch_name) {
 // Returns how many commits are ready to be pushed.
 int Committed(void) {
 
-    FILE *file;
+    FILE* file;
     if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
         return -1;
     }
@@ -72,10 +72,10 @@ int Committed(void) {
     return atoi(buf);
 }
 // Counts how many staged, unstaged, and untracked files in the repo
-// on the current branch, then puts each value in the provided variables.
+// on the current branch, then assigns each value to the provided variables.
 // !!Currently has a noticeable 1-2 second slow down in large repos like llvm.
-void get_status_of(int *staged, int *unstaged, int *untracked) {
-    FILE *file;
+void get_status_of(int* staged, int* unstaged, int* untracked) {
+    FILE* file;
     if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
         exit(-1);
     }

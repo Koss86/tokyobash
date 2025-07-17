@@ -63,20 +63,20 @@ typedef struct IntTimesAndDates {
     // int fetch_sec;
 } IntTimesnDates;
 
-void parse_config(ConfigSettings *usrConfig, char *pHome, int Hlen);
-void replace_home(char *path, int Plen, int Hlen);
-void abrv_path(char *path, int Plen);
-void rem_curDir(char *path, int Plen);
+void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
+void replace_home(char* path, int Plen, int Hlen);
+void abrv_path(char* path, int Plen);
+void rem_curDir(char* path, int Plen);
 
 bool git_is_accessible(void);
 bool in_repo(void);
-void get_branch(char *branch_name);
+void get_branch(char* branch_name);
 int Committed(void);
-void get_status_of(int *staged, int *unstaged, int *untracked);
+void get_status_of(int* staged, int* unstaged, int* untracked);
 
-int Fetched(FetchOpts *fetchConfig);
-bool shouldFetch(FetchOpts *fetchConfig);
-void extractTimeData(IntTimesnDates *, char[], char[], char[], char[]);
-void getDaysInMonth(int *daysInMonth, int month);
+int Fetched(FetchOpts* fetchConfig);
+bool shouldFetch(FetchOpts* fetchConfig);
+void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
+void getDaysInMonth(int* daysInMonth, int month);
 
 #endif

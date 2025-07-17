@@ -1,9 +1,9 @@
 #include "../../include/tokyobash.h"
 
-void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
+void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 
     char path[PATH_MAX];
-    char *pConfig = getenv("XDG_CONFIG_HOME");
+    char* pConfig = getenv("XDG_CONFIG_HOME");
     char filepath[PATH_MAX] = "/tokyobash/config";
 
     int filePathLen = 17;
@@ -39,7 +39,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
         path[configPathLen + filePathLen] = '\0';
     }
 
-    FILE *file = fopen(path, "r");
+    FILE* file = fopen(path, "r");
     if (file == NULL) {
         return;
     }
@@ -244,7 +244,7 @@ void parse_config(ConfigSettings *usrConfig, char *pHome, int Hleng) {
     }
 }
 // If path contains $HOME, replace it with '~'.
-void replace_home(char *path, int Plen, int Hlen) {
+void replace_home(char* path, int pathLength, int homeLength) {
 
     path[0] = '~';
 
@@ -262,7 +262,7 @@ void replace_home(char *path, int Plen, int Hlen) {
 }
 // If path lenth is greater than 50, keep first 24 chars, add '...' then
 // place last 23 chars after last '.' .
-void abrv_path(char *path, int Plen) {
+void abrv_path(char* path, int pathLength) {
 
     for (int i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
         path[i] = '.';
@@ -278,7 +278,7 @@ void abrv_path(char *path, int Plen) {
 // Remove current directory from path. We add it back with \\W after
 // changing text to bold. This way the path is normal, while current dir is
 // highlighted.
-void rem_curDir(char *path, int Plen) {
+void rem_curDir(char* path, int pathLength) {
 
     for (int i = pathLength - 1; i > -1; i--) {
 
