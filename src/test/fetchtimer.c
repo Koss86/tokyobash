@@ -9,15 +9,15 @@ typedef struct {
     FetchOpts settings;
 } Tester;
 
-bool shouldFetchTest(Tester *fetchConfig);
-void extractTimeData(IntTimesnDates *, char[], char[], char[], char[]);
-void getDaysInMonth(int *daysInMonth, int month);
+bool shouldFetchTest(Tester* fetchConfig);
+void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
+void getDaysInMonth(int* daysInMonth, int month);
 
 #define TEST_SIZE 18
 
 int main() {
 
-    Tester *times;
+    Tester* times;
     if ((times = malloc(sizeof(Tester) * TEST_SIZE)) == NULL) {
         perror("malloc failed.");
         exit(1);
@@ -238,7 +238,7 @@ int main() {
     }
     printf("Passed: %i  Expected: %i \n", pass, expectedtrue);
 }
-bool shouldFetchTest(Tester *fetchConfig) {
+bool shouldFetchTest(Tester* fetchConfig) {
 
     const int MONTHS_IN_YR = 12;
     const int HOURS_IN_DAY = 24;
@@ -396,7 +396,7 @@ bool shouldFetchTest(Tester *fetchConfig) {
     return false;
 }
 
-void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_time[],
+void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
                      char fetch_date[], char fetch_time[]) {
 
     const int YR_INDX = 2;
@@ -471,7 +471,7 @@ void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_tim
     dateData->fetch_min = atoi(fbuf);
 }
 
-void getDaysInMonth(int *daysInMonth, int month) {
+void getDaysInMonth(int* daysInMonth, int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         *daysInMonth = 30;

@@ -11,7 +11,7 @@ int main(void) {
         exit(-1);
     }
 
-    char *pHome = getenv("HOME");
+    char* pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
         printf("\\u@\\h: ");
@@ -52,13 +52,14 @@ int main(void) {
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
 
-    parse_config(&usrConfig, pHome, Hlen);
+    parseConfig(&usrConfig, pHome, homeLength);
 
     char bold[] = "\\[\\e[1m\\]";
     char reset[] = "\\[\\e[00m\\]";
     char red[] = "\\[\\e[38;2;255;77;77m\\]";
-    char light_red[] = "\\[\\e[38;5;211m\\]";
-    char pink[] = "\\[\\e[38;5;217m\\]";
+    char desat_firebrick[] = "\\[\\e[38;2;191;72;72m\\]";
+    char pink[] = "\\[\\e[38;5;211m\\]";
+    char rose[] = "\\[\\e[38;5;217m\\]";
     char peach[] = "\\[\\e[38;5;223m\\]";
     char dark_orange[] = "\\[\\e[38;2;255;149;20m\\]";
     char orange[] = "\\[\\e[38;5;214m\\]";
@@ -77,17 +78,17 @@ int main(void) {
     char white[] = "\\[\\e[38;2;255;255;255m\\]";
     char beige[] = "\\[\\e[38;2;239;239;200m\\]";
 
-    char *color_usr = &reset[0];
-    char *color_time = &reset[0];
-    char *color_path = &reset[0];
-    char *color_mnt = &reset[0];
-    char *color_root = &reset[0];
+    char* color_usr = &reset[0];
+    char* color_time = &reset[0];
+    char* color_path = &reset[0];
+    char* color_mnt = &reset[0];
+    char* color_root = &reset[0];
 
-    char *color_untracked = &yellow[0];
-    char *color_unstaged = &reset[0];
-    char *color_staged = &reset[0];
-    char *color_committed = &reset[0];
-    char *color_fetched = &reset[0];
+    char* color_untracked = &yellow[0];
+    char* color_unstaged = &reset[0];
+    char* color_staged = &reset[0];
+    char* color_committed = &reset[0];
+    char* color_fetched = &reset[0];
 
     switch (usrConfig.theme) {
 

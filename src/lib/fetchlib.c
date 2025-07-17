@@ -4,14 +4,14 @@
 // calls fetch if longer than user specified in
 // usrConfig.fetchSettings->limit. Then, returns
 // number of commits if any from remote.
-int Fetched(FetchOpts *fetchSettings) {
+int Fetched(FetchOpts* fetchSettings) {
 
     if (shouldFetch(fetchSettings)) {
-        FILE *gitFetch = popen("git fetch 2>/dev/null", "r");
+        FILE* gitFetch = popen("git fetch 2>/dev/null", "r");
         pclose(gitFetch);
     }
 
-    FILE *file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
+    FILE* file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
     if (file == NULL) {
         return -1;
     }
@@ -25,10 +25,10 @@ int Fetched(FetchOpts *fetchSettings) {
     pclose(file);
     return atoi(buf);
 }
-bool shouldFetch(FetchOpts *fetchConfig) {
+bool shouldFetch(FetchOpts* fetchConfig) {
 
     time_t now = time(0);
-    struct tm *time_struct = localtime(&now);
+    struct tm* time_struct = localtime(&now);
 
     char curnt_date[11];
     char curnt_time[9];
@@ -41,7 +41,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
         return false;
     }
 
-    FILE *fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    FILE* fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
 
     if (fetch_status == NULL) {
         return false;
@@ -229,7 +229,7 @@ bool shouldFetch(FetchOpts *fetchConfig) {
     }
     return false;
 }
-void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_time[],
+void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
                      char fetch_date[], char fetch_time[]) {
 
     const int YR_INDX = 2;
@@ -303,7 +303,7 @@ void extractTimeData(IntTimesnDates *dateData, char curnt_date[], char curnt_tim
     dateData->curnt_min = atoi(cbuf);
     dateData->fetch_min = atoi(fbuf);
 }
-void getDaysInMonth(int *daysInMonth, int month) {
+void getDaysInMonth(int* daysInMonth, int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         *daysInMonth = 30;
