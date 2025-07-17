@@ -1,12 +1,16 @@
 #include "../../include/tokyobash.h"
 
+static void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
+static void getDaysInMonth(int*, int);
+static bool shouldFetch(FetchOpts*);
+
 // Checks when last the repo was updated,
 // calls fetch if longer than user specified in
-// usrConfig.fetchSettings->limit. Then, returns
+// usrConfig.fetchConfig->limit. Then, returns
 // number of commits if any from remote.
-int Fetched(FetchOpts* fetchSettings) {
+int Fetched(FetchOpts* fetchConfig) {
 
-    if (shouldFetch(fetchSettings)) {
+    if (shouldFetch(fetchConfig)) {
         FILE* gitFetch = popen("git fetch 2>/dev/null", "r");
         pclose(gitFetch);
     }
@@ -25,7 +29,7 @@ int Fetched(FetchOpts* fetchSettings) {
     pclose(file);
     return atoi(buf);
 }
-bool shouldFetch(FetchOpts* fetchConfig) {
+static bool shouldFetch(FetchOpts* fetchConfig) {
 
     time_t now = time(0);
     struct tm* time_struct = localtime(&now);
@@ -229,8 +233,8 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     }
     return false;
 }
-void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
-                     char fetch_date[], char fetch_time[]) {
+static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
+                            char fetch_date[], char fetch_time[]) {
 
     const int YR_INDX = 2;
     const int MONTH_INDX = 5;
@@ -303,7 +307,7 @@ void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_tim
     dateData->curnt_min = atoi(cbuf);
     dateData->fetch_min = atoi(fbuf);
 }
-void getDaysInMonth(int* daysInMonth, int month) {
+static void getDaysInMonth(int* daysInMonth, int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         *daysInMonth = 30;
