@@ -4,10 +4,10 @@ static void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 static void getDaysInMonth(int*, int);
 static bool shouldFetch(FetchOpts*);
 
-// Checks when last the repo was updated,
-// calls fetch if longer than user specified in
-// usrConfig.fetchConfig->limit. Then, returns
-// number of commits if any from remote.
+// Checks when last the repo was updated.
+// Calls fetch if longer than specified in
+// usrConfig.fetchConfig->limit. Then returns
+// number of commits from remote.
 int Fetched(FetchOpts* fetchConfig) {
 
     if (shouldFetch(fetchConfig)) {
