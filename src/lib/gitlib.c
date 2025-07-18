@@ -1,6 +1,6 @@
 #include "../../include/tokyobash.h"
 // If git is available, return true.
-bool git_is_accessible(void) {
+bool isGitAccessible(void) {
 
     FILE* file;
     if ((file = popen("git --version 2>/dev/null", "r")) == NULL) {
@@ -17,7 +17,7 @@ bool git_is_accessible(void) {
     return (strstr(buf, "git version") != NULL);
 }
 // If current directory is a repository, return true.
-bool in_repo(void) {
+bool inRepo(void) {
 
     FILE* file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
     if (file == NULL) {
@@ -35,7 +35,7 @@ bool in_repo(void) {
     return (strncmp(buf, "true", 4) == 0);
 }
 // Place branch name into provided buffer.
-void get_branch(char* branch_name) {
+void getBranch(char* branch_name) {
 
     FILE* file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
     if (file == NULL) {
@@ -74,7 +74,7 @@ int Committed(void) {
 // Counts how many staged, unstaged, and untracked files in the repo
 // on the current branch, then assigns each value to the provided variables.
 // !!Currently has a noticeable 1-2 second slow down in large repos like llvm.
-void get_status_of(int* staged, int* unstaged, int* untracked) {
+void getStatusOf(int* staged, int* unstaged, int* untracked) {
     FILE* file;
     if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
         exit(-1);

@@ -23,7 +23,7 @@ int main(void) {
     PathState pathState;
 
     if (strstr(path, pHome) != NULL) {
-        replace_home(path, pathLength, homeLength);
+        replaceHome(path, pathLength, homeLength);
         pathLength = (pathLength - homeLength) + 1;
     }
 
@@ -38,7 +38,7 @@ int main(void) {
     }
 
     if (pathLength > ABV_PATH_LEN_T) {
-        abrv_path(path, pathLength);
+        abrvPath(path, pathLength);
         pathLength = ABV_PATH_LEN_T;
     }
 
@@ -147,9 +147,9 @@ int main(void) {
         printf("%s[\\t] ", color_time);
     }
 
-    rem_curDir(path, pathLength);
+    remCurntDir(path, pathLength);
 
-    if (!usrConfig.git || !git_is_accessible() || !in_repo()) {
+    if ((!usrConfig.git || !isGitAccessible()) || !inRepo()) {
         // Skip branch name and status bar and just print the path.
         switch (pathState) {
 
@@ -178,7 +178,7 @@ int main(void) {
 
         if (usrConfig.branchname) {
             char branch_name[MAX_BRANCH_LEN];
-            get_branch(&branch_name[0]);
+            getBranch(&branch_name[0]);
             printf("%s%s%s  ", color_path, branch_name, color_usr);
         }
 
@@ -210,7 +210,7 @@ int main(void) {
             int untracked, unstaged, staged, committed, fetched;
             untracked = unstaged = staged = committed = fetched = 0;
 
-            get_status_of(&staged, &unstaged, &untracked);
+            getStatusOf(&staged, &unstaged, &untracked);
             committed = Committed();
             fetched = Fetched(&usrConfig.fetchConfig);
 
