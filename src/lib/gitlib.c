@@ -77,7 +77,7 @@ int Committed(void) {
 void getStatusOf(int* staged, int* unstaged, int* untracked) {
     FILE* file;
     if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
-        exit(-1);
+        return;
     }
     char c;
     int state = 0;
