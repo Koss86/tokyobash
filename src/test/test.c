@@ -95,6 +95,13 @@ int main() {
             fbuf[i] = ftime[3 + i];
             cbuf[i] = ctime[3 + i];
         }
+
+        /*
+        char str[] = "Today's temperature is 24 degrees";
+        int amount = atoi(&str[23]);
+        printf("%d", amount);
+        */
+
         int i_fbuf = atoi(fbuf);
         int i_cbuf = atoi(cbuf);
         printf("%i %i\n", i_cbuf, i_fbuf);
