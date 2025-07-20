@@ -405,70 +405,20 @@ void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_tim
     const int HR_INDX = 0;
     const int MIN_INDX = 3;
 
-    const int BUF_SIZE = 3;
+    dateData->curnt_year = atoi(&curnt_date[YR_INDX]);
+    dateData->fetch_year = atoi(&fetch_date[YR_INDX]);
 
-    char cbuf[BUF_SIZE];
-    char fbuf[BUF_SIZE];
+    dateData->curnt_month = atoi(&curnt_date[MONTH_INDX]);
+    dateData->fetch_month = atoi(&fetch_date[MONTH_INDX]);
 
-    for (int i = 0; i < BUF_SIZE; i++) {
-        if (i == BUF_SIZE - 1) {
-            cbuf[i] = '\0';
-            fbuf[i] = '\0';
-            break;
-        }
-        cbuf[i] = curnt_date[YR_INDX + i];
-        fbuf[i] = fetch_date[YR_INDX + i];
-    }
-    dateData->curnt_year = atoi(cbuf);
-    dateData->fetch_year = atoi(fbuf);
+    dateData->curnt_day = atoi(&curnt_date[DAY_INDX]);
+    dateData->fetch_day = atoi(&fetch_date[DAY_INDX]);
 
-    for (int i = 0; i < BUF_SIZE; i++) {
-        if (i == BUF_SIZE - 1) {
-            cbuf[i] = '\0';
-            fbuf[i] = '\0';
-            break;
-        }
-        cbuf[i] = curnt_date[MONTH_INDX + i];
-        fbuf[i] = fetch_date[MONTH_INDX + i];
-    }
-    dateData->curnt_month = atoi(cbuf);
-    dateData->fetch_month = atoi(fbuf);
+    dateData->curnt_hour = atoi(&curnt_time[HR_INDX]);
+    dateData->fetch_hour = atoi(&fetch_time[HR_INDX]);
 
-    for (int i = 0; i < BUF_SIZE; i++) {
-        if (i == BUF_SIZE - 1) {
-            cbuf[i] = '\0';
-            fbuf[i] = '\0';
-            break;
-        }
-        cbuf[i] = curnt_date[DAY_INDX + i];
-        fbuf[i] = fetch_date[DAY_INDX + i];
-    }
-    dateData->curnt_day = atoi(cbuf);
-    dateData->fetch_day = atoi(fbuf);
-
-    for (int i = 0; i < BUF_SIZE; i++) {
-        if (i == BUF_SIZE - 1) {
-            cbuf[i] = '\0';
-            fbuf[i] = '\0';
-            break;
-        }
-        cbuf[i] = curnt_time[HR_INDX + i];
-        fbuf[i] = fetch_time[HR_INDX + i];
-    }
-    dateData->curnt_hour = atoi(cbuf);
-    dateData->fetch_hour = atoi(fbuf);
-
-    for (int i = 0; i < BUF_SIZE; i++) {
-        if (i == BUF_SIZE - 1) {
-            cbuf[i] = '\0';
-            fbuf[i] = '\0';
-            break;
-        }
-        cbuf[i] = curnt_time[MIN_INDX + i];
-        fbuf[i] = fetch_time[MIN_INDX + i];
-    }
-    dateData->curnt_min = atoi(cbuf);
-    dateData->fetch_min = atoi(fbuf);
+    dateData->curnt_min = atoi(&curnt_time[MIN_INDX]);
+    dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
 }
 
 void getDaysInMonth(int* daysInMonth, int month) {
