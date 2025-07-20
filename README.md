@@ -80,7 +80,7 @@ In the root of the tokyobash repository, there are 3 commands to use:
 
 #### No Make
 
-If you dont have make, use these gcc commands:
+If you dont have make, use these gcc commands in the top level of the tokyobash repository:
 ```
 gcc -c src/tokyobash.c
 gcc -c src/lib/tokyobashlib.c
@@ -102,14 +102,14 @@ Try these commands in your terminal:
 - If `XDG_CONFIG_HOME` not set:
   ```
   mkdir -p ~/.config/tokyobash/
-  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
+  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\ntime = 1\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/
   rm config
   ```
 - If  `XDG_CONFIG_HOME` is set:
   ```
   mkdir -p $XDG_CONFIG_HOME/tokyobash/
-  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\nfetchtimer = 1d' > ./config
+  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\ngit = 1\nbranchname = 1\nstatusbar = 0\ntime = 1\nfetchtimer = 1d' > ./config
   cp -n config $XDG_CONFIG_HOME/tokyobash/
   rm config
   ```
@@ -128,15 +128,15 @@ export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
 export PROMPT_COMMAND='PS1="$(tokyobash)"'
 
 ```
-Now replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
+Replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
 
-Save then restart your terminal!
+Now save and restart your terminal!
 
 ## Config
 
-Config file uses standard key=value pairs.
+Config file uses standard key = value pairs.
 
-`#` used for comments.
+`#` or `//` can be used for comments.
 
 Spaces, single, and double quotes are ignored.
 
@@ -164,8 +164,8 @@ For example:
   - If `fetchtimer = 3d` repo will update after 3 days.
   - `fetchtimer = 1h30m` is not vaild and will probably cause an error. Only one `Day`, `Hour`, or `Minute` modifier allowed.
 
-Setting git = 0 disables all git integration. This supersedes the branchname and statusbar settings.
-So, if branchname = 1, and statusbar = 1, while git is set to 0. Then branchname and statusbar are not displayed.
+Setting `git = 0` disables all git integration. This supersedes the branchname and statusbar settings.
+So, if `git = 0`, then branchname and statusbar are not displayed reguardless of their setting.
 
 ##
 
