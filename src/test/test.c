@@ -11,24 +11,16 @@ int main() {
     struct tm* time_struct = localtime(&now);
 
     if (!strftime(cdate, sizeof(cdate), "%Y-%m-%d", time_struct)) {
-        printf("\\nError. shouldFetch()\\n");
+        printf("\nError. shouldFetch()\n");
     }
 
     if (!strftime(ctime, sizeof(ctime), "%X", time_struct)) {
-        printf("\\nError. shouldFetch()\\n");
+        printf("\nError. shouldFetch()\n");
     }
     FILE* fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
     if (fetch_status == NULL) {
-        printf("\\nError. shouldFetch()\\n");
+        printf("\nError. shouldFetch()\n");
     }
-
-    /*
-    char fbuf[800];
-    if (fgets(fbuf, sizeof(fbuf), fetch_status) == NULL) {
-        pclose(fetch_status);
-        printf("\\nError. shouldFetch()\\n");
-    }
-    */
 
     char c;
     int indx = 0;
@@ -73,7 +65,7 @@ int main() {
             }
         }
     }
-    // Check how long since fetch was called
+
     if (fdate[2] != cdate[2] || fdate[3] != cdate[3])
         return true; // Year
     if (fdate[5] != cdate[5] || fdate[6] != cdate[6])
@@ -107,6 +99,8 @@ int main() {
         printf("%i %i\n", i_cbuf, i_fbuf);
     }
 
-    printf("Last Fetch:%s %s\nCurrent Date:%s %s", fdate, ftime, cdate, ctime);
+    int test = atoi(&fdate[5]);
+    printf("%i\n", test);
+    printf("Last Fetch:%s %s\nCurrent Date:%s %s\n", fdate, ftime, cdate, ctime);
     return 0;
 }

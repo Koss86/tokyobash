@@ -52,7 +52,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
     int indx = 0;
     char keybuf[64];
     char valbuf[64];
-    char atoibuffer[3];
 
     while ((c = fgetc(file)) != EOF) {
 
@@ -129,76 +128,38 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if ((valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'm') ||
-                        valbuf[2] == 'm') {
+                    if (valbuf[1] == 'm' || valbuf[2] == 'm') {
 
                         usrConfig->fetchConfig.modifier = Minute;
 
-                        if (valbuf[2] == 'm') {
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = valbuf[1];
-                            atoibuffer[2] = '\0';
-
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
-                            if (usrConfig->fetchConfig.limit > 60) {
-                                usrConfig->fetchConfig.limit = 60;
-                            }
-
-                        } else {
-
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
-                        }
-
-                    } else if ((valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'h') ||
-                               valbuf[2] == 'h') {
+                    } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
 
                         usrConfig->fetchConfig.modifier = Hour;
 
-                        if (valbuf[2] == 'h') {
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = valbuf[1];
-                            atoibuffer[2] = '\0';
+                    } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
 
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
+                        usrConfig->fetchConfig.modifier = Day;
+                    }
+
+                    usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
+
+                    switch (usrConfig->fetchConfig.modifier) {
+
+                        case Minute:
+                            if (usrConfig->fetchConfig.limit > 60) {
+                                usrConfig->fetchConfig.limit = 60;
+                            }
+                            break;
+                        case Hour:
                             if (usrConfig->fetchConfig.limit > 24) {
                                 usrConfig->fetchConfig.limit = 24;
                             }
-
-                        } else {
-
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
-                        }
-
-                    } else if ((valbuf[0] != '-' && valbuf[0] != '0' && valbuf[1] == 'd') ||
-                               valbuf[2] == 'd') {
-
-                        usrConfig->fetchConfig.modifier = Day;
-
-                        if (valbuf[2] == 'd') {
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = valbuf[1];
-                            atoibuffer[2] = '\0';
-
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
+                            break;
+                        case Day:
                             if (usrConfig->fetchConfig.limit > 31) {
                                 usrConfig->fetchConfig.limit = 31;
                             }
-
-                        } else {
-
-                            atoibuffer[0] = valbuf[0];
-                            atoibuffer[1] = '\0';
-                            usrConfig->fetchConfig.limit = atoi(atoibuffer);
-                        }
-
-                    } else {
-                        // Justin Case
-                        usrConfig->fetchConfig.modifier = Day;
-                        usrConfig->fetchConfig.limit = 1;
+                            break;
                     }
 
                 } else if ((strncmp(keybuf, "time", 4)) == 0) {
@@ -275,7 +236,7 @@ void abrvPath(char* path, int pathLength) {
     }
     path[ABV_PATH_LEN_T] = '\0';
 }
-// Remove current directory from path. We add it back with \\W after
+// Remove current directory from path. We add it back with \W after
 // changing text to bold. This way the path is normal, while current dir is
 // highlighted.
 void remCurntDir(char* path, int pathLength) {
