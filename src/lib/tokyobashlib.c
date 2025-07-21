@@ -156,8 +156,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                             }
                             break;
                         case Day:
-                            if (usrConfig->fetchConfig.limit > 31) {
-                                usrConfig->fetchConfig.limit = 31;
+                            if (usrConfig->fetchConfig.limit > 15) {
+                                usrConfig->fetchConfig.limit = 15;
                             }
                             break;
                     }
