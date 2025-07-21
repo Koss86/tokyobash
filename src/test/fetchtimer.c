@@ -13,7 +13,7 @@ bool shouldFetchTest(Tester* fetchConfig);
 void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 void getDaysInMonth(int* daysInMonth, int month);
 
-#define TEST_SIZE 18
+#define TEST_SIZE 21
 
 int main() {
 
@@ -67,6 +67,24 @@ int main() {
     strcpy(times[in].curnt_date, "2025-04-03");
     strcpy(times[in].fetch_date, "2025-03-31");
     strcpy(times[in].curnt_time, "23:23:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 30;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-30");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "23:50:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 30;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-02-28");
+    strcpy(times[in].fetch_date, "2025-01-31");
+    strcpy(times[in].curnt_time, "23:50:43");
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
@@ -189,6 +207,15 @@ int main() {
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 30;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-01-31");
+    strcpy(times[in].curnt_time, "10:50:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
     int pass = 0;
     int expectedtrue = 0;
     for (int i = 0; i < TEST_SIZE; i++) {
@@ -274,6 +301,12 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
 
         printf("in Month: monthDif = %i\n", monthDif);
+        for (int i = 0; i < monthDif; i++) {
+            int cur_month = 0;
+            int fetch_month = 0;
+            getDaysInMonth(&cur_month, timeData.curnt_month);
+            getDaysInMonth(&fetch_month, timeData.fetch_month);
+        }
 
         if (monthDif > 1) {
 
@@ -283,12 +316,20 @@ bool shouldFetchTest(Tester* fetchConfig) {
 
     if (timeData.curnt_day != timeData.fetch_day) { // Day
 
+        if (monthDif != 0) {
+            getDaysInMonth(&days_in_month, timeData.fetch_month);
+            dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+        } else {
+            dayDif = timeData.curnt_day - timeData.fetch_day;
+        }
+        /*
         if (timeData.curnt_day >= timeData.fetch_day) {
             dayDif = timeData.curnt_day - timeData.fetch_day;
         } else {
             getDaysInMonth(&days_in_month, timeData.fetch_month);
             dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
         }
+        */
 
         printf("in Day: dayDif = %i\n", dayDif);
 
