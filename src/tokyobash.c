@@ -179,7 +179,7 @@ int main(void) {
         if (usrConfig.branchname) {
             char branch_name[MAX_BRANCH_LEN];
             getBranch(&branch_name[0]);
-            printf("%s%s%s   ", color_path, branch_name, color_usr);
+            printf("%s%s%s  ", color_path, branch_name, color_usr);
         }
 
         switch (pathState) {
