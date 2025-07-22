@@ -140,11 +140,11 @@ static bool shouldFetch(FetchOpts* fetchConfig) {
 
     if (timeData.curnt_day != timeData.fetch_day) { // Day
 
-        if (timeData.curnt_day >= timeData.fetch_day) {
-            dayDif = timeData.curnt_day - timeData.fetch_day;
-        } else {
+        if (monthDif != 0) {
             getDaysInMonth(&days_in_month, timeData.fetch_month);
             dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+        } else {
+            dayDif = timeData.curnt_day - timeData.fetch_day;
         }
 
         if ((fetchConfig->modifier == Day && dayDif > fetchConfig->limit) ||
