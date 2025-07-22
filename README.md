@@ -9,21 +9,21 @@ Highlights the current directory and changes color depending on whether you're i
   
 ![tokyobash_01](https://github.com/user-attachments/assets/f8f1f02f-abf7-4a15-b024-491dcbb8675f)
 
-##
+#
 
 #### Abbreviate Path
 Abbreviates paths longer than 50 characters.
 
 ![tokyobash_02](https://github.com/user-attachments/assets/b3b94ac8-b229-442d-a684-4afb493649dc)
 
-##
+#
 
 #### Git Branch Name
 If current directory is a repository it will display the current branch name:
  
 ![tokyobash_03](https://github.com/user-attachments/assets/7a47c858-b828-4b0e-96d9-bff82d4d7d48)
 
-##
+#
 
 #### Git Status Bar
 An icon bar that tracks changes to current repository.
@@ -42,9 +42,9 @@ Displays (in order):
 
 The status bar will only display when there are changes to the repo. And only show items that were changed.
 
-It is disabled by default, but can be enabled via the [Config](#config) setting.
+It is disabled by default, but can be enabled via the `statusbar` [Config](#config) setting.
  
-##
+#
 
 #### Themes
 You can currently choose between 3 different themes.
@@ -61,7 +61,7 @@ Kanagawa:
 
 ![tokyobash_kanagawa](https://github.com/user-attachments/assets/3bc22047-44d2-4674-a20d-01537a94b5d7)
 
-Can be changed via the theme [Config](#config) setting.
+Can be changed via the `theme` [Config](#config) setting.
 
 ## Installation
 
@@ -77,6 +77,26 @@ In the root of the tokyobash repository, there are 3 commands to use:
   - If `$XDG_CONFIG_HOME` is not set, the config directory path will default to `$HOME/.config/tokyobash`
 
   -`make install prefix=custom/path` Will compile tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
+  
+#
+
+Now add this to your .bashrc (usually located at $HOME/.bashrc):
+
+```bash
+
+export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
+
+# If tokyobash was placed somewhere that's in your $PATH,
+# then your PROMPT_COMMAND can look like this.
+
+export PROMPT_COMMAND='PS1="$(tokyobash)"'
+
+```
+Replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
+
+Now save and restart your terminal!
+
+#
 
 #### No Make
 
@@ -113,24 +133,6 @@ Try these commands in your terminal:
   cp -n config $XDG_CONFIG_HOME/tokyobash/
   rm config
   ```
-  
-##
-
-Now add this to your .bashrc (usually located at $HOME/.bashrc):
-
-```bash
-
-export PROMPT_COMMAND='PS1="$(path/to/tokyobash/binary)"'
-
-# If tokyobash was placed somewhere that's in your $PATH,
-# then your PROMPT_COMMAND can look like this.
-
-export PROMPT_COMMAND='PS1="$(tokyobash)"'
-
-```
-Replace `path/to/tokyobash/binary` above with the acutal path to the compiled tokyobash binary.
-
-Now save and restart your terminal!
 
 ## Config
 
