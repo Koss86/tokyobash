@@ -74,5 +74,6 @@ void getBranch(char* branch_name);
 int Committed(void);
 void getStatusOf(int* staged, int* unstaged, int* untracked);
 int Fetched(FetchOpts* fetchConfig);
+bool shouldFetch(FetchOpts* fetchConfig);
 
 #endif

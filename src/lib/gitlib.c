@@ -1,4 +1,5 @@
 #include "../../include/tokyobash.h"
+
 // If git is available, return true.
 bool isGitAccessible(void) {
 
@@ -111,4 +112,29 @@ void getStatusOf(int* staged, int* unstaged, int* untracked) {
     *unstaged = unst;
     *untracked = untr;
     pclose(file);
+}
+// Checks when last the repo was updated.
+// Calls fetch if longer than specified in
+// usrConfig.fetchConfig->limit. Then returns
+// number of commits from remote.
+int Fetched(FetchOpts* fetchConfig) {
+
+    if (shouldFetch(fetchConfig)) {
+        FILE* gitFetch = popen("git fetch 2>/dev/null", "r");
+        pclose(gitFetch);
+    }
+
+    FILE* file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
+    if (file == NULL) {
+        return -1;
+    }
+
+    char buf[16];
+    if (fgets(buf, sizeof(buf), file) == NULL) {
+        pclose(file);
+        return -1;
+    }
+
+    pclose(file);
+    return atoi(buf);
 }

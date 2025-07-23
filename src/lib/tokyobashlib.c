@@ -4,7 +4,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
-    char filepath[64] = "/tokyobash/config";
+    char filepath[256] = "/tokyobash/config";
     int filePathLen = 17;
 
     if (pConfig == NULL || pConfig[0] == '\0') {
