@@ -250,7 +250,7 @@ int main(void) {
                     // We stop printing the dividers at ct = 1
                     // because we want the last print to be ']' not '|'.
                     if (ct > 0 && ct != 1) {
-                        printf("%s|", color_usr);
+                        printf("%s | ", color_usr);
                         ct--;
                     }
                 }
@@ -258,7 +258,7 @@ int main(void) {
                     printf("%s%s %d", color_unstaged, reset, unstaged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s|", color_usr);
+                        printf("%s | ", color_usr);
                         ct--;
                     }
                 }
@@ -266,7 +266,7 @@ int main(void) {
                     printf("%s󱝣%s %d", color_staged, reset, staged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s|", color_usr);
+                        printf("%s | ", color_usr);
                         ct--;
                     }
                 }
@@ -274,7 +274,7 @@ int main(void) {
                     printf("%s%s %d", color_committed, reset, committed);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s|", color_usr);
+                        printf("%s | ", color_usr);
                         ct--;
                     }
                 }
@@ -282,7 +282,7 @@ int main(void) {
                     printf("%s%s %d", color_fetched, reset, fetched);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s|", color_usr);
+                        printf("%s | ", color_usr);
                         ct--;
                     }
                 }
