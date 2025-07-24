@@ -94,6 +94,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         yearDif = timeData.curnt_year - timeData.fetch_year;
 
         if (yearDif > 1) {
+
             return true;
         }
     }
@@ -101,24 +102,49 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (timeData.curnt_month != timeData.fetch_month) { // Month
 
         if (timeData.curnt_month >= timeData.fetch_month) {
+
             monthDif = timeData.curnt_month - timeData.fetch_month;
+
         } else {
+
             monthDif = (MONTHS_IN_YR - timeData.fetch_month) + timeData.curnt_month;
         }
 
         if (monthDif > 1) {
 
-            return true;
+            if ((timeData.curnt_month != 3 && timeData.fetch_month != 1) ||
+                fetchConfig->modifier != Day) {
+
+                return true;
+
+            } else {
+
+                getDaysInMonth(&days_in_month, timeData.fetch_month);
+                dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+                dayDif += 28; // add month of Febuary.
+
+                if (dayDif >= fetchConfig->limit) {
+
+                    return true;
+
+                } else {
+
+                    return false;
+                }
+            }
         }
     }
 
     if (timeData.curnt_day != timeData.fetch_day) { // Day
 
-        if (monthDif != 0) {
+        if (monthDif == 0) {
+
+            dayDif = timeData.curnt_day - timeData.fetch_day;
+
+        } else {
+
             getDaysInMonth(&days_in_month, timeData.fetch_month);
             dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
-        } else {
-            dayDif = timeData.curnt_day - timeData.fetch_day;
         }
 
         if ((fetchConfig->modifier == Day && dayDif > fetchConfig->limit) ||
@@ -133,8 +159,11 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         } else if (fetchConfig->modifier == Day) { // and dayDif and limit are equal
 
             if (timeData.curnt_hour >= timeData.fetch_hour) {
+
                 hrDif = timeData.curnt_hour - timeData.fetch_hour;
+
             } else {
+
                 hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
             }
 
@@ -159,8 +188,11 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (timeData.curnt_hour != timeData.fetch_hour || fetchConfig->modifier == Hour) { // Hour
 
         if (timeData.curnt_hour >= timeData.fetch_hour) {
+
             hrDif = timeData.curnt_hour - timeData.fetch_hour;
+
         } else {
+
             hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
         }
 

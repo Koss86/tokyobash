@@ -156,8 +156,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                             }
                             break;
                         case Day:
-                            if (usrConfig->fetchConfig.limit > 15) {
-                                usrConfig->fetchConfig.limit = 15;
+                            if (usrConfig->fetchConfig.limit > 30) {
+                                usrConfig->fetchConfig.limit = 30;
                             }
                             break;
                     }
@@ -203,6 +203,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
             valbuf[indx++] = c;
         }
     }
+    fclose(file);
+    return;
 }
 // If path contains $HOME, replace it with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
@@ -220,6 +222,7 @@ void replaceHome(char* path, int pathLength, int homeLength) {
         }
         path[indx] = '\0';
     }
+    return;
 }
 // If path lenth is greater than 50, keep first 24 chars, add '...' then
 // place last 23 chars after last '.' .
@@ -235,6 +238,7 @@ void abrvPath(char* path, int pathLength) {
         path[i] = path[indx++];
     }
     path[ABV_PATH_LEN_T] = '\0';
+    return;
 }
 // Remove current directory from path. We add it back with \W after
 // changing text to bold. This way the path is normal, while current dir is
@@ -248,4 +252,5 @@ void remCurntDir(char* path, int pathLength) {
             break;
         }
     }
+    return;
 }
