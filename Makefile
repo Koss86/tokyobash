@@ -18,9 +18,6 @@ else
 	COMP_VERSION = $(shell clang --version)
 	ifneq ($(findstring clang,$(COMP_VERSION)),)
 		CXX = clang
-	else
-		@echo "No compiler found, exiting."
-		exit 1
 	endif
 endif
 
