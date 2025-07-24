@@ -281,6 +281,8 @@ int main() {
 
     int pass = 0;
     int expectedtrue = 0;
+    char buffer[16];
+    char failedTest[TEST_SIZE * 3];
 
     for (int i = 0; i < TEST_SIZE; i++) {
         printf("Test %i\nModifier: ", i + 1);
@@ -304,6 +306,8 @@ int main() {
 
             if (times[i].expected == false) {
                 printf(" TEST FAILED");
+                sprintf(&buffer[0], "%d ", i + 1);
+                strcat(failedTest, buffer);
             }
 
         } else {
@@ -312,6 +316,8 @@ int main() {
 
             if (times[i].expected == true) {
                 printf(" TEST FAILED");
+                sprintf(&buffer[0], "%d ", i + 1);
+                strcat(failedTest, buffer);
             }
         }
 
@@ -337,8 +343,11 @@ int main() {
         failed = expectedtrue - pass;
     }
 
-    printf("%d Tests Ran\n%d Passed  %d Expected to Pass\n%d Failed\n", TEST_SIZE, pass,
-           expectedtrue, failed);
+    printf("%d Tests Ran\n%d Passed  %d Expected to Pass\n", TEST_SIZE, pass, expectedtrue);
+    printf("%d Failed Test\n", failed);
+    if (failed != 0) {
+        printf("Tests That Failed: %s\n", failedTest);
+    }
 
     return 0;
 }
