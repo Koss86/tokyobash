@@ -1,8 +1,11 @@
 .PHONY: all install clean
 CFLAGS = -O3 -Wall -Wextra -pedantic -fstack-protector-strong -std=gnu99 -Wshadow -Wconversion -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -Wno-conversion -fno-common -Wno-unused-result -Wimplicit-fallthrough -fdiagnostics-color=always
-BIN = tokyobash
 BINDIR = bin
-OBJ = tokyobash.o tokyobashlib.o gitlib.o fetchlib.o
+BIN = tokyobash
+LIB1 = tokyobashlib
+LIB2 = gitlib
+LIB3 = shouldFetchlib
+OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o
 CONFIG_FILE = config
 CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/$(BIN)
 prefix =
@@ -27,17 +30,17 @@ $(BIN): $(OBJ)
 	@mkdir -p $(BINDIR)
 	@$(CXX) $(CFLAGS) $(OBJ) -o $(BINDIR)/$(BIN)
 
-tokyobash.o: src/tokyobash.c
-	@$(CXX) $(CFLAGS) -c src/tokyobash.c
+$(BIN).o: src/$(BIN).c
+	@$(CXX) $(CFLAGS) -c src/$(BIN).c
 
-tokyobashlib.o: src/lib/tokyobashlib.c
-	@$(CXX) $(CFLAGS) -c src/lib/tokyobashlib.c
+$(LIB1).o: src/lib/$(LIB1).c
+	@$(CXX) $(CFLAGS) -c src/lib/$(LIB1).c
 
-gitlib.o: src/lib/gitlib.c
-	@$(CXX) $(CFLAGS) -c src/lib/gitlib.c
+$(LIB2).o: src/lib/$(LIB2).c
+	@$(CXX) $(CFLAGS) -c src/lib/$(LIB2).c
 
-fetchlib.o: src/lib/fetchlib.c
-	@$(CXX) $(CFLAGS) -c src/lib/fetchlib.c
+$(LIB3).o: src/lib/$(LIB3).c
+	@$(CXX) $(CFLAGS) -c src/lib/$(LIB3).c
 
 install: $(BIN) $(CONFIG_FILE)
 
