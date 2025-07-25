@@ -29,8 +29,8 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     int indx = 0;
     int newline = 0;
     int space = 0;
-    int inDate = 0;
-    int inTime = 0;
+    bool inDate = false;
+    bool inTime = false;
     char fetch_date[11];
     char fetch_time[9];
 
@@ -48,10 +48,10 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         if (newline == 6 && c == ' ') {
             space++;
             if (space == 1) {
-                inDate = 1;
+                inDate = true;
             } else if (space == 2) {
-                inTime = 1;
-                inDate = 0;
+                inTime = true;
+                inDate = false;
             }
             continue;
         }
@@ -85,13 +85,15 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     int dayDif = 0;
     int hrDif = 0;
     int minDif = 0;
+    FetchModifier modifier = fetchConfig->modifier;
+    int limit = fetchConfig->limit;
 
-    IntTimesnDates timeData;
-    extractTimeData(&timeData, curnt_date, curnt_time, fetch_date, fetch_time);
+    IntTimesnDates time;
+    extractTimeData(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
-    if (timeData.curnt_year != timeData.fetch_year) { // Year
+    if (time.curnt_year != time.fetch_year) { // Year
 
-        yearDif = timeData.curnt_year - timeData.fetch_year;
+        yearDif = time.curnt_year - time.fetch_year;
 
         if (yearDif > 1) {
 
@@ -99,31 +101,30 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_month != timeData.fetch_month) { // Month
+    if (time.curnt_month != time.fetch_month) { // Month
 
-        if (timeData.curnt_month >= timeData.fetch_month) {
+        if (time.curnt_month >= time.fetch_month) {
 
-            monthDif = timeData.curnt_month - timeData.fetch_month;
+            monthDif = time.curnt_month - time.fetch_month;
 
         } else {
 
-            monthDif = (MONTHS_IN_YR - timeData.fetch_month) + timeData.curnt_month;
+            monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
         }
 
         if (monthDif > 1) {
 
-            if ((timeData.curnt_month != 3 && timeData.fetch_month != 1) ||
-                fetchConfig->modifier != Day) {
+            if ((time.curnt_month != 3 && time.fetch_month != 1) || modifier != Day) {
 
                 return true;
 
             } else {
 
-                getDaysInMonth(&days_in_month, timeData.fetch_month);
-                dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+                getDaysInMonth(&days_in_month, time.fetch_month);
+                dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
                 dayDif += 28; // add month of Febuary.
 
-                if (dayDif >= fetchConfig->limit) {
+                if (dayDif >= limit) {
 
                     return true;
 
@@ -135,45 +136,44 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_day != timeData.fetch_day) { // Day
+    if (time.curnt_day != time.fetch_day) { // Day
 
         if (monthDif == 0) {
 
-            dayDif = timeData.curnt_day - timeData.fetch_day;
+            dayDif = time.curnt_day - time.fetch_day;
 
         } else {
 
-            getDaysInMonth(&days_in_month, timeData.fetch_month);
-            dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+            getDaysInMonth(&days_in_month, time.fetch_month);
+            dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
-        if ((fetchConfig->modifier == Day && dayDif > fetchConfig->limit) ||
-            (fetchConfig->modifier != Day && dayDif > 1)) {
+        if ((modifier == Day && dayDif > limit) || (modifier != Day && dayDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->modifier == Day && dayDif < fetchConfig->limit) {
+        } else if (modifier == Day && dayDif < limit) {
 
             return false;
 
-        } else if (fetchConfig->modifier == Day) { // and dayDif and limit are equal
+        } else if (modifier == Day) { // and dayDif and limit are equal
 
-            if (timeData.curnt_hour >= timeData.fetch_hour) {
+            if (dayDif == 0) {
 
-                hrDif = timeData.curnt_hour - timeData.fetch_hour;
+                hrDif = time.curnt_hour - time.fetch_hour;
 
             } else {
 
-                hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+                hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
             }
 
-            if (hrDif > 1) {
+            if (hrDif > HOURS_IN_DAY) {
 
                 return false;
 
             } else {
 
-                if (timeData.curnt_min >= timeData.fetch_min) {
+                if (time.curnt_min >= time.fetch_min) {
 
                     return true;
 
@@ -185,29 +185,28 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_hour != timeData.fetch_hour || fetchConfig->modifier == Hour) { // Hour
+    if (time.curnt_hour != time.fetch_hour || modifier == Hour) { // Hour
 
-        if (timeData.curnt_hour >= timeData.fetch_hour) {
+        if (time.curnt_hour >= time.fetch_hour) {
 
-            hrDif = timeData.curnt_hour - timeData.fetch_hour;
+            hrDif = time.curnt_hour - time.fetch_hour;
 
         } else {
 
-            hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
-        if ((fetchConfig->modifier == Hour && hrDif > fetchConfig->limit) ||
-            (fetchConfig->modifier != Hour && hrDif > 1)) {
+        if ((modifier == Hour && hrDif > limit) || (modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->modifier == Hour && hrDif < fetchConfig->limit) {
+        } else if (modifier == Hour && hrDif < limit) {
 
             return false;
 
-        } else if (fetchConfig->modifier == Hour) {
+        } else if (modifier == Hour) {
 
-            if (timeData.curnt_min >= timeData.fetch_min) {
+            if (time.curnt_min >= time.fetch_min) {
 
                 return true;
 
@@ -218,23 +217,20 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_min != timeData.fetch_min || fetchConfig->modifier == Minute) { // Minute
+    if (time.curnt_min != time.fetch_min) { // Minute
 
-        if (timeData.curnt_min >= timeData.fetch_min) {
+        if (hrDif == 0) {
 
-            minDif = timeData.curnt_min - timeData.fetch_min;
+            minDif = time.curnt_min - time.fetch_min;
 
         } else {
 
-            minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
+            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
 
-        if (fetchConfig->modifier == Minute) {
+        if (minDif >= limit) {
 
-            if (minDif >= fetchConfig->limit) {
-
-                return true;
-            }
+            return true;
         }
     }
     return false;
