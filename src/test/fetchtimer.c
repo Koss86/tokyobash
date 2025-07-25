@@ -26,10 +26,12 @@ int main() {
 
     generateTests(times);
 
+    int failed;
+    char buffer[16];
     int return_true = 0;
     int return_false = 0;
     int expectedtrue = 0;
-    char buffer[16];
+    int expectedfalse = 0;
     char failedTests[TEST_SIZE * 3];
 
     for (int i = 0; i < TEST_SIZE; i++) {
@@ -56,6 +58,7 @@ int main() {
                 printf(" TEST FAILED");
                 sprintf(&buffer[0], "%d ", i + 1);
                 strcat(failedTests, buffer);
+                failed++;
             }
 
         } else {
@@ -67,6 +70,7 @@ int main() {
                 printf(" TEST FAILED");
                 sprintf(&buffer[0], "%d ", i + 1);
                 strcat(failedTests, buffer);
+                failed++;
             }
         }
 
@@ -80,23 +84,17 @@ int main() {
 
         } else {
 
+            expectedfalse++;
             printf("False\n");
         }
         printf("\n");
     }
 
-    int failed;
-    if (return_true >= expectedtrue) {
-        failed = return_true - expectedtrue;
-    } else {
-        failed = expectedtrue - return_true;
-    }
-
-    printf("%d Tests Ran\n%d Returned True  %d Expected to Return True\n", TEST_SIZE, return_true,
-           expectedtrue);
-    printf("%d Retruned False %d Expected to Return False\n", return_false,
+    printf("%2d Tests Ran\n", TEST_SIZE);
+    printf("%2d Test Failed\n", failed);
+    printf("%2d Returned True  %2d Expected to Return True\n", return_true, expectedtrue);
+    printf("%2d Retruned False %2d Expected to Return False\n", return_false,
            TEST_SIZE - expectedtrue);
-    printf("%d Test Failed\n", failed);
     if (failed != 0) {
         printf("Tests That Failed: %s\n", failedTests);
     }
@@ -116,14 +114,16 @@ bool shouldFetchTest(Tester* fetchConfig) {
     int dayDif = 0;
     int hrDif = 0;
     int minDif = 0;
+    FetchModifier modifier = fetchConfig->settings.modifier;
+    int limit = fetchConfig->settings.limit;
 
-    IntTimesnDates timeData;
-    extractTimeData(&timeData, fetchConfig->curnt_date, fetchConfig->curnt_time,
+    IntTimesnDates time;
+    extractTimeData(&time, fetchConfig->curnt_date, fetchConfig->curnt_time,
                     fetchConfig->fetch_date, fetchConfig->fetch_time);
 
-    if (timeData.curnt_year != timeData.fetch_year) { // Year
+    if (time.curnt_year != time.fetch_year) { // Year
 
-        yearDif = timeData.curnt_year - timeData.fetch_year;
+        yearDif = time.curnt_year - time.fetch_year;
         printf("in Year: yearDif = %i\n", yearDif);
 
         if (yearDif > 1) {
@@ -132,35 +132,34 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_month != timeData.fetch_month) { // Month
+    if (time.curnt_month != time.fetch_month) { // Month
 
-        if (timeData.curnt_month >= timeData.fetch_month) {
+        if (time.curnt_month >= time.fetch_month) {
 
-            monthDif = timeData.curnt_month - timeData.fetch_month;
+            monthDif = time.curnt_month - time.fetch_month;
 
         } else {
 
-            monthDif = (MONTHS_IN_YR - timeData.fetch_month) + timeData.curnt_month;
+            monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
         }
 
         printf("in Month: monthDif = %i\n", monthDif);
 
         if (monthDif > 1) {
 
-            if ((timeData.curnt_month != 3 && timeData.fetch_month != 1) ||
-                fetchConfig->settings.modifier != Day) {
+            if ((time.curnt_month != 3 && time.fetch_month != 1) || modifier != Day) {
 
                 return true;
 
             } else {
 
-                getDaysInMonth(&days_in_month, timeData.fetch_month);
-                dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
-                dayDif += 28;
+                getDaysInMonth(&days_in_month, time.fetch_month);
+                dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
+                dayDif += 28; // add month of Febuary.
 
                 printf("in Month: dayDif = %d\n", dayDif);
 
-                if (dayDif >= fetchConfig->settings.limit) {
+                if (dayDif >= limit) {
 
                     return true;
 
@@ -172,61 +171,60 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_day != timeData.fetch_day) { // Day
+    if (time.curnt_day != time.fetch_day) { // Day
 
         if (monthDif == 0) {
 
-            dayDif = timeData.curnt_day - timeData.fetch_day;
+            dayDif = time.curnt_day - time.fetch_day;
 
         } else {
 
-            getDaysInMonth(&days_in_month, timeData.fetch_month);
-            dayDif = (days_in_month - timeData.fetch_day) + timeData.curnt_day;
+            getDaysInMonth(&days_in_month, time.fetch_month);
+            dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
         printf("in Day: dayDif = %i\n", dayDif);
 
-        if ((fetchConfig->settings.modifier == Day && dayDif > fetchConfig->settings.limit) ||
-            (fetchConfig->settings.modifier != Day && dayDif > 1)) {
+        if ((modifier == Day && dayDif > limit) || (modifier != Day && dayDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->settings.modifier == Day && dayDif < fetchConfig->settings.limit) {
+        } else if (modifier == Day && dayDif < limit) {
 
             return false;
 
-        } else if (fetchConfig->settings.modifier == Day) { // and dayDif and limit are equal
+        } else if (modifier == Day) { // and dayDif and limit are equal
 
-            if (timeData.curnt_hour >= timeData.fetch_hour) {
+            if (dayDif == 0) {
 
-                hrDif = timeData.curnt_hour - timeData.fetch_hour;
+                hrDif = time.curnt_hour - time.fetch_hour;
 
             } else {
 
-                hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+                hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
             }
 
             printf("in Day: hrDif = %i\n", hrDif);
 
-            if (hrDif > 1) {
+            if (hrDif > HOURS_IN_DAY) {
 
                 return false;
 
             } else {
 
                 ////////////// REMOVE FROM MAIN LIB ////////////////
-                if (timeData.curnt_min >= timeData.fetch_min) {
+                if (time.curnt_min >= time.fetch_min) {
 
-                    minDif = timeData.curnt_min - timeData.fetch_min;
+                    minDif = time.curnt_min - time.fetch_min;
 
                 } else {
 
-                    minDif = timeData.fetch_min - timeData.curnt_min;
+                    minDif = time.fetch_min - time.curnt_min;
                 }
 
                 printf("in Day: minDif = %i\n", minDif);
                 /////////////////////////////////////////////////////
-                if (timeData.curnt_min >= timeData.fetch_min) {
+                if (time.curnt_min >= time.fetch_min) {
 
                     return true;
 
@@ -238,44 +236,42 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_hour != timeData.fetch_hour ||
-        fetchConfig->settings.modifier == Hour) { // Hour
+    if (time.curnt_hour != time.fetch_hour || modifier == Hour) { // Hour
 
-        if (timeData.curnt_hour >= timeData.fetch_hour) {
+        if (time.curnt_hour >= time.fetch_hour) {
 
-            hrDif = timeData.curnt_hour - timeData.fetch_hour;
+            hrDif = time.curnt_hour - time.fetch_hour;
 
         } else {
 
-            hrDif = (HOURS_IN_DAY - timeData.fetch_hour) + timeData.curnt_hour;
+            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
         printf("in Hour: hrDif = %i\n", hrDif);
-        if ((fetchConfig->settings.modifier == Hour && hrDif > fetchConfig->settings.limit) ||
-            (fetchConfig->settings.modifier != Hour && hrDif > 1)) {
+        if ((modifier == Hour && hrDif > limit) || (modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (fetchConfig->settings.modifier == Hour && hrDif < fetchConfig->settings.limit) {
+        } else if (modifier == Hour && hrDif < limit) {
 
             return false;
 
-        } else if (fetchConfig->settings.modifier == Hour) {
+        } else if (modifier == Hour) {
 
             ////////////// REMOVE FROM MAIN LIB ////////////////
-            if (timeData.curnt_min >= timeData.fetch_min) {
+            if (time.curnt_min >= time.fetch_min) {
                 // if (hrDif > 0){
 
-                minDif = timeData.curnt_min - timeData.fetch_min;
+                minDif = time.curnt_min - time.fetch_min;
 
             } else {
 
-                minDif = timeData.fetch_min - timeData.curnt_min;
+                minDif = time.fetch_min - time.curnt_min;
             }
 
             printf("in Hour: minDif = %i\n", minDif);
             ////////////////////////////////////////////////////
-            if (timeData.curnt_min >= timeData.fetch_min) {
+            if (time.curnt_min >= time.fetch_min) {
 
                 return true;
 
@@ -286,26 +282,23 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
     }
 
-    if (timeData.curnt_min != timeData.fetch_min ||
-        fetchConfig->settings.modifier == Minute) { // Minute
+    if (time.curnt_min != time.fetch_min) { // Minute
 
         if (hrDif == 0) {
-            // if (timeData.curnt_min >= timeData.fetch_min) {
+            // if (time.curnt_min >= time.fetch_min) {
 
-            minDif = timeData.curnt_min - timeData.fetch_min;
+            minDif = time.curnt_min - time.fetch_min;
 
         } else {
 
-            minDif = (MINS_IN_HOUR - timeData.fetch_min) + timeData.curnt_min;
+            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
 
         printf("in Minute: minDif = %i\n", minDif);
-        if (fetchConfig->settings.modifier == Minute) {
 
-            if (minDif >= fetchConfig->settings.limit) {
+        if (minDif >= limit) {
 
-                return true;
-            }
+            return true;
         }
     }
     return false;
