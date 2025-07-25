@@ -29,8 +29,8 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     int indx = 0;
     int newline = 0;
     int space = 0;
-    int inDate = 0;
-    int inTime = 0;
+    bool inDate = false;
+    bool inTime = false;
     char fetch_date[11];
     char fetch_time[9];
 
@@ -48,10 +48,10 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         if (newline == 6 && c == ' ') {
             space++;
             if (space == 1) {
-                inDate = 1;
+                inDate = true;
             } else if (space == 2) {
-                inTime = 1;
-                inDate = 0;
+                inTime = true;
+                inDate = false;
             }
             continue;
         }
@@ -220,7 +220,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
     if (timeData.curnt_min != timeData.fetch_min || fetchConfig->modifier == Minute) { // Minute
 
-        if (timeData.curnt_min >= timeData.fetch_min) {
+        if (hrDif == 0) {
 
             minDif = timeData.curnt_min - timeData.fetch_min;
 
