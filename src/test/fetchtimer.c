@@ -14,7 +14,7 @@ void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 void getDaysInMonth(int* daysInMonth, int month);
 void generateTests(Tester* times);
 
-#define TEST_SIZE 34
+#define TEST_SIZE 36
 
 int main() {
 
@@ -127,6 +127,7 @@ bool shouldFetchTest(Tester* fetchConfig) {
         printf("in Year: yearDif = %i\n", yearDif);
 
         if (yearDif > 1) {
+
             return true;
         }
     }
@@ -349,6 +350,15 @@ void getDaysInMonth(int* daysInMonth, int month) {
 void generateTests(Tester* times) {
     int in = 0;
     ///////// Day Tests ///////////
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 5;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2026-01-05");
+    strcpy(times[in].fetch_date, "2025-12-31");
+    strcpy(times[in].curnt_time, "00:01:43");
+    strcpy(times[in].fetch_time, "13:59:43");
+    in++;
+
     times[in].settings.modifier = Day;
     times[in].settings.limit = 3;
     times[in].expected = true;
@@ -655,5 +665,14 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_date, "2025-04-01");
     strcpy(times[in].curnt_time, "11:00:43");
     strcpy(times[in].fetch_time, "10:59:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2026-01-01");
+    strcpy(times[in].fetch_date, "2025-12-31");
+    strcpy(times[in].curnt_time, "00:01:43");
+    strcpy(times[in].fetch_time, "23:59:43");
     in++;
 }
