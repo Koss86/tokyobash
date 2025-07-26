@@ -43,6 +43,7 @@ typedef struct ConfigSettings {
     bool time;
     bool debug;
     Themes theme;
+    bool background;
     bool statusbar;
     bool branchname;
     FetchOpts fetchConfig;

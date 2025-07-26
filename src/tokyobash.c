@@ -48,6 +48,7 @@ int main(void) {
     usrConfig.debug = 0;
     usrConfig.statusbar = 0;
     usrConfig.branchname = 1;
+    usrConfig.background = 1;
     usrConfig.theme = Tokyonight;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
@@ -141,7 +142,11 @@ int main(void) {
             break;
     }
 
-    printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+    if (usrConfig.background) {
+        printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+    } else {
+        printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+    }
 
     if (usrConfig.time) {
         printf("%s[\\t] ", color_time);
