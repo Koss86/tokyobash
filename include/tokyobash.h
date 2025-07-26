@@ -54,13 +54,11 @@ typedef struct IntTimesAndDates {
     int curnt_day;
     int curnt_hour;
     int curnt_min;
-    // int curnt_sec;
     int fetch_year;
     int fetch_month;
     int fetch_day;
     int fetch_hour;
     int fetch_min;
-    // int fetch_sec;
 } IntTimesnDates;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
