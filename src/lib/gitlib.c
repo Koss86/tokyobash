@@ -18,7 +18,7 @@ bool isGitAccessible(void) {
     return (strstr(buf, "git version") != NULL);
 }
 // If current directory is a repository, return true.
-bool inRepo(void) {
+bool checkIfInRepo(void) {
 
     FILE* file = popen("git rev-parse --is-inside-work-tree 2>/dev/null", "r");
     if (file == NULL) {

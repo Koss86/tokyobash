@@ -167,20 +167,13 @@ bool shouldFetch(FetchOpts* fetchConfig) {
                 hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
             }
 
-            if (hrDif > HOURS_IN_DAY) {
+            if (hrDif > HOURS_IN_DAY || time.curnt_min < time.fetch_min) {
 
                 return false;
 
             } else {
 
-                if (time.curnt_min >= time.fetch_min) {
-
-                    return true;
-
-                } else {
-
-                    return false;
-                }
+                return true;
             }
         }
     }
@@ -196,24 +189,16 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
-        if ((modifier == Hour && hrDif > limit) || (modifier != Hour && hrDif > 1)) {
+        if ((modifier == Hour && hrDif > limit) ||
+            (modifier == Hour && time.curnt_min >= time.fetch_min) ||
+            (modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (modifier == Hour && hrDif < limit) {
+        } else if ((modifier == Hour && hrDif < limit) ||
+                   (modifier == Hour && time.curnt_min < time.fetch_min)) {
 
             return false;
-
-        } else if (modifier == Hour) {
-
-            if (time.curnt_min >= time.fetch_min) {
-
-                return true;
-
-            } else {
-
-                return false;
-            }
         }
     }
 

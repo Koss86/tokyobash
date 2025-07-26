@@ -41,10 +41,15 @@ typedef struct FetchOpts {
 typedef struct ConfigSettings {
     bool git;
     bool time;
+    bool fetch;
     bool debug;
     Themes theme;
+    bool inARepo;
     bool statusbar;
+    bool background;
     bool branchname;
+    bool gitAccessible;
+    PathState pathState;
     FetchOpts fetchConfig;
 } ConfigSettings;
 
@@ -61,13 +66,120 @@ typedef struct IntTimesAndDates {
     int fetch_min;
 } IntTimesnDates;
 
+typedef struct Colors {
+    char bold[13];
+    char reset[14];
+    char red[26];
+    char yellow[26];
+    char lime_green[27];
+    char desat_lime[27];
+    char white[28];
+    char black[16];
+    char beige[28];
+    char green[24];
+    char gray[28];
+
+    char surface1[25];
+    char surface1_bg[25];
+    char surface2[26];
+    char surface2_bg[26];
+    char firebrick[26];
+    char firebrick_bg[26];
+    char pink[20];
+    char pink_bg[20];
+    char rose[28];
+    char rose_bg[28];
+    char peach[28];
+    char peach_bg[28];
+    char orange[27];
+    char orange_bg[27];
+    char cyan[28];
+    char cyan_bg[28];
+    char blue[28];
+    char blue_bg[28];
+    char sky_blue[20];
+    char sky_blue_bg[20];
+    char teal[26];
+    char teal_bg[26];
+    char smoke[29];
+    char smoke_bg[29];
+    char orchid[28];
+    char orchid_bg[28];
+    char light_purple[20];
+    char light_purple_bg[20];
+    char purple[28];
+    char purple_bg[28];
+    char khaki[28];
+    char khaki_bg[28];
+    char gold[27];
+    char gold_bg[27];
+    char light_gold[28];
+    char light_gold_bg[28];
+    char slate[26];
+    char slate_bg[26];
+    char light_slate[26];
+    char light_slate_bg[26];
+    char sumiInk3[25];
+    char sumiInk3_bg[25];
+    char sumiInk4[26];
+    char sumiInk4_bg[26];
+    char winter_green[25];
+    char winter_green_bg[25];
+    char surimiOrange[28];
+    char surimiOrange_bg[28];
+
+    char waveAqua2[28];
+    char rosewater[28];
+    char sky[28];
+    char dark_peach[28];
+    char pale_teal[28];
+    char sandy_orange[30];
+    char sandy_orange_bg[30];
+} Colors;
+
+typedef struct ColorPointers {
+    char* bold;
+    char* reset;
+    char* usr_color;
+    char* time_color;
+    char* branch_color;
+    char* path_color;
+
+    char* untracked;
+    char* unstaged;
+    char* staged;
+    char* committed;
+    char* fetched;
+
+    char* usr_txt;
+    char* time_txt;
+    char* branch_txt;
+    char* path_txt;
+    char* mnt_txt;
+    char* root_txt;
+
+    char* usr_bg;
+    char* time_bg;
+    char* branch_bg;
+    char* path_bg;
+} ColorPointers;
+
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
+void colorDefinitions(Colors* colors);
+void assignPointers(ColorPointers* colors, Colors* colorsDefs, ConfigSettings* usrConfig);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
 void remCurntDir(char* path, int Plen);
 
+void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors);
+void printBranch(ConfigSettings* usrConfig, ColorPointers* colors);
+void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
+void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
+void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int staged, int committed,
+                    int fetched);
+
 bool isGitAccessible(void);
-bool inRepo(void);
+bool checkIfInRepo(void);
 void getBranch(char* branch_name);
 int Committed(void);
 void getStatusOf(int* staged, int* unstaged, int* untracked);

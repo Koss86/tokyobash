@@ -5,7 +5,8 @@ BIN = tokyobash
 LIB1 = tokyobashlib
 LIB2 = gitlib
 LIB3 = shouldFetchlib
-OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o
+LIB4 = printlib
+OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o $(LIB4).o
 CONFIG_FILE = config
 CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/$(BIN)
 prefix =
@@ -39,6 +40,9 @@ $(LIB2).o: src/lib/$(LIB2).c
 $(LIB3).o: src/lib/$(LIB3).c
 	@$(CXX) $(CFLAGS) -c src/lib/$(LIB3).c
 
+$(LIB4).o: src/lib/$(LIB4).c
+	@$(CXX) $(CFLAGS) -c src/lib/$(LIB4).c
+
 install: $(BIN) $(CONFIG_FILE)
 
 	@mkdir -p $(CONFIGDIR)
@@ -57,7 +61,7 @@ endif
 	@$(RM) $(OBJ) $(CONFIG_FILE)
 
 $(CONFIG_FILE):
-	@printf 'theme      = tokyonight\n#theme     = catppuccin\n#theme     = kanagawa\n\ngit        = 1\nbranchname = 1\nstatusbar  = 0\ntime       = 1\nfetchtimer = 1d\n' > $(CONFIG_FILE)
+	@printf 'theme      = tokyonight\n#theme     = catppuccin\n#theme     = kanagawa\n\ngit        = 1\nbranchname = 1\nstatusbar  = 1\ntime       = 1\nfetch      = 0\nfetchtimer = 1d\n' > $(CONFIG_FILE)
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)
