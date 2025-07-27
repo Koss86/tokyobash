@@ -170,6 +170,14 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                         usrConfig->time = true;
                     }
 
+                } else if ((strncmp(keybuf, "background", 10)) == 0) {
+
+                    if (valbuf[0] == '0') {
+                        usrConfig->background = false;
+                    } else if (valbuf[0] == '1') {
+                        usrConfig->background = true;
+                    }
+
                 } // add else if's here for future optoins with int vals.
 
                 else if ((strncmp(keybuf, "debug", 5)) == 0) {
