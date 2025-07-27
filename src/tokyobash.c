@@ -48,7 +48,7 @@ int main(void) {
     usrConfig.debug = 0;
     usrConfig.statusbar = 0;
     usrConfig.branchname = 1;
-    usrConfig.background = 1;
+    usrConfig.background = 0;
     usrConfig.theme = Tokyonight;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
@@ -71,85 +71,166 @@ int main(void) {
     char cyan[] = "\\[\\e[38;5;86m\\]";
     char blue[] = "\\[\\e[38;5;4m\\]";
     char sky_blue[] = "\\[\\e[38;5;117m\\]";
-    char teal[] = "\\[\\e[38;2;104;155;196m\\]";
+    char teal[] = "\\[\\e[38;5;37m\\]";
     char orchid[] = "\\[\\e[38;2;166;121;210m\\]";
     char light_purple[] = "\\[\\e[38;5;182m\\]";
     char purple[] = "\\[\\e[38;2;153;102;204m\\]";
     char khaki[] = "\\[\\e[38;2;238;232;170m\\]";
     char white[] = "\\[\\e[38;2;255;255;255m\\]";
+    char black[] = "\\[\\e[0;30m\\]";
     char beige[] = "\\[\\e[38;2;239;239;200m\\]";
 
-    char* color_usr = &reset[0];
-    char* color_time = &reset[0];
-    char* color_path = &reset[0];
-    char* color_mnt = &reset[0];
-    char* color_root = &reset[0];
+    char blue_bg[] = "\\[\\e[48;5;4m\\]";
+    char sky_blue_bg[] = "\\[\\e[48;5;117m\\]";
+    char cyan_bg[] = "\\[\\e[48;5;86m\\]";
+    char teal_bg[] = "\\[\\e[48;5;37m\\]";
 
-    char* color_untracked = &yellow[0];
-    char* color_unstaged = &reset[0];
-    char* color_staged = &reset[0];
-    char* color_committed = &reset[0];
-    char* color_fetched = &reset[0];
+    char* usr_color = reset;
+    char* time_color = reset;
+    char* path_color = reset;
+    char* mnt_color = reset;
+    char* root_color = reset;
 
-    switch (usrConfig.theme) {
+    char* color_untracked = yellow;
+    char* color_unstaged = reset;
+    char* color_staged = reset;
+    char* color_committed = reset;
+    char* color_fetched = reset;
 
-        case Tokyonight:
-            color_usr = &cyan[0];
-            color_time = &sky_blue[0];
-            color_path = &blue[0];
-            color_mnt = &orange[0];
-            color_root = &pink[0];
-            color_unstaged = &orange[0];
-            color_staged = &orchid[0];
-            color_committed = &lime_green[0];
-            color_fetched = &dark_orange[0];
-            break;
+    char* txt_fg_color = reset;
+    char* usr_bg = reset;
+    char* time_bg = reset;
+    char* branch_bg = reset;
+    char* path_bg = reset;
+    // char* mnt_bg = reset;
+    // char* root_bg = reset;
 
-        case Catppuccin:
-            color_usr = &peach[0];
-            color_time = &rose[0];
-            color_path = &light_purple[0];
-            color_mnt = &blue[0];
-            color_root = &orange[0];
-            color_unstaged = &orange[0];
-            color_staged = &blue[0];
-            color_committed = &lime_green[0];
-            color_fetched = &pink[0];
-            break;
+    if (usrConfig.background) {
 
-        case Kanagawa:
-            color_usr = &desat_firebrick[0];
-            color_time = &teal[0];
-            color_path = &khaki[0];
-            color_mnt = &desat_lime[0];
-            color_root = &light_purple[0];
-            color_unstaged = &dark_orange[0];
-            color_staged = &purple[0];
-            color_committed = &green[0];
-            color_fetched = &pink[0];
-            break;
+        switch (usrConfig.theme) {
 
-        case Orange:
-            color_usr = &dark_orange[0];
-            color_time = &beige[0];
-            color_path = &white[0];
-            color_mnt = &orange[0];
-            color_root = &pink[0];
-            color_unstaged = &red[0];
-            color_staged = &blue[0];
-            color_committed = &green[0];
-            color_fetched = &red[0];
-            break;
+            case Tokyonight:
+                usr_color = cyan;
+                time_color = sky_blue;
+                path_color = blue;
+                mnt_color = orange;
+                root_color = pink;
+                color_unstaged = orange;
+                color_staged = orchid;
+                color_committed = lime_green;
+                color_fetched = dark_orange;
+
+                txt_fg_color = black;
+                usr_bg = cyan_bg;
+                branch_bg = teal_bg;
+                time_bg = sky_blue_bg;
+                path_bg = blue_bg;
+                break;
+
+            case Catppuccin:
+                usr_color = peach;
+                time_color = rose;
+                path_color = light_purple;
+                mnt_color = blue;
+                root_color = orange;
+                color_unstaged = orange;
+                color_staged = blue;
+                color_committed = lime_green;
+                color_fetched = pink;
+                break;
+
+            case Kanagawa:
+                usr_color = desat_firebrick;
+                time_color = teal;
+                path_color = khaki;
+                mnt_color = desat_lime;
+                root_color = light_purple;
+                color_unstaged = dark_orange;
+                color_staged = purple;
+                color_committed = green;
+                color_fetched = pink;
+                break;
+
+            case Orange:
+                usr_color = dark_orange;
+                time_color = beige;
+                path_color = white;
+                mnt_color = orange;
+                root_color = pink;
+                color_unstaged = red;
+                color_staged = blue;
+                color_committed = green;
+                color_fetched = red;
+                break;
+        }
+
+    } else {
+
+        switch (usrConfig.theme) {
+
+            case Tokyonight:
+                usr_color = cyan;
+                time_color = sky_blue;
+                path_color = blue;
+                mnt_color = orange;
+                root_color = pink;
+                color_unstaged = orange;
+                color_staged = orchid;
+                color_committed = lime_green;
+                color_fetched = dark_orange;
+                break;
+
+            case Catppuccin:
+                usr_color = peach;
+                time_color = rose;
+                path_color = light_purple;
+                mnt_color = blue;
+                root_color = orange;
+                color_unstaged = orange;
+                color_staged = blue;
+                color_committed = lime_green;
+                color_fetched = pink;
+                break;
+
+            case Kanagawa:
+                usr_color = desat_firebrick;
+                time_color = teal;
+                path_color = khaki;
+                mnt_color = desat_lime;
+                root_color = light_purple;
+                color_unstaged = dark_orange;
+                color_staged = purple;
+                color_committed = green;
+                color_fetched = pink;
+                break;
+
+            case Orange:
+                usr_color = dark_orange;
+                time_color = beige;
+                path_color = white;
+                mnt_color = orange;
+                root_color = pink;
+                color_unstaged = red;
+                color_staged = blue;
+                color_committed = green;
+                color_fetched = red;
+                break;
+        }
     }
 
     if (usrConfig.background) {
-        printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+        printf("%s%s%s\\u@\\h%s%s", usr_color, txt_fg_color, usr_bg, usr_color, reset);
+
     } else {
-        printf("%s%s\\u@\\h%s: ", bold, color_usr, reset);
+        printf("%s%s\\u@\\h%s: ", bold, usr_color, reset);
     }
 
     if (usrConfig.time) {
-        printf("%s[\\t] ", color_time);
+        if (usrConfig.background) {
+            printf("%s%s%s%s\\t%s", time_bg, usr_color, txt_fg_color, time_bg, reset);
+        } else {
+            printf("%s[\\t] ", time_color);
+        }
     }
 
     remCurntDir(path, pathLength);
@@ -160,21 +241,21 @@ int main(void) {
 
             case Home:
                 if (pathLength > 1) {
-                    printf("%s%s%s\\W/\\n", color_path, path, bold);
+                    printf(" %s%s%s\\W/\\n", path_color, path, bold);
                 } else {
-                    printf("%s%s\\W/\\n", color_path, bold);
+                    printf(" %s%s\\W/\\n", path_color, bold);
                 }
                 break;
 
             case Mnt:
-                printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+                printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
                 break;
 
             case Root:
                 if (pathLength > 1) {
-                    printf("%s%s%s\\W/\\n", color_root, path, bold);
+                    printf(" %s%s%s\\W/\\n", root_color, path, bold);
                 } else {
-                    printf("%s%s\\W\\n", color_root, bold);
+                    printf(" %s%s\\W\\n", root_color, bold);
                 }
                 break;
         }
@@ -184,28 +265,33 @@ int main(void) {
         if (usrConfig.branchname) {
             char branch_name[MAX_BRANCH_LEN];
             getBranch(&branch_name[0]);
-            printf("%s%s%s  ", color_path, branch_name, color_usr);
+            if (usrConfig.background) {
+                printf("%s%s%s%s %s%s  %s%s", time_bg, teal, txt_fg_color, branch_bg,
+                       branch_name, usr_color, reset, teal);
+            } else {
+                printf(" %s%s%s ", path_color, branch_name, usr_color);
+            }
         }
 
         switch (pathState) {
 
             case Home:
                 if (pathLength > 1) {
-                    printf("%s%s%s\\W/\\n", color_path, path, bold);
+                    printf(" %s%s%s\\W/\\n", path_color, path, bold);
                 } else {
-                    printf("%s%s\\W/\\n", color_path, bold);
+                    printf(" %s%s\\W/\\n", path_color, bold);
                 }
                 break;
 
             case Mnt:
-                printf("%s%s%s\\W/\\n", color_mnt, path, bold);
+                printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
                 break;
 
             case Root:
                 if (pathLength > 1) {
-                    printf("%s%s%s\\W/\\n", color_root, path, bold);
+                    printf(" %s%s%s\\W/\\n", root_color, path, bold);
                 } else {
-                    printf("%s%s\\W\\n", color_root, bold);
+                    printf(" %s%s\\W\\n", root_color, bold);
                 }
                 break;
         }
@@ -229,7 +315,7 @@ int main(void) {
 
             if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
 
-                printf("  %s┗┳[%s", color_usr, reset);
+                printf("  %s┗┳[%s", usr_color, reset);
 
                 int ct = 0;
                 if (untracked > 0)
@@ -255,7 +341,7 @@ int main(void) {
                     // We stop printing the dividers at ct = 1
                     // because we want the last print to be ']' not '|'.
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", color_usr);
+                        printf("%s | ", usr_color);
                         ct--;
                     }
                 }
@@ -263,7 +349,7 @@ int main(void) {
                     printf("%s%s %d", color_unstaged, reset, unstaged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", color_usr);
+                        printf("%s | ", usr_color);
                         ct--;
                     }
                 }
@@ -271,7 +357,7 @@ int main(void) {
                     printf("%s󱝣%s %d", color_staged, reset, staged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", color_usr);
+                        printf("%s | ", usr_color);
                         ct--;
                     }
                 }
@@ -279,7 +365,7 @@ int main(void) {
                     printf("%s%s %d", color_committed, reset, committed);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", color_usr);
+                        printf("%s | ", usr_color);
                         ct--;
                     }
                 }
@@ -287,17 +373,17 @@ int main(void) {
                     printf("%s%s %d", color_fetched, reset, fetched);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", color_usr);
+                        printf("%s | ", usr_color);
                         ct--;
                     }
                 }
                 if (space) {
                     printf(" ");
                 }
-                printf("%s%s]\\n ", bold, color_usr);
+                printf("%s%s]\\n ", bold, usr_color);
             }
         }
     }
-    printf("  %s%s┗>$ %s", bold, color_usr, reset);
+    printf("  %s%s┗>$ %s", bold, usr_color, reset);
     return 0;
 }
