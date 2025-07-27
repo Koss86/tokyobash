@@ -68,7 +68,7 @@ void abrvPath(char* path, int Plen);
 void remCurntDir(char* path, int Plen);
 
 bool isGitAccessible(void);
-bool inRepo(void);
+bool checkIfInRepo(void);
 void getBranch(char* branch_name);
 int Committed(void);
 void getStatusOf(int* staged, int* unstaged, int* untracked);
