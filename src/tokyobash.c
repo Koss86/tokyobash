@@ -44,17 +44,23 @@ int main(void) {
     }
 
     ConfigSettings usrConfig;
-    usrConfig.git = 1;
-    usrConfig.time = 1;
-    usrConfig.debug = 0;
-    usrConfig.statusbar = 0;
-    usrConfig.branchname = 1;
-    usrConfig.background = 0;
+    usrConfig.git = true;
+    usrConfig.time = true;
+    usrConfig.debug = false;
+    usrConfig.inARepo = false;
+    usrConfig.statusbar = false;
+    usrConfig.branchname = true;
+    usrConfig.background = false;
     usrConfig.theme = Tokyonight;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
+    usrConfig.gitAccessible = isGitAccessible();
 
     parseConfig(&usrConfig, pHome, homeLength);
+
+    if (usrConfig.git && usrConfig.gitAccessible) {
+        usrConfig.inARepo = checkIfInRepo();
+    }
 
     if (usrConfig.background) {
 
@@ -186,7 +192,7 @@ int main(void) {
 
     remCurntDir(path, pathLength);
 
-    if ((!usrConfig.git || !isGitAccessible()) || !inRepo()) {
+    if ((!usrConfig.git || !isGitAccessible()) || !checkIfInRepo()) {
         // Skip branch name and status bar and just print the path.
         switch (pathState) {
 

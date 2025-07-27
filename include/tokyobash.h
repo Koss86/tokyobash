@@ -43,9 +43,11 @@ typedef struct ConfigSettings {
     bool time;
     bool debug;
     Themes theme;
-    bool background;
+    bool inARepo;
     bool statusbar;
+    bool background;
     bool branchname;
+    bool gitAccessible;
     FetchOpts fetchConfig;
 } ConfigSettings;
 
