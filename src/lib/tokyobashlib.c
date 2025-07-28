@@ -1,4 +1,69 @@
+#include "../../include/colors.h"
 #include "../../include/tokyobash.h"
+
+void printPathWithBg(ConfigSettings* usrConfig, PathState pathState, char* path, int pathLength) {
+
+    if (usrConfig->git && usrConfig->branchname) {
+        if (usrConfig->inARepo) {
+            printf("%s%s%s", path_icon_color, branch_bg, reset);
+
+        } else { // TODO: check if time is displayed.
+            printf("%s%s%s%s%s", time_icon_color, branch_bg, path_icon_color, path_bg, reset);
+        }
+    } else {
+        printf("%s%s%s", time_icon_color, path_bg, reset);
+    }
+
+    switch (pathState) {
+
+        case Home: // 
+            if (pathLength > 1) {
+                printf("%s%s%s%s\\W/%s%s%s\n", txt_fg_color, path_bg, path, bold, reset,
+                       path_icon_color, reset);
+            } else {
+                printf("%s%s%s\\W/%s%s\\n", txt_fg_color, path_bg, bold, reset, path_icon_color);
+            }
+            break;
+
+        case Mnt:
+            printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
+            break;
+
+        case Root:
+            if (pathLength > 1) {
+                printf(" %s%s%s\\W/\\n", root_color, path, bold);
+            } else {
+                printf(" %s%s\\W\\n", root_color, bold);
+            }
+            break;
+    }
+}
+
+void printPathNoBg(PathState pathState, char* path, int pathLength) {
+
+    switch (pathState) {
+
+        case Home:
+            if (pathLength > 1) {
+                printf(" %s%s%s\\W/\\n", path_color, path, bold);
+            } else {
+                printf(" %s%s\\W/\\n", path_color, bold);
+            }
+            break;
+
+        case Mnt:
+            printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
+            break;
+
+        case Root:
+            if (pathLength > 1) {
+                printf(" %s%s%s\\W/\\n", root_color, path, bold);
+            } else {
+                printf(" %s%s\\W\\n", root_color, bold);
+            }
+            break;
+    }
+}
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 

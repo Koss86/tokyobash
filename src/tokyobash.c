@@ -68,7 +68,6 @@ int main(void) {
 
             case Tokyonight:
                 usr_color = cyan;
-                time_color = sky_blue;
                 path_color = blue;
                 mnt_color = orange;
                 root_color = pink;
@@ -79,9 +78,14 @@ int main(void) {
 
                 txt_fg_color = black;
                 usr_bg = cyan_bg;
-                branch_bg = teal_bg;
-                time_bg = sky_blue_bg;
+                time_bg = teal_bg;
+                branch_bg = sky_blue_bg;
                 path_bg = blue_bg;
+
+                usr_icon_color = cyan;
+                time_icon_color = teal;
+                branch_icon_color = sky_blue;
+                path_icon_color = blue;
                 break;
 
             case Catppuccin:
@@ -184,73 +188,49 @@ int main(void) {
 
     if (usrConfig.time) {
         if (usrConfig.background) {
-            printf("%s%s%s%s\\t%s", time_bg, usr_color, txt_fg_color, time_bg, reset);
+            printf("%s%s%s%s\\t%s", usr_color, time_bg, txt_fg_color, time_bg, reset);
         } else {
             printf("%s[\\t] ", time_color);
+        }
+    } else {
+        if (usrConfig.background) {
+            // printf("%s%s", );
+        } else {
         }
     }
 
     remCurntDir(path, pathLength);
 
-    if ((!usrConfig.git || !isGitAccessible()) || !checkIfInRepo()) {
+    if ((!usrConfig.git || !usrConfig.gitAccessible) || !usrConfig.inARepo) {
+
         // Skip branch name and status bar and just print the path.
-        switch (pathState) {
+        if (usrConfig.background) {
+            printPathWithBg(&usrConfig, pathState, path, pathLength);
+        } else {
 
-            case Home:
-                if (pathLength > 1) {
-                    printf(" %s%s%s\\W/\\n", path_color, path, bold);
-                } else {
-                    printf(" %s%s\\W/\\n", path_color, bold);
-                }
-                break;
-
-            case Mnt:
-                printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
-                break;
-
-            case Root:
-                if (pathLength > 1) {
-                    printf(" %s%s%s\\W/\\n", root_color, path, bold);
-                } else {
-                    printf(" %s%s\\W\\n", root_color, bold);
-                }
-                break;
+            printPathNoBg(pathState, path, pathLength);
         }
 
     } else {
 
         if (usrConfig.branchname) {
+
             char branch_name[MAX_BRANCH_LEN];
             getBranch(&branch_name[0]);
+
             if (usrConfig.background) {
-                printf("%s%s%s%s %s%s  %s%s", time_bg, teal, txt_fg_color, branch_bg,
-                       branch_name, usr_color, reset, teal);
+                printf("%s%s %s%s%s  %s", branch_bg, time_icon_color, txt_fg_color, branch_bg,
+                       branch_name, reset);
             } else {
-                printf(" %s%s%s ", path_color, branch_name, usr_color);
+                printf("%s%s%s ", path_color, branch_name, usr_color);
             }
         }
 
-        switch (pathState) {
+        if (usrConfig.background) {
+            printPathWithBg(&usrConfig, pathState, path, pathLength);
 
-            case Home:
-                if (pathLength > 1) {
-                    printf(" %s%s%s\\W/\\n", path_color, path, bold);
-                } else {
-                    printf(" %s%s\\W/\\n", path_color, bold);
-                }
-                break;
-
-            case Mnt:
-                printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
-                break;
-
-            case Root:
-                if (pathLength > 1) {
-                    printf(" %s%s%s\\W/\\n", root_color, path, bold);
-                } else {
-                    printf(" %s%s\\W\\n", root_color, bold);
-                }
-                break;
+        } else {
+            printPathNoBg(pathState, path, pathLength);
         }
 
         if (usrConfig.statusbar || usrConfig.debug) {

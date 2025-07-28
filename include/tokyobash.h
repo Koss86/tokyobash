@@ -68,6 +68,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
 void remCurntDir(char* path, int Plen);
+void printPathWithBg(ConfigSettings* usrConfig, PathState pathState, char* path, int pathLength);
+void printPathNoBg(PathState pathState, char* path, int pathLength);
 
 bool isGitAccessible(void);
 bool checkIfInRepo(void);
