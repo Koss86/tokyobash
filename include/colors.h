@@ -30,7 +30,8 @@ char blue_bg[] = "\\[\\e[48;5;4m\\]";
 char sky_blue_bg[] = "\\[\\e[48;5;117m\\]";
 char cyan_bg[] = "\\[\\e[48;5;86m\\]";
 char teal_bg[] = "\\[\\e[48;5;37m\\]";
-char* usr_color = reset;
+
+char* usr_color = &reset[0];
 char* time_color = reset;
 char* path_color = reset;
 char* mnt_color = reset;
@@ -49,5 +50,11 @@ char* branch_bg = reset;
 char* path_bg = reset;
 char* mnt_bg = reset;
 char* root_bg = reset;
+char* usr_icon_color = reset;
+char* time_icon_color = reset;
+char* branch_icon_color = reset;
+char* path_icon_color = reset;
+char* mnt_icon_color = reset;
+char* root_icon_color = reset;
 
 #endif
