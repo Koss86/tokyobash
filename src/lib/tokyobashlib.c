@@ -1,65 +1,338 @@
-#include "../../include/colors.h"
 #include "../../include/tokyobash.h"
 
-void printPathWithBg(ConfigSettings* usrConfig, PathState pathState, char* path, int pathLength) {
+void assignPointers(ColorPointers* pointers, Colors* colors, ConfigSettings* usrConfig) {
 
-    if (usrConfig->git && usrConfig->branchname) {
-        if (usrConfig->inARepo) {
-            printf("%s%s%s", path_icon_color, branch_bg, reset);
+    pointers->bold = &colors->bold[0];
+    pointers->reset = &colors->reset[0];
+    pointers->txt_fg_color = &colors->black[0];
+    pointers->untracked_color = &colors->yellow[0];
 
-        } else { // TODO: check if time is displayed.
-            printf("%s%s%s%s%s", time_icon_color, branch_bg, path_icon_color, path_bg, reset);
+    if (usrConfig->background) {
+        switch (usrConfig->theme) {
+            case Tokyonight:
+                pointers->usr_color = &colors->cyan[0];
+                pointers->time_color = &colors->teal[0];
+                pointers->branch_color = &colors->sky_blue[0];
+                pointers->path_color = &colors->blue[0];
+                pointers->mnt_color = &colors->orange[0];
+                pointers->root_color = &colors->pink[0];
+
+                pointers->unstaged_color = &colors->orange[0];
+                pointers->staged_color = &colors->orchid[0];
+                pointers->committed_color = &colors->lime_green[0];
+                pointers->fetched_color = &colors->dark_orange[0];
+
+                pointers->usr_bg = &colors->cyan_bg[0];
+                pointers->time_bg = &colors->teal_bg[0];
+                pointers->branch_bg = &colors->sky_blue_bg[0];
+                pointers->path_bg = &colors->blue_bg[0];
+                pointers->root_bg = &colors->pink_bg[0];
+                pointers->mnt_bg = &colors->orange_bg[0];
+                break;
+            case Catppuccin:
+                pointers->usr_color = &colors->peach[0];
+                pointers->time_color = &colors->rose[0];
+                pointers->branch_color = &colors->sky_blue[0];
+                pointers->path_color = &colors->light_purple[0];
+                pointers->mnt_color = &colors->blue[0];
+                pointers->root_color = &colors->orange[0];
+
+                pointers->untracked_color = &colors->yellow[0];
+                pointers->unstaged_color = &colors->orange[0];
+                pointers->staged_color = &colors->blue[0];
+                pointers->committed_color = &colors->lime_green[0];
+                pointers->fetched_color = &colors->pink[0];
+
+                pointers->usr_bg = &colors->cyan_bg[0];
+                pointers->time_bg = &colors->teal_bg[0];
+                pointers->branch_bg = &colors->sky_blue_bg[0];
+                pointers->path_bg = &colors->blue_bg[0];
+                break;
+            case Kanagawa:
+                break;
+            case Orange:
+                break;
         }
+
     } else {
-        printf("%s%s%s", time_icon_color, path_bg, reset);
-    }
 
-    switch (pathState) {
+        switch (usrConfig->theme) {
 
-        case Home: // 
-            if (pathLength > 1) {
-                printf("%s%s%s%s\\W/%s%s%s\n", txt_fg_color, path_bg, path, bold, reset,
-                       path_icon_color, reset);
-            } else {
-                printf("%s%s%s\\W/%s%s\\n", txt_fg_color, path_bg, bold, reset, path_icon_color);
-            }
-            break;
+            case Tokyonight:
+                pointers->usr_color = &colors->cyan[0];
+                pointers->time_color = &colors->sky_blue[0];
+                pointers->path_color = &colors->blue[0];
+                pointers->mnt_color = &colors->orange[0];
+                pointers->root_color = &colors->pink[0];
 
-        case Mnt:
-            printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
-            break;
+                pointers->unstaged_color = &colors->orange[0];
+                pointers->staged_color = &colors->orchid[0];
+                pointers->committed_color = &colors->lime_green[0];
+                pointers->fetched_color = &colors->dark_orange[0];
+                break;
 
-        case Root:
-            if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", root_color, path, bold);
-            } else {
-                printf(" %s%s\\W\\n", root_color, bold);
-            }
-            break;
+            case Catppuccin:
+                pointers->usr_color = &colors->peach[0];
+                pointers->time_color = &colors->rose[0];
+                pointers->path_color = &colors->light_purple[0];
+                pointers->mnt_color = &colors->blue[0];
+                pointers->root_color = &colors->orange[0];
+
+                pointers->unstaged_color = &colors->orange[0];
+                pointers->staged_color = &colors->blue[0];
+                pointers->committed_color = &colors->lime_green[0];
+                pointers->fetched_color = &colors->pink[0];
+                break;
+
+            case Kanagawa:
+                pointers->usr_color = &colors->peach[0];
+                pointers->time_color = &colors->rose[0];
+                pointers->path_color = &colors->light_purple[0];
+                pointers->mnt_color = &colors->blue[0];
+                pointers->root_color = &colors->orange[0];
+
+                pointers->unstaged_color = &colors->orange[0];
+                pointers->staged_color = &colors->blue[0];
+                pointers->committed_color = &colors->lime_green[0];
+                pointers->fetched_color = &colors->pink[0];
+                break;
+
+            case Orange:
+                pointers->usr_color = &colors->dark_orange[0];
+                pointers->time_color = &colors->beige[0];
+                pointers->path_color = &colors->white[0];
+                pointers->mnt_color = &colors->orange[0];
+                pointers->root_color = &colors->pink[0];
+
+                pointers->unstaged_color = &colors->red[0];
+                pointers->staged_color = &colors->blue[0];
+                pointers->committed_color = &colors->green[0];
+                pointers->fetched_color = &colors->red[0];
+                break;
+        }
     }
 }
 
-void printPathNoBg(PathState pathState, char* path, int pathLength) {
+void populateColors(Colors* colors) {
+    strncpy(colors->bold, "\\[\\e[1m\\]", 15);
+    strncpy(colors->reset, "\\[\\e[00m\\]", 15);
+    strncpy(colors->red, "\\[\\e[38;2;255;77;77m\\]", 30);
+    strncpy(colors->desat_firebrick, "\\[\\e[38;2;191;72;72m\\]", 30);
+    strncpy(colors->pink, "\\[\\e[38;5;204m\\]", 30);
+    strncpy(colors->rose, "\\[\\e[38;5;217m\\]", 30);
+    strncpy(colors->peach, "\\[\\e[38;5;223m\\]", 30);
+    strncpy(colors->dark_orange, "\\[\\e[38;2;255;149;20m\\]", 30);
+    strncpy(colors->orange, "\\[\\e[38;5;214m\\]", 30);
+    strncpy(colors->yellow, "\\[\\e[38;2;255;255;0m\\]", 30);
+    strncpy(colors->green, "\\[\\e[38;2;0;255;0m\\]", 30);
+    strncpy(colors->lime_green, "\\[\\e[38;2;172;255;47m\\]", 30);
+    strncpy(colors->desat_lime, "\\[\\e[38;2;117;156;38m\\]", 30);
+    strncpy(colors->cyan, "\\[\\e[38;5;86m\\]", 30);
+    strncpy(colors->blue, "\\[\\e[38;5;4m\\]", 30);
+    strncpy(colors->sky_blue, "\\[\\e[38;5;117m\\]", 30);
+    strncpy(colors->teal, "\\[\\e[38;5;37m\\]", 30);
+    strncpy(colors->orchid, "\\[\\e[38;2;166;121;210m\\]", 30);
+    strncpy(colors->light_purple, "\\[\\e[38;5;182m\\]", 30);
+    strncpy(colors->purple, "\\[\\e[38;2;153;102;204m\\]", 30);
+    strncpy(colors->khaki, "\\[\\e[38;2;238;232;170m\\]", 30);
+    strncpy(colors->white, "\\[\\e[38;2;255;255;255m\\]", 30);
+    strncpy(colors->black, "\\[\\e[0;30m\\]", 30);
+    strncpy(colors->beige, "\\[\\e[38;2;239;239;200m\\]", 30);
+
+    strncpy(colors->blue_bg, "\\[\\e[48;5;4m\\]", 30);
+    strncpy(colors->sky_blue_bg, "\\[\\e[48;5;117m\\]", 30);
+    strncpy(colors->cyan_bg, "\\[\\e[48;5;86m\\]", 30);
+    strncpy(colors->teal_bg, "\\[\\e[48;5;37m\\]", 30);
+    strncpy(colors->pink_bg, "\\[\\e[48;5;204m\\]", 30);
+    strncpy(colors->orange_bg, "\\[\\e[48;5;214m\\]", 30);
+}
+
+void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* pointers, PathState pathState,
+                     char* path, int pathLength) {
+
+    if (usrConfig->time) {
+
+        if (usrConfig->git && usrConfig->branchname) {
+
+            if (usrConfig->inARepo) {
+                switch (pathState) {
+                    case Home:
+                        printf("%s%s%s", pointers->path_color, pointers->branch_bg,
+                               pointers->reset);
+                        break;
+                    case Mnt:
+                        printf("%s%s%s", pointers->mnt_color, pointers->mnt_bg, pointers->reset);
+                        break;
+                    case Root:
+                        printf("%s%s%s", pointers->root_color, pointers->root_bg,
+                               pointers->reset);
+                        break;
+                }
+            } else { /// Outside of Repo ///
+                switch (pathState) {
+                    case Home:
+                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                               pointers->path_color, pointers->reset);
+                        break;
+                    case Mnt:
+                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                               pointers->mnt_color, pointers->reset);
+                        break;
+                    case Root:
+                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                               pointers->root_color, pointers->reset);
+                        break;
+                }
+            }
+
+        } else { /// Git or Branch Name Disabled ///
+
+            switch (pathState) {
+                case Home:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->path_color, pointers->reset);
+                    break;
+                case Mnt:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->mnt_color, pointers->reset);
+                    break;
+                case Root:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->root_color, pointers->reset);
+                    break;
+            }
+        }
+        switch (pathState) {
+            case Home:
+                if (pathLength > 1) {
+                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
+                           path, pointers->bold, pointers->reset, pointers->path_color,
+                           pointers->reset);
+                } else {
+                    printf("%s%s%s\\W/%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
+                           pointers->bold, pointers->reset, pointers->path_color);
+                }
+                break;
+            case Mnt:
+                printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->mnt_bg, path,
+                       pointers->bold, pointers->reset, pointers->mnt_color, pointers->reset);
+                break;
+            case Root:
+                if (pathLength > 1) {
+                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
+                           path, pointers->bold, pointers->reset, pointers->root_color,
+                           pointers->reset);
+                } else {
+                    printf("%s%s%s \\W%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
+                           pointers->bold, pointers->root_color, pointers->reset);
+                }
+                break;
+        }
+
+    } else { /// Time Disabled ///
+
+        if (usrConfig->git && usrConfig->branchname) {
+
+            if (usrConfig->inARepo) {
+                switch (pathState) {
+                    case Home:
+                        printf("%s%s%s", pointers->path_color, pointers->branch_bg,
+                               pointers->reset);
+                        break;
+                    case Mnt:
+                        printf("%s%s%s", pointers->mnt_color, pointers->mnt_bg, pointers->reset);
+                        break;
+                    case Root:
+                        printf("%s%s%s", pointers->root_color, pointers->root_bg,
+                               pointers->reset);
+                        break;
+                }
+
+            } else {
+
+                switch (pathState) {
+                    case Home:
+                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
+                               pointers->path_color, pointers->reset);
+                        break;
+                    case Mnt:
+                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
+                               pointers->mnt_color, pointers->reset);
+                        break;
+                    case Root:
+                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
+                               pointers->root_color, pointers->reset);
+                        break;
+                }
+            }
+
+        } else {
+
+            switch (pathState) {
+                case Home:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->path_color, pointers->reset);
+                    break;
+                case Mnt:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->mnt_color, pointers->reset);
+                    break;
+                case Root:
+                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
+                           pointers->root_color, pointers->reset);
+                    break;
+            }
+        }
+        switch (pathState) {
+            case Home:
+                if (pathLength > 1) {
+                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
+                           path, pointers->bold, pointers->reset, pointers->path_color,
+                           pointers->reset);
+                } else {
+                    printf("%s%s%s\\W/%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
+                           pointers->bold, pointers->reset, pointers->path_color);
+                }
+                break;
+            case Mnt:
+                printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->mnt_bg, path,
+                       pointers->bold, pointers->reset, pointers->mnt_color, pointers->reset);
+                break;
+            case Root:
+                if (pathLength > 1) {
+                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
+                           path, pointers->bold, pointers->reset, pointers->root_color,
+                           pointers->reset);
+                } else {
+                    printf("%s%s%s \\W%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
+                           pointers->bold, pointers->root_color, pointers->reset);
+                }
+                break;
+        }
+    }
+}
+
+void printPathNoBg(ColorPointers* pointers, PathState pathState, char* path, int pathLength) {
 
     switch (pathState) {
 
         case Home:
             if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", path_color, path, bold);
+                printf(" %s%s%s\\W/\\n", pointers->path_color, path, pointers->bold);
             } else {
-                printf(" %s%s\\W/\\n", path_color, bold);
+                printf(" %s%s\\W/\\n", pointers->path_color, pointers->bold);
             }
             break;
 
         case Mnt:
-            printf(" %s%s%s\\W/\\n", mnt_color, path, bold);
+            printf(" %s%s%s\\W/\\n", pointers->mnt_color, path, pointers->bold);
             break;
 
         case Root:
             if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", root_color, path, bold);
+                printf(" %s%s%s\\W/\\n", pointers->root_color, path, pointers->bold);
             } else {
-                printf(" %s%s\\W\\n", root_color, bold);
+                printf(" %s%s\\W\\n", pointers->root_color, pointers->bold);
             }
             break;
     }

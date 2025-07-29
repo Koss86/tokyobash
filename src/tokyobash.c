@@ -1,5 +1,4 @@
 #include "../include/tokyobash.h"
-#include "../include/colors.h"
 
 int main(void) {
 
@@ -62,135 +61,25 @@ int main(void) {
         usrConfig.inARepo = checkIfInRepo();
     }
 
-    if (usrConfig.background) {
-
-        switch (usrConfig.theme) {
-
-            case Tokyonight:
-                usr_color = cyan;
-                path_color = blue;
-                mnt_color = orange;
-                root_color = pink;
-                color_unstaged = orange;
-                color_staged = orchid;
-                color_committed = lime_green;
-                color_fetched = dark_orange;
-
-                txt_fg_color = black;
-                usr_bg = cyan_bg;
-                time_bg = teal_bg;
-                branch_bg = sky_blue_bg;
-                path_bg = blue_bg;
-
-                usr_icon_color = cyan;
-                time_icon_color = teal;
-                branch_icon_color = sky_blue;
-                path_icon_color = blue;
-                break;
-
-            case Catppuccin:
-                usr_color = peach;
-                time_color = rose;
-                path_color = light_purple;
-                mnt_color = blue;
-                root_color = orange;
-                color_unstaged = orange;
-                color_staged = blue;
-                color_committed = lime_green;
-                color_fetched = pink;
-                break;
-
-            case Kanagawa:
-                usr_color = desat_firebrick;
-                time_color = teal;
-                path_color = khaki;
-                mnt_color = desat_lime;
-                root_color = light_purple;
-                color_unstaged = dark_orange;
-                color_staged = purple;
-                color_committed = green;
-                color_fetched = pink;
-                break;
-
-            case Orange:
-                usr_color = dark_orange;
-                time_color = beige;
-                path_color = white;
-                mnt_color = orange;
-                root_color = pink;
-                color_unstaged = red;
-                color_staged = blue;
-                color_committed = green;
-                color_fetched = red;
-                break;
-        }
-
-    } else {
-
-        switch (usrConfig.theme) {
-
-            case Tokyonight:
-                usr_color = cyan;
-                time_color = sky_blue;
-                path_color = blue;
-                mnt_color = orange;
-                root_color = pink;
-                color_unstaged = orange;
-                color_staged = orchid;
-                color_committed = lime_green;
-                color_fetched = dark_orange;
-                break;
-
-            case Catppuccin:
-                usr_color = peach;
-                time_color = rose;
-                path_color = light_purple;
-                mnt_color = blue;
-                root_color = orange;
-                color_unstaged = orange;
-                color_staged = blue;
-                color_committed = lime_green;
-                color_fetched = pink;
-                break;
-
-            case Kanagawa:
-                usr_color = desat_firebrick;
-                time_color = teal;
-                path_color = khaki;
-                mnt_color = desat_lime;
-                root_color = light_purple;
-                color_unstaged = dark_orange;
-                color_staged = purple;
-                color_committed = green;
-                color_fetched = pink;
-                break;
-
-            case Orange:
-                usr_color = dark_orange;
-                time_color = beige;
-                path_color = white;
-                mnt_color = orange;
-                root_color = pink;
-                color_unstaged = red;
-                color_staged = blue;
-                color_committed = green;
-                color_fetched = red;
-                break;
-        }
-    }
+    Colors colors;
+    ColorPointers pointers;
+    populateColors(&colors);
+    assignPointers(&pointers, &colors, &usrConfig);
 
     if (usrConfig.background) {
-        printf("%s%s%s\\u@\\h%s%s", usr_color, txt_fg_color, usr_bg, usr_color, reset);
+        printf("%s%s%s\\u@\\h%s%s", pointers.usr_color, pointers.txt_fg_color, pointers.usr_bg,
+               pointers.usr_color, pointers.reset);
 
     } else {
-        printf("%s%s\\u@\\h%s: ", bold, usr_color, reset);
+        printf("%s%s\\u@\\h%s: ", pointers.bold, pointers.usr_color, pointers.reset);
     }
 
     if (usrConfig.time) {
         if (usrConfig.background) {
-            printf("%s%s%s%s\\t%s", usr_color, time_bg, txt_fg_color, time_bg, reset);
+            printf("%s%s%s%s\\t%s", pointers.usr_color, pointers.time_bg, pointers.txt_fg_color,
+                   pointers.time_bg, pointers.reset);
         } else {
-            printf("%s[\\t] ", time_color);
+            printf("%s[\\t] ", pointers.time_color);
         }
     } else {
         if (usrConfig.background) {
@@ -205,10 +94,9 @@ int main(void) {
 
         // Skip branch name and status bar and just print the path.
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, pathState, path, pathLength);
+            printPathWithBg(&usrConfig, &pointers, pathState, path, pathLength);
         } else {
-
-            printPathNoBg(pathState, path, pathLength);
+            printPathNoBg(&pointers, pathState, path, pathLength);
         }
 
     } else {
@@ -219,18 +107,23 @@ int main(void) {
             getBranch(&branch_name[0]);
 
             if (usrConfig.background) {
-                printf("%s%s %s%s%s  %s", branch_bg, time_icon_color, txt_fg_color, branch_bg,
-                       branch_name, reset);
+                if (usrConfig.time) {
+                    printf("%s%s%s%s%s %s", pointers.branch_bg, pointers.time_color,
+                           pointers.txt_fg_color, pointers.branch_bg, branch_name, pointers.reset);
+                } else {
+                    printf("%s%s%s%s%s %s", pointers.branch_bg, pointers.usr_color,
+                           pointers.txt_fg_color, pointers.branch_bg, branch_name, pointers.reset);
+                }
             } else {
-                printf("%s%s%s ", path_color, branch_name, usr_color);
+                printf("%s%s%s ", pointers.path_color, branch_name, pointers.usr_color);
             }
         }
 
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, pathState, path, pathLength);
+            printPathWithBg(&usrConfig, &pointers, pathState, path, pathLength);
 
         } else {
-            printPathNoBg(pathState, path, pathLength);
+            printPathNoBg(&pointers, pathState, path, pathLength);
         }
 
         if (usrConfig.statusbar || usrConfig.debug) {
@@ -240,6 +133,7 @@ int main(void) {
 
             getStatusOf(&staged, &unstaged, &untracked);
             committed = Committed();
+            // TODO: Add config setting to be able to enable and disable.
             fetched = Fetched(&usrConfig.fetchConfig);
 
             if (usrConfig.debug) {
@@ -252,7 +146,7 @@ int main(void) {
 
             if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
 
-                printf("  %s┗┳[%s", usr_color, reset);
+                printf("  %s┗┳[%s", pointers.usr_color, pointers.reset);
 
                 int ct = 0;
                 if (untracked > 0)
@@ -266,61 +160,60 @@ int main(void) {
                 if (fetched > 0)
                     ct++;
 
+                // Empty space used here and at end for a little
+                // separation if more than 1 item populates statusbar.
                 int space = 0;
                 if (ct > 1) {
-                    // Empty space used here and at end for a little
-                    // separation if more than 1 item populates statusbar.
                     printf(" ");
                     space++;
                 }
                 if (untracked > 0) {
-                    printf("%s%s %d", color_untracked, reset, untracked);
+                    printf("%s%s %d", pointers.untracked_color, pointers.reset, untracked);
                     // We stop printing the dividers at ct = 1
                     // because we want the last print to be ']' not '|'.
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", usr_color);
+                        printf("%s | ", pointers.usr_color);
                         ct--;
                     }
                 }
                 if (unstaged > 0) {
-                    printf("%s%s %d", color_unstaged, reset, unstaged);
+                    printf("%s%s %d", pointers.unstaged_color, pointers.reset, unstaged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", usr_color);
+                        printf("%s | ", pointers.usr_color);
                         ct--;
                     }
                 }
                 if (staged > 0) {
-                    printf("%s󱝣%s %d", color_staged, reset, staged);
+                    printf("%s󱝣%s %d", pointers.staged_color, pointers.reset, staged);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", usr_color);
+                        printf("%s | ", pointers.usr_color);
                         ct--;
                     }
                 }
                 if (committed > 0) {
-                    printf("%s%s %d", color_committed, reset, committed);
-
+                    printf("%s%s %d", pointers.committed_color, pointers.reset, committed);
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", usr_color);
+                        printf("%s | ", pointers.usr_color);
                         ct--;
                     }
                 }
                 if (fetched > 0) {
-                    printf("%s%s %d", color_fetched, reset, fetched);
+                    printf("%s%s %d", pointers.fetched_color, pointers.reset, fetched);
 
                     if (ct > 0 && ct != 1) {
-                        printf("%s | ", usr_color);
+                        printf("%s | ", pointers.usr_color);
                         ct--;
                     }
                 }
                 if (space) {
                     printf(" ");
                 }
-                printf("%s%s]\\n ", bold, usr_color);
+                printf("%s%s]\\n ", pointers.bold, pointers.usr_color);
             }
         }
     }
-    printf("  %s%s┗>$ %s", bold, usr_color, reset);
+    printf("  %s%s┗>$ %s", pointers.bold, pointers.usr_color, pointers.reset);
     return 0;
 }
