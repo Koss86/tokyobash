@@ -5,7 +5,8 @@ BIN = tokyobash
 LIB1 = tokyobashlib
 LIB2 = gitlib
 LIB3 = shouldFetchlib
-OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o
+LIB4 = printlib
+OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o $(LIB4).o
 CONFIG_FILE = config
 CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/$(BIN)
 prefix =
@@ -38,6 +39,9 @@ $(LIB2).o: src/lib/$(LIB2).c
 
 $(LIB3).o: src/lib/$(LIB3).c
 	@$(CXX) $(CFLAGS) -c src/lib/$(LIB3).c
+
+$(LIB4).o: src/lib/$(LIB4).c
+	@$(CXX) $(CFLAGS) -c src/lib/$(LIB4).c
 
 install: $(BIN) $(CONFIG_FILE)
 

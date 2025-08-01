@@ -1,343 +1,5 @@
 #include "../../include/tokyobash.h"
 
-void assignPointers(ColorPointers* pointers, Colors* colors, ConfigSettings* usrConfig) {
-
-    pointers->bold = &colors->bold[0];
-    pointers->reset = &colors->reset[0];
-    pointers->txt_fg_color = &colors->black[0];
-    pointers->untracked_color = &colors->yellow[0];
-
-    if (usrConfig->background) {
-        switch (usrConfig->theme) {
-            case Tokyonight:
-                pointers->usr_color = &colors->cyan[0];
-                pointers->time_color = &colors->teal[0];
-                pointers->branch_color = &colors->sky_blue[0];
-                pointers->path_color = &colors->blue[0];
-                pointers->mnt_color = &colors->orange[0];
-                pointers->root_color = &colors->pink[0];
-
-                pointers->unstaged_color = &colors->orange[0];
-                pointers->staged_color = &colors->orchid[0];
-                pointers->committed_color = &colors->lime_green[0];
-                pointers->fetched_color = &colors->dark_orange[0];
-
-                pointers->usr_bg = &colors->cyan_bg[0];
-                pointers->time_bg = &colors->teal_bg[0];
-                pointers->branch_bg = &colors->sky_blue_bg[0];
-                pointers->path_bg = &colors->blue_bg[0];
-                pointers->root_bg = &colors->pink_bg[0];
-                pointers->mnt_bg = &colors->orange_bg[0];
-                break;
-            case Catppuccin:
-                pointers->usr_color = &colors->peach[0];
-                pointers->time_color = &colors->rose[0];
-                pointers->branch_color = &colors->sky_blue[0];
-                pointers->path_color = &colors->light_purple[0];
-                pointers->mnt_color = &colors->blue[0];
-                pointers->root_color = &colors->orange[0];
-
-                pointers->untracked_color = &colors->yellow[0];
-                pointers->unstaged_color = &colors->orange[0];
-                pointers->staged_color = &colors->blue[0];
-                pointers->committed_color = &colors->lime_green[0];
-                pointers->fetched_color = &colors->pink[0];
-
-                pointers->usr_bg = &colors->cyan_bg[0];
-                pointers->time_bg = &colors->teal_bg[0];
-                pointers->branch_bg = &colors->sky_blue_bg[0];
-                pointers->path_bg = &colors->blue_bg[0];
-                break;
-            case Kanagawa:
-                break;
-            case Orange:
-                break;
-        }
-
-    } else {
-
-        switch (usrConfig->theme) {
-
-            case Tokyonight:
-                pointers->usr_color = &colors->cyan[0];
-                pointers->time_color = &colors->sky_blue[0];
-                pointers->path_color = &colors->blue[0];
-                pointers->mnt_color = &colors->orange[0];
-                pointers->root_color = &colors->pink[0];
-
-                pointers->unstaged_color = &colors->orange[0];
-                pointers->staged_color = &colors->orchid[0];
-                pointers->committed_color = &colors->lime_green[0];
-                pointers->fetched_color = &colors->dark_orange[0];
-                break;
-
-            case Catppuccin:
-                pointers->usr_color = &colors->peach[0];
-                pointers->time_color = &colors->rose[0];
-                pointers->path_color = &colors->light_purple[0];
-                pointers->mnt_color = &colors->blue[0];
-                pointers->root_color = &colors->orange[0];
-
-                pointers->unstaged_color = &colors->orange[0];
-                pointers->staged_color = &colors->blue[0];
-                pointers->committed_color = &colors->lime_green[0];
-                pointers->fetched_color = &colors->pink[0];
-                break;
-
-            case Kanagawa:
-                pointers->usr_color = &colors->peach[0];
-                pointers->time_color = &colors->rose[0];
-                pointers->path_color = &colors->light_purple[0];
-                pointers->mnt_color = &colors->blue[0];
-                pointers->root_color = &colors->orange[0];
-
-                pointers->unstaged_color = &colors->orange[0];
-                pointers->staged_color = &colors->blue[0];
-                pointers->committed_color = &colors->lime_green[0];
-                pointers->fetched_color = &colors->pink[0];
-                break;
-
-            case Orange:
-                pointers->usr_color = &colors->dark_orange[0];
-                pointers->time_color = &colors->beige[0];
-                pointers->path_color = &colors->white[0];
-                pointers->mnt_color = &colors->orange[0];
-                pointers->root_color = &colors->pink[0];
-
-                pointers->unstaged_color = &colors->red[0];
-                pointers->staged_color = &colors->blue[0];
-                pointers->committed_color = &colors->green[0];
-                pointers->fetched_color = &colors->red[0];
-                break;
-        }
-    }
-}
-
-void populateColors(Colors* colors) {
-    strncpy(colors->bold, "\\[\\e[1m\\]", 15);
-    strncpy(colors->reset, "\\[\\e[00m\\]", 15);
-    strncpy(colors->red, "\\[\\e[38;2;255;77;77m\\]", 30);
-    strncpy(colors->desat_firebrick, "\\[\\e[38;2;191;72;72m\\]", 30);
-    strncpy(colors->pink, "\\[\\e[38;5;204m\\]", 30);
-    strncpy(colors->rose, "\\[\\e[38;5;217m\\]", 30);
-    strncpy(colors->peach, "\\[\\e[38;5;223m\\]", 30);
-    strncpy(colors->dark_orange, "\\[\\e[38;2;255;149;20m\\]", 30);
-    strncpy(colors->orange, "\\[\\e[38;5;214m\\]", 30);
-    strncpy(colors->yellow, "\\[\\e[38;2;255;255;0m\\]", 30);
-    strncpy(colors->green, "\\[\\e[38;2;0;255;0m\\]", 30);
-    strncpy(colors->lime_green, "\\[\\e[38;2;172;255;47m\\]", 30);
-    strncpy(colors->desat_lime, "\\[\\e[38;2;117;156;38m\\]", 30);
-    strncpy(colors->cyan, "\\[\\e[38;5;86m\\]", 30);
-    strncpy(colors->blue, "\\[\\e[38;5;4m\\]", 30);
-    strncpy(colors->sky_blue, "\\[\\e[38;5;117m\\]", 30);
-    strncpy(colors->teal, "\\[\\e[38;5;37m\\]", 30);
-    strncpy(colors->orchid, "\\[\\e[38;2;166;121;210m\\]", 30);
-    strncpy(colors->light_purple, "\\[\\e[38;5;182m\\]", 30);
-    strncpy(colors->purple, "\\[\\e[38;2;153;102;204m\\]", 30);
-    strncpy(colors->khaki, "\\[\\e[38;2;238;232;170m\\]", 30);
-    strncpy(colors->white, "\\[\\e[38;2;255;255;255m\\]", 30);
-    strncpy(colors->black, "\\[\\e[0;30m\\]", 30);
-    strncpy(colors->beige, "\\[\\e[38;2;239;239;200m\\]", 30);
-
-    strncpy(colors->blue_bg, "\\[\\e[48;5;4m\\]", 30);
-    strncpy(colors->sky_blue_bg, "\\[\\e[48;5;117m\\]", 30);
-    strncpy(colors->cyan_bg, "\\[\\e[48;5;86m\\]", 30);
-    strncpy(colors->teal_bg, "\\[\\e[48;5;37m\\]", 30);
-    strncpy(colors->pink_bg, "\\[\\e[48;5;204m\\]", 30);
-    strncpy(colors->orange_bg, "\\[\\e[48;5;214m\\]", 30);
-}
-
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* pointers, PathState pathState,
-                     char* path, int pathLength) {
-
-    if (usrConfig->time) {
-
-        if (usrConfig->git && usrConfig->branchname) {
-
-            if (usrConfig->inARepo) {
-                switch (pathState) {
-                    case Home:
-                        printf("%s%s%s", pointers->path_color, pointers->branch_bg,
-                               pointers->reset);
-                        break;
-                    case Mnt:
-                        printf("%s%s%s", pointers->mnt_color, pointers->mnt_bg, pointers->reset);
-                        break;
-                    case Root:
-                        printf("%s%s%s", pointers->root_color, pointers->root_bg,
-                               pointers->reset);
-                        break;
-                }
-            } else { /// Outside of Repo ///
-                switch (pathState) {
-                    case Home:
-                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                               pointers->path_color, pointers->reset);
-                        break;
-                    case Mnt:
-                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                               pointers->mnt_color, pointers->reset);
-                        break;
-                    case Root:
-                        printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                               pointers->root_color, pointers->reset);
-                        break;
-                }
-            }
-
-        } else { /// Git or Branch Name Disabled ///
-
-            switch (pathState) {
-                case Home:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->path_color, pointers->reset);
-                    break;
-                case Mnt:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->mnt_color, pointers->reset);
-                    break;
-                case Root:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->root_color, pointers->reset);
-                    break;
-            }
-        }
-        switch (pathState) {
-            case Home:
-                if (pathLength > 1) {
-                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
-                           path, pointers->bold, pointers->reset, pointers->path_color,
-                           pointers->reset);
-                } else {
-                    printf("%s%s%s\\W/%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
-                           pointers->bold, pointers->reset, pointers->path_color);
-                }
-                break;
-            case Mnt:
-                printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->mnt_bg, path,
-                       pointers->bold, pointers->reset, pointers->mnt_color, pointers->reset);
-                break;
-            case Root:
-                if (pathLength > 1) {
-                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
-                           path, pointers->bold, pointers->reset, pointers->root_color,
-                           pointers->reset);
-                } else {
-                    printf("%s%s%s \\W%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
-                           pointers->bold, pointers->root_color, pointers->reset);
-                }
-                break;
-        }
-
-    } else { /// Time Disabled ///
-
-        if (usrConfig->git && usrConfig->branchname) {
-
-            if (usrConfig->inARepo) {
-                switch (pathState) {
-                    case Home:
-                        printf("%s%s%s", pointers->path_color, pointers->branch_bg,
-                               pointers->reset);
-                        break;
-                    case Mnt:
-                        printf("%s%s%s", pointers->mnt_color, pointers->mnt_bg, pointers->reset);
-                        break;
-                    case Root:
-                        printf("%s%s%s", pointers->root_color, pointers->root_bg,
-                               pointers->reset);
-                        break;
-                }
-
-            } else {
-
-                switch (pathState) {
-                    case Home:
-                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
-                               pointers->path_color, pointers->reset);
-                        break;
-                    case Mnt:
-                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
-                               pointers->mnt_color, pointers->reset);
-                        break;
-                    case Root:
-                        printf("%s%s%s%s", pointers->usr_color, pointers->branch_bg,
-                               pointers->root_color, pointers->reset);
-                        break;
-                }
-            }
-
-        } else {
-
-            switch (pathState) {
-                case Home:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->path_color, pointers->reset);
-                    break;
-                case Mnt:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->mnt_color, pointers->reset);
-                    break;
-                case Root:
-                    printf("%s%s%s%s", pointers->time_color, pointers->branch_bg,
-                           pointers->root_color, pointers->reset);
-                    break;
-            }
-        }
-        switch (pathState) {
-            case Home:
-                if (pathLength > 1) {
-                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
-                           path, pointers->bold, pointers->reset, pointers->path_color,
-                           pointers->reset);
-                } else {
-                    printf("%s%s%s\\W/%s%s\\n", pointers->txt_fg_color, pointers->path_bg,
-                           pointers->bold, pointers->reset, pointers->path_color);
-                }
-                break;
-            case Mnt:
-                printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->mnt_bg, path,
-                       pointers->bold, pointers->reset, pointers->mnt_color, pointers->reset);
-                break;
-            case Root:
-                if (pathLength > 1) {
-                    printf("%s%s%s%s\\W/%s%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
-                           path, pointers->bold, pointers->reset, pointers->root_color,
-                           pointers->reset);
-                } else {
-                    printf("%s%s%s \\W%s%s\\n", pointers->txt_fg_color, pointers->root_bg,
-                           pointers->bold, pointers->root_color, pointers->reset);
-                }
-                break;
-        }
-    }
-}
-
-void printPathNoBg(ColorPointers* pointers, PathState pathState, char* path, int pathLength) {
-
-    switch (pathState) {
-
-        case Home:
-            if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", pointers->path_color, path, pointers->bold);
-            } else {
-                printf(" %s%s\\W/\\n", pointers->path_color, pointers->bold);
-            }
-            break;
-
-        case Mnt:
-            printf(" %s%s%s\\W/\\n", pointers->mnt_color, path, pointers->bold);
-            break;
-
-        case Root:
-            if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", pointers->root_color, path, pointers->bold);
-            } else {
-                printf(" %s%s\\W\\n", pointers->root_color, pointers->bold);
-            }
-            break;
-    }
-}
-
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 
     char path[PATH_MAX];
@@ -598,5 +260,255 @@ void remCurntDir(char* path, int pathLength) {
             break;
         }
     }
+    return;
+}
+void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* usrConfig) {
+
+    colors->bold = &colorDefs->bold[0];
+    colors->reset = &colorDefs->reset[0];
+    colors->untracked = &colorDefs->yellow[0];
+
+    colors->usr_txt = &colorDefs->white[0];
+    colors->time_txt = &colorDefs->white[0];
+    colors->branch_txt = &colorDefs->white[0];
+    colors->path_txt = &colorDefs->white[0];
+
+    colors->usr_color = &colorDefs->reset[0];
+    colors->time_color = &colorDefs->reset[0];
+    colors->branch_color = &colorDefs->reset[0];
+    colors->path_color = &colorDefs->reset[0];
+    colors->mnt_color = &colorDefs->reset[0];
+    colors->root_color = &colorDefs->reset[0];
+
+    colors->unstaged = &colorDefs->reset[0];
+    colors->staged = &colorDefs->reset[0];
+    colors->committed = &colorDefs->reset[0];
+    colors->fetched = &colorDefs->reset[0];
+
+    colors->usr_bg = &colorDefs->reset[0];
+    colors->time_bg = &colorDefs->reset[0];
+    colors->branch_bg = &colorDefs->reset[0];
+    colors->path_bg = &colorDefs->reset[0];
+    colors->root_bg = &colorDefs->reset[0];
+    colors->mnt_bg = &colorDefs->reset[0];
+
+    if (usrConfig->background) {
+
+        switch (usrConfig->theme) {
+
+            case Tokyonight:
+
+                colors->usr_txt = &colorDefs->teal[0];
+                colors->usr_color = &colorDefs->cyan[0];
+                colors->usr_bg = &colorDefs->cyan_bg[0];
+
+                colors->time_txt = &colorDefs->smoke[0];
+                colors->time_color = &colorDefs->sky_blue[0];
+                colors->time_bg = &colorDefs->sky_blue_bg[0];
+
+                colors->branch_txt = &colorDefs->sky_blue[0];
+                colors->branch_color = &colorDefs->blue[0];
+                colors->branch_bg = &colorDefs->blue_bg[0];
+
+                colors->path_txt = colors->branch_txt;
+                colors->path_color = colors->branch_color;
+                colors->path_bg = colors->branch_bg;
+
+                colors->mnt_txt = &colorDefs->khaki[0];
+                colors->mnt_color = &colorDefs->orange[0];
+                colors->mnt_bg = &colorDefs->orange_bg[0];
+
+                colors->root_txt = &colorDefs->peach[0];
+                colors->root_color = &colorDefs->pink[0];
+                colors->root_bg = &colorDefs->pink_bg[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->orchid[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->orange[0];
+                break;
+
+            case Catppuccin:
+
+                colors->usr_txt = &colorDefs->rose[0];
+                colors->usr_color = &colorDefs->peach[0];
+                colors->usr_bg = &colorDefs->peach_bg[0];
+
+                colors->time_txt = &colorDefs->khaki[0];
+                colors->time_color = &colorDefs->rose[0];
+                colors->time_bg = &colorDefs->rose_bg[0];
+
+                colors->branch_txt = &colorDefs->orchid[0];
+                colors->branch_color = &colorDefs->light_purple[0];
+                colors->branch_bg = &colorDefs->light_purple_bg[0];
+
+                colors->path_txt = colors->branch_txt;
+                colors->path_color = colors->branch_color;
+                colors->path_bg = colors->branch_bg;
+
+                colors->mnt_txt = &colorDefs->beige[0];
+                colors->mnt_color = &colorDefs->gold[0];
+                colors->mnt_bg = &colorDefs->gold_bg[0];
+
+                colors->root_txt = &colorDefs->light_purple[0];
+                colors->root_color = &colorDefs->orchid[0];
+                colors->root_bg = &colorDefs->orchid_bg[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->blue[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->pink[0];
+                break;
+
+            case Kanagawa:
+
+                colors->usr_txt = &colorDefs->rose[0];
+                colors->usr_color = &colorDefs->firebrick[0];
+                colors->usr_bg = &colorDefs->firebrick_bg[0];
+
+                colors->time_txt = &colorDefs->beige[0];
+                colors->time_color = &colorDefs->smoke[0];
+                colors->time_bg = &colorDefs->smoke_bg[0];
+
+                colors->branch_txt = &colorDefs->white[0];
+                colors->branch_color = &colorDefs->light_gold[0];
+                colors->branch_bg = &colorDefs->light_gold_bg[0];
+
+                colors->path_txt = colors->branch_txt;
+                colors->path_color = colors->branch_color;
+                colors->path_bg = colors->branch_bg;
+
+                colors->mnt_txt = &colorDefs->khaki[0];
+                colors->mnt_color = &colorDefs->orange[0];
+                colors->mnt_bg = &colorDefs->orange_bg[0];
+
+                colors->root_txt = &colorDefs->light_purple[0];
+                colors->root_color = &colorDefs->purple[0];
+                colors->root_bg = &colorDefs->purple_bg[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->blue[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->pink[0];
+                break;
+            case Orange:
+                break;
+        }
+
+    } else {
+
+        switch (usrConfig->theme) {
+
+            case Tokyonight:
+                colors->usr_color = &colorDefs->cyan[0];
+                colors->usr_txt = &colorDefs->cyan[0];
+                colors->time_txt = &colorDefs->sky_blue[0];
+                colors->branch_txt = &colorDefs->smoke[0];
+                colors->path_txt = &colorDefs->blue[0];
+                colors->mnt_txt = &colorDefs->gold[0];
+                colors->root_txt = &colorDefs->pink[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->orchid[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->orange[0];
+                break;
+
+            case Catppuccin:
+                colors->usr_color = &colorDefs->peach[0];
+                colors->usr_txt = &colorDefs->peach[0];
+                colors->time_txt = &colorDefs->rose[0];
+                colors->branch_txt = &colorDefs->light_purple[0];
+                colors->path_txt = &colorDefs->light_purple[0];
+                colors->mnt_txt = &colorDefs->blue[0];
+                colors->root_txt = &colorDefs->gold[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->blue[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->pink[0];
+                break;
+
+            case Kanagawa:
+                colors->usr_color = &colorDefs->firebrick[0];
+                colors->usr_txt = &colorDefs->firebrick[0];
+                colors->time_txt = &colorDefs->smoke[0];
+                colors->branch_txt = &colorDefs->khaki[0];
+                colors->path_txt = &colorDefs->khaki[0];
+                colors->mnt_txt = &colorDefs->orange[0];
+                colors->root_txt = &colorDefs->light_purple[0];
+
+                colors->unstaged = &colorDefs->gold[0];
+                colors->staged = &colorDefs->blue[0];
+                colors->committed = &colorDefs->lime_green[0];
+                colors->fetched = &colorDefs->pink[0];
+                break;
+
+            case Orange:
+                colors->usr_color = &colorDefs->orange[0];
+                colors->usr_txt = &colorDefs->orange[0];
+                colors->time_txt = &colorDefs->beige[0];
+                colors->branch_txt = &colorDefs->gold[0];
+                colors->path_txt = &colorDefs->white[0];
+
+                colors->unstaged = &colorDefs->red[0];
+                colors->staged = &colorDefs->blue[0];
+                colors->committed = &colorDefs->green[0];
+                colors->fetched = &colorDefs->red[0];
+                break;
+        }
+    }
+    return;
+}
+void populateColors(Colors* colorDefs) {
+    strncpy(colorDefs->bold, "\\[\\e[1m\\]", 13);
+    strncpy(colorDefs->reset, "\\[\\e[00m\\]", 14);
+    strncpy(colorDefs->red, "\\[\\e[38;2;255;77;77m\\]", 26);
+    strncpy(colorDefs->firebrick, "\\[\\e[38;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
+    strncpy(colorDefs->rose, "\\[\\e[38;5;217m\\]", 20);
+    strncpy(colorDefs->peach, "\\[\\e[38;5;223m\\]", 20);
+    strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
+    strncpy(colorDefs->yellow, "\\[\\e[38;2;255;255;0m\\]", 26);
+    strncpy(colorDefs->green, "\\[\\e[38;2;0;255;0m\\]", 24);
+    strncpy(colorDefs->lime_green, "\\[\\e[38;2;172;255;47m\\]", 27);
+    strncpy(colorDefs->desat_lime, "\\[\\e[38;2;101;135;33m\\]", 27);
+    strncpy(colorDefs->cyan, "\\[\\e[38;5;86m\\]", 19);
+    strncpy(colorDefs->blue, "\\[\\e[38;2;90;130;209m\\]", 27);
+    strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
+    strncpy(colorDefs->dark_blue, "\\[\\e[38;2;0;0;205m\\]", 24);
+    strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);
+    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
+    strncpy(colorDefs->orchid, "\\[\\e[38;2;166;121;210m\\]", 28);
+    strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
+    strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
+    strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
+    strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
+    strncpy(colorDefs->gray, "\\[\\e[37m\\]", 14);
+    strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
+    strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
+    strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
+    strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
+
+    strncpy(colorDefs->peach_bg, "\\[\\e[48;5;223m\\]", 20);
+    strncpy(colorDefs->rose_bg, "\\[\\e[48;5;217m\\]", 20);
+    strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
+
+    strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
+    strncpy(colorDefs->blue_bg, "\\[\\e[48;2;90;130;209m\\]", 27);
+    strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
+    strncpy(colorDefs->cyan_bg, "\\[\\e[48;5;86m\\]", 19);
+    strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
+    strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
+    strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
+    strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;166;121;210m\\]", 28);
+
+    strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
+    strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
+    strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
+    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
+    // strncpy(colorDefs->lavender_bg, "\\[\\e[48;2;114;135;253m\\]", 28);
+    strncpy(colorDefs->dark_blue_bg, "\\[\\e[48;2;0;0;205m\\]", 24);
     return;
 }

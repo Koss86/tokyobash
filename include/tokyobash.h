@@ -65,37 +65,53 @@ typedef struct IntTimesAndDates {
 } IntTimesnDates;
 
 typedef struct Colors {
-    char bold[15];
-    char reset[15];
-    char red[30];
-    char desat_firebrick[30];
-    char pink[30];
-    char rose[30];
-    char peach[30];
-    char dark_orange[30];
-    char orange[30];
-    char yellow[30];
-    char green[30];
-    char lime_green[30];
-    char desat_lime[30];
-    char cyan[30];
-    char blue[30];
-    char sky_blue[30];
-    char teal[30];
-    char orchid[30];
-    char light_purple[30];
-    char purple[30];
-    char khaki[30];
-    char white[30];
-    char black[30];
-    char beige[30];
+    char bold[13];
+    char reset[14];
+    char red[26];
+    char firebrick[26];
+    char pink[20];
+    char rose[20];
+    char peach[20];
+    char orange[27];
+    char yellow[26];
+    char green[24];
+    char lime_green[27];
+    char desat_lime[27];
+    char cyan[19];
+    char blue[27];
+    char sky_blue[20];
+    char dark_blue[24];
+    char teal[26];
+    char smoke[29];
+    char orchid[28];
+    char light_purple[20];
+    char purple[28];
+    char khaki[28];
+    char white[28];
+    char gray[14];
+    char black[16];
+    char beige[28];
+    char gold[27];
+    char light_gold[28];
 
-    char blue_bg[30];
-    char sky_blue_bg[30];
-    char cyan_bg[30];
-    char teal_bg[30];
-    char pink_bg[30];
-    char orange_bg[30];
+    char rose_bg[20];
+    char peach_bg[20];
+    char light_purple_bg[20];
+    char purple_bg[28];
+
+    char light_gold_bg[28];
+    char gold_bg[27];
+    char khaki_bg[28];
+    char firebrick_bg[26];
+    char blue_bg[27];
+    char sky_blue_bg[20];
+    char dark_blue_bg[24];
+    char cyan_bg[19];
+    char teal_bg[26];
+    char smoke_bg[29];
+    char pink_bg[20];
+    char orange_bg[27];
+    char orchid_bg[28];
 } Colors;
 
 typedef struct ColorPointers {
@@ -108,13 +124,19 @@ typedef struct ColorPointers {
     char* mnt_color;
     char* root_color;
 
-    char* untracked_color;
-    char* unstaged_color;
-    char* staged_color;
-    char* committed_color;
-    char* fetched_color;
+    char* untracked;
+    char* unstaged;
+    char* staged;
+    char* committed;
+    char* fetched;
 
-    char* txt_fg_color;
+    char* usr_txt;
+    char* time_txt;
+    char* branch_txt;
+    char* path_txt;
+    char* mnt_txt;
+    char* root_txt;
+
     char* usr_bg;
     char* time_bg;
     char* branch_bg;
@@ -125,13 +147,18 @@ typedef struct ColorPointers {
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
 void populateColors(Colors* colors);
-void assignPointers(ColorPointers* pointers, Colors* colors, ConfigSettings* usrConfig);
+void assignPointers(ColorPointers* colors, Colors* colorsDefs, ConfigSettings* usrConfig);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
 void remCurntDir(char* path, int Plen);
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* pointers, PathState pathState,
+
+void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors);
+void printBranch(ConfigSettings* usrConfig, ColorPointers* colors);
+void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState pathState,
                      char* path, int pathLength);
-void printPathNoBg(ColorPointers* pointers, PathState pathState, char* path, int pathLength);
+void printPathNoBg(ColorPointers* colors, PathState pathState, char* path, int pathLength);
+void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int staged, int committed,
+                    int fetched);
 
 bool isGitAccessible(void);
 bool checkIfInRepo(void);
