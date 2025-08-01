@@ -99,7 +99,7 @@ int main(void) {
 
             getStatusOf(&staged, &unstaged, &untracked);
             committed = Committed();
-            // TODO: Add config setting to be able to enable and disable.
+
             if (usrConfig.fetch) {
                 fetched = Fetched(&usrConfig.fetchConfig);
             }
