@@ -178,6 +178,14 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                         usrConfig->background = true;
                     }
 
+                } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
+
+                    if (valbuf[0] == '0') {
+                        usrConfig->fetch = false;
+                    } else if (valbuf[0] == '1') {
+                        usrConfig->fetch = true;
+                    }
+
                 } // add else if's here for future optoins with int vals.
 
                 else if ((strncmp(keybuf, "debug", 5)) == 0) {

@@ -41,6 +41,7 @@ typedef struct FetchOpts {
 typedef struct ConfigSettings {
     bool git;
     bool time;
+    bool fetch;
     bool debug;
     Themes theme;
     bool inARepo;

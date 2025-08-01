@@ -45,6 +45,7 @@ int main(void) {
     ConfigSettings usrConfig;
     usrConfig.git = true;
     usrConfig.time = true;
+    usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
     usrConfig.statusbar = false;
@@ -99,7 +100,9 @@ int main(void) {
             getStatusOf(&staged, &unstaged, &untracked);
             committed = Committed();
             // TODO: Add config setting to be able to enable and disable.
-            fetched = Fetched(&usrConfig.fetchConfig);
+            if (usrConfig.fetch) {
+                fetched = Fetched(&usrConfig.fetchConfig);
+            }
 
             if (usrConfig.debug) {
                 untracked = 2;
