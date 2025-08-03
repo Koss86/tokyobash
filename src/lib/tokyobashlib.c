@@ -338,19 +338,19 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 
             case Catppuccin:
 
-                colors->usr_txt = &colorDefs->rose[0];
+                colors->usr_txt = &colorDefs->surface1[0];
                 colors->usr_color = &colorDefs->peach[0];
                 colors->usr_bg = &colorDefs->peach_bg[0];
 
-                colors->time_txt = &colorDefs->khaki[0];
-                colors->time_color = &colorDefs->rose[0];
-                colors->time_bg = &colorDefs->rose_bg[0];
+                colors->time_txt = &colorDefs->rose[0];
+                colors->time_color = &colorDefs->surface1[0];
+                colors->time_bg = &colorDefs->surface1_bg[0];
 
-                colors->branch_txt = &colorDefs->orchid[0];
-                colors->branch_color = &colorDefs->light_purple[0];
-                colors->branch_bg = &colorDefs->light_purple_bg[0];
+                colors->branch_txt = &colorDefs->light_purple[0];
+                colors->branch_color = &colorDefs->surface2[0];
+                colors->branch_bg = &colorDefs->surface2_bg[0];
 
-                colors->path_txt = colors->branch_txt;
+                colors->path_txt = &colorDefs->orchid[0];
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
@@ -479,23 +479,27 @@ void populateColors(Colors* colorDefs) {
     strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
     strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
     strncpy(colorDefs->gray, "\\[\\e[38;2;154;165;206m\\]", 28);
+    strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
+    strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 28);
 
-    strncpy(colorDefs->firebrick, "\\[\\e[38;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->surface1, "\\[\\e[38;2;69;71;90m\\]", 25);
+    strncpy(colorDefs->surface1_bg, "\\[\\e[48;2;69;71;90m\\]", 25);
+    strncpy(colorDefs->surface2, "\\[\\e[38;2;88;91;112m\\]", 26);
+    strncpy(colorDefs->surface2_bg, "\\[\\e[48;2;88;91;112m\\]", 26);
+    strncpy(colorDefs->firebrick, "\\[\\e[38;2;232;36;36m\\]", 26);
     strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
     strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
     strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
     strncpy(colorDefs->rose, "\\[\\e[38;5;217m\\]", 20);
     strncpy(colorDefs->rose_bg, "\\[\\e[48;5;217m\\]", 20);
-    strncpy(colorDefs->peach, "\\[\\e[38;5;223m\\]", 20);
-    strncpy(colorDefs->peach_bg, "\\[\\e[48;5;223m\\]", 20);
+    strncpy(colorDefs->peach, "\\[\\e[38;2;250;179;135m\\]", 28);
+    strncpy(colorDefs->peach_bg, "\\[\\e[48;2;250;179;135m\\]", 28);
     strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
     strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
     strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
     strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
     strncpy(colorDefs->cyan, "\\[\\e[38;2;115;218;202m\\]", 28);
     strncpy(colorDefs->cyan_bg, "\\[\\e[48;2;115;218;202m\\]", 28);
-    // strncpy(colorDefs->blue, "\\[\\e[38;2;90;130;209m\\]", 27);
-    // strncpy(colorDefs->blue_bg, "\\[\\e[48;2;90;130;209m\\]", 27);
     strncpy(colorDefs->blue, "\\[\\e[38;2;122;162;247m\\]", 28);
     strncpy(colorDefs->blue_bg, "\\[\\e[48;2;122;162;247m\\]", 28);
     strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
@@ -515,6 +519,7 @@ void populateColors(Colors* colorDefs) {
     strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
     strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
     strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
+
     strncpy(colorDefs->slate, "\\[\\e[38;2;65;72;104m\\]", 26);
     strncpy(colorDefs->slate_bg, "\\[\\e[48;2;65;72;104m\\]", 26);
     strncpy(colorDefs->light_slate, "\\[\\e[38;2;86;95;137m\\]", 26);

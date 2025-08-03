@@ -78,14 +78,18 @@ typedef struct Colors {
     char green[24];
     char gray[28];
 
+    char surface1[25];
+    char surface1_bg[25];
+    char surface2[26];
+    char surface2_bg[26];
     char firebrick[26];
     char firebrick_bg[26];
     char pink[20];
     char pink_bg[20];
     char rose[20];
     char rose_bg[20];
-    char peach[20];
-    char peach_bg[20];
+    char peach[28];
+    char peach_bg[28];
     char orange[27];
     char orange_bg[27];
     char cyan[28];
@@ -115,6 +119,9 @@ typedef struct Colors {
     char light_slate[26];
     char light_slate_bg[26];
 
+    char dark_peach[28];
+    char pale_yellow[28];
+    char pale_teal[28];
     char pale_green[30];
     char pale_green_bg[30];
     char sandy_orange[30];
