@@ -3,8 +3,8 @@
 void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors) {
 
     if (usrConfig->background) {
-        printf("%s%s%s%s\\u@\\h%s%s", colors->bold, colors->usr_color, colors->usr_txt,
-               colors->usr_bg, colors->usr_color, colors->reset);
+        printf("%s%s%s\\u@\\h%s%s", colors->usr_color, colors->usr_txt, colors->usr_bg,
+               colors->usr_color, colors->reset);
     } else {
         printf("%s%s\\u@\\h%s:", colors->bold, colors->usr_txt, colors->reset);
     }
@@ -45,9 +45,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
                      char* path, int pathLength) {
 
     if (usrConfig->time) {
-
-        if (usrConfig->inARepo) {
-
+        if (usrConfig->inARepo && usrConfig->branchname) {
             switch (pathState) {
 
                 case Home:
@@ -83,22 +81,23 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
                     break;
             }
         }
+
     } else {
 
-        if (usrConfig->inARepo) {
+        if (usrConfig->inARepo && usrConfig->branchname) {
 
             switch (pathState) {
 
                 case Home:
-                    printf("%s%s%s", colors->branch_txt, colors->branch_bg, colors->reset);
+                    printf("%s%s%s", colors->usr_color, colors->branch_bg, colors->reset);
                     break;
 
                 case Mnt:
-                    printf("%s%s%s", colors->branch_txt, colors->mnt_bg, colors->reset);
+                    printf("%s%s%s", colors->usr_color, colors->mnt_bg, colors->reset);
                     break;
 
                 case Root:
-                    printf("%s%s%s", colors->branch_txt, colors->root_bg, colors->reset);
+                    printf("%s%s%s", colors->usr_color, colors->root_bg, colors->reset);
                     break;
             }
 

@@ -311,20 +311,20 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->usr_bg = &colorDefs->cyan_bg[0];
 
                 colors->time_txt = &colorDefs->smoke[0];
-                colors->time_color = &colorDefs->sky_blue[0];
-                colors->time_bg = &colorDefs->sky_blue_bg[0];
+                colors->time_color = &colorDefs->slate[0];
+                colors->time_bg = &colorDefs->slate_bg[0];
 
-                colors->branch_txt = &colorDefs->sky_blue[0];
-                colors->branch_color = &colorDefs->blue[0];
-                colors->branch_bg = &colorDefs->blue_bg[0];
+                colors->branch_txt = &colorDefs->gray[0];
+                colors->branch_color = &colorDefs->light_slate[0];
+                colors->branch_bg = &colorDefs->light_slate_bg[0];
 
-                colors->path_txt = colors->branch_txt;
+                colors->path_txt = &colorDefs->blue[0];
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
                 colors->mnt_txt = &colorDefs->khaki[0];
-                colors->mnt_color = &colorDefs->orange[0];
-                colors->mnt_bg = &colorDefs->orange_bg[0];
+                colors->mnt_color = &colorDefs->sandy_orange[0];
+                colors->mnt_bg = &colorDefs->sandy_orange_bg[0];
 
                 colors->root_txt = &colorDefs->peach[0];
                 colors->root_color = &colorDefs->pink[0];
@@ -332,7 +332,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->orchid[0];
-                colors->committed = &colorDefs->lime_green[0];
+                colors->committed = &colorDefs->pale_green[0];
                 colors->fetched = &colorDefs->orange[0];
                 break;
 
@@ -362,7 +362,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->root_color = &colorDefs->orchid[0];
                 colors->root_bg = &colorDefs->orchid_bg[0];
 
-                colors->unstaged = &colorDefs->gold[0];
+                colors->unstaged = &colorDefs->sandy_orange[0];
                 colors->staged = &colorDefs->blue[0];
                 colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->pink[0];
@@ -472,51 +472,56 @@ void populateColors(Colors* colorDefs) {
     strncpy(colorDefs->bold, "\\[\\e[1m\\]", 13);
     strncpy(colorDefs->reset, "\\[\\e[00m\\]", 14);
     strncpy(colorDefs->red, "\\[\\e[38;2;255;77;77m\\]", 26);
-    strncpy(colorDefs->firebrick, "\\[\\e[38;2;191;72;72m\\]", 26);
-    strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
-    strncpy(colorDefs->rose, "\\[\\e[38;5;217m\\]", 20);
-    strncpy(colorDefs->peach, "\\[\\e[38;5;223m\\]", 20);
-    strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
     strncpy(colorDefs->yellow, "\\[\\e[38;2;255;255;0m\\]", 26);
     strncpy(colorDefs->green, "\\[\\e[38;2;0;255;0m\\]", 24);
     strncpy(colorDefs->lime_green, "\\[\\e[38;2;172;255;47m\\]", 27);
     strncpy(colorDefs->desat_lime, "\\[\\e[38;2;101;135;33m\\]", 27);
-    strncpy(colorDefs->cyan, "\\[\\e[38;5;86m\\]", 19);
-    strncpy(colorDefs->blue, "\\[\\e[38;2;90;130;209m\\]", 27);
-    strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
-    strncpy(colorDefs->dark_blue, "\\[\\e[38;2;0;0;205m\\]", 24);
-    strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);
-    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
-    strncpy(colorDefs->orchid, "\\[\\e[38;2;166;121;210m\\]", 28);
-    strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
-    strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
-    strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
     strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
-    strncpy(colorDefs->gray, "\\[\\e[37m\\]", 14);
     strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
+    strncpy(colorDefs->gray, "\\[\\e[38;2;154;165;206m\\]", 28);
+
+    strncpy(colorDefs->firebrick, "\\[\\e[38;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
+    strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
+    strncpy(colorDefs->rose, "\\[\\e[38;5;217m\\]", 20);
+    strncpy(colorDefs->rose_bg, "\\[\\e[48;5;217m\\]", 20);
+    strncpy(colorDefs->peach, "\\[\\e[38;5;223m\\]", 20);
+    strncpy(colorDefs->peach_bg, "\\[\\e[48;5;223m\\]", 20);
+    strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
+    strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
+    strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
+    strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
+    strncpy(colorDefs->cyan, "\\[\\e[38;2;115;218;202m\\]", 28);
+    strncpy(colorDefs->cyan_bg, "\\[\\e[48;2;115;218;202m\\]", 28);
+    // strncpy(colorDefs->blue, "\\[\\e[38;2;90;130;209m\\]", 27);
+    // strncpy(colorDefs->blue_bg, "\\[\\e[48;2;90;130;209m\\]", 27);
+    strncpy(colorDefs->blue, "\\[\\e[38;2;122;162;247m\\]", 28);
+    strncpy(colorDefs->blue_bg, "\\[\\e[48;2;122;162;247m\\]", 28);
+    strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
+    strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
+    strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);
+    strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
+    strncpy(colorDefs->orchid, "\\[\\e[38;2;186;154;247m\\]", 28);
+    strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;186;154;247m\\]", 28);
+    strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
+    strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
+    strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
+    strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
     strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
     strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
-    strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
-
-    strncpy(colorDefs->peach_bg, "\\[\\e[48;5;223m\\]", 20);
-    strncpy(colorDefs->rose_bg, "\\[\\e[48;5;217m\\]", 20);
-    strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
-
-    strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
-    strncpy(colorDefs->blue_bg, "\\[\\e[48;2;90;130;209m\\]", 27);
-    strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
-    strncpy(colorDefs->cyan_bg, "\\[\\e[48;5;86m\\]", 19);
-    strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
-    strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
-    strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
-    strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;166;121;210m\\]", 28);
-
-    strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
     strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
-    strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
-    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
+    strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
+    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
     strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
-    // strncpy(colorDefs->lavender_bg, "\\[\\e[48;2;114;135;253m\\]", 28);
-    strncpy(colorDefs->dark_blue_bg, "\\[\\e[48;2;0;0;205m\\]", 24);
+    strncpy(colorDefs->slate, "\\[\\e[38;2;65;72;104m\\]", 26);
+    strncpy(colorDefs->slate_bg, "\\[\\e[48;2;65;72;104m\\]", 26);
+    strncpy(colorDefs->light_slate, "\\[\\e[38;2;86;95;137m\\]", 26);
+    strncpy(colorDefs->light_slate_bg, "\\[\\e[48;2;86;95;137m\\]", 26);
+    strncpy(colorDefs->pale_green, "\\[\\e[38;2;158;206;106m\\]", 28);
+    strncpy(colorDefs->pale_green_bg, "\\[\\e[48;2;158;206;106m\\]", 28);
+    strncpy(colorDefs->sandy_orange, "\\[\\e[38;2;255;158;100m\\]", 28);
+    strncpy(colorDefs->sandy_orange_bg, "\\[\\e[48;2;255;158;100m\\]", 28);
     return;
 }
