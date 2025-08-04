@@ -2,6 +2,21 @@
 
 int main(void) {
 
+    ConfigSettings usrConfig;
+    usrConfig.git = true;
+    usrConfig.time = true;
+    usrConfig.fetch = false;
+    usrConfig.debug = false;
+    usrConfig.inARepo = false;
+    usrConfig.statusbar = false;
+    usrConfig.branchname = true;
+    usrConfig.background = false;
+    usrConfig.theme = Tokyonight;
+    usrConfig.fetchConfig.limit = 1;
+    usrConfig.fetchConfig.modifier = Day;
+    usrConfig.gitAccessible = false;
+    usrConfig.gitAccessible = isGitAccessible();
+
     char path[PATH_MAX];
     getcwd(path, sizeof(path));
 
@@ -20,7 +35,7 @@ int main(void) {
 
     int pathLength = strlen(path);
     int homeLength = strlen(pHome);
-    PathState pathState;
+    parseConfig(&usrConfig, pHome, homeLength);
 
     if (strstr(path, pHome) != NULL) {
         replaceHome(path, pathLength, homeLength);
@@ -28,12 +43,12 @@ int main(void) {
     }
 
     if (path[0] == '~') {
-        pathState = Home;
+        usrConfig.pathState = Home;
     } else {
         if (strstr(path, "/mnt") != NULL) {
-            pathState = Mnt;
+            usrConfig.pathState = Mnt;
         } else {
-            pathState = Root;
+            usrConfig.pathState = Root;
         }
     }
 
@@ -41,23 +56,6 @@ int main(void) {
         abrvPath(path, pathLength);
         pathLength = ABV_PATH_LEN_T;
     }
-
-    ConfigSettings usrConfig;
-    usrConfig.git = true;
-    usrConfig.time = true;
-    usrConfig.fetch = false;
-    usrConfig.debug = false;
-    usrConfig.inARepo = false;
-    usrConfig.statusbar = false;
-    usrConfig.branchname = true;
-    usrConfig.background = false;
-    usrConfig.theme = Tokyonight;
-    usrConfig.fetchConfig.limit = 1;
-    usrConfig.fetchConfig.modifier = Day;
-    usrConfig.gitAccessible = false;
-    usrConfig.gitAccessible = isGitAccessible();
-
-    parseConfig(&usrConfig, pHome, homeLength);
 
     if (usrConfig.git && usrConfig.gitAccessible) {
         usrConfig.inARepo = checkIfInRepo();
@@ -75,9 +73,9 @@ int main(void) {
     if ((!usrConfig.git || !usrConfig.gitAccessible) || !usrConfig.inARepo) {
 
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, &colors, pathState, path, pathLength);
+            printPathWithBg(&usrConfig, &colors, path, pathLength);
         } else {
-            printPathNoBg(&colors, pathState, path, pathLength);
+            printPathNoBg(&usrConfig, &colors, path, pathLength);
         }
 
     } else {
@@ -87,9 +85,9 @@ int main(void) {
         }
 
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, &colors, pathState, path, pathLength);
+            printPathWithBg(&usrConfig, &colors, path, pathLength);
         } else {
-            printPathNoBg(&colors, pathState, path, pathLength);
+            printPathNoBg(&usrConfig, &colors, path, pathLength);
         }
 
         if (usrConfig.statusbar || usrConfig.debug) {

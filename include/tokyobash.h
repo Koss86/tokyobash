@@ -49,6 +49,7 @@ typedef struct ConfigSettings {
     bool background;
     bool branchname;
     bool gitAccessible;
+    PathState pathState;
     FetchOpts fetchConfig;
 } ConfigSettings;
 
@@ -168,9 +169,8 @@ void remCurntDir(char* path, int Plen);
 
 void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors);
 void printBranch(ConfigSettings* usrConfig, ColorPointers* colors);
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState pathState,
-                     char* path, int pathLength);
-void printPathNoBg(ColorPointers* colors, PathState pathState, char* path, int pathLength);
+void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
+void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
 void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int staged, int committed,
                     int fetched);
 

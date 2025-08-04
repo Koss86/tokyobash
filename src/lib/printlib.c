@@ -41,12 +41,11 @@ void printBranch(ConfigSettings* usrConfig, ColorPointers* colors) {
     return;
 }
 
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState pathState,
-                     char* path, int pathLength) {
+void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength) {
 
     if (usrConfig->time) {
         if (usrConfig->inARepo && usrConfig->branchname) {
-            switch (pathState) {
+            switch (usrConfig->pathState) {
 
                 case Home:
                     printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
@@ -63,7 +62,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
 
         } else {
 
-            switch (pathState) {
+            switch (usrConfig->pathState) {
 
                 case Home:
                     printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
@@ -86,7 +85,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
 
         if (usrConfig->inARepo && usrConfig->branchname) {
 
-            switch (pathState) {
+            switch (usrConfig->pathState) {
 
                 case Home:
                     printf("%s%s%s", colors->usr_color, colors->branch_bg, colors->reset);
@@ -103,7 +102,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
 
         } else {
 
-            switch (pathState) {
+            switch (usrConfig->pathState) {
 
                 case Home:
                     printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
@@ -120,7 +119,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
         }
     }
 
-    switch (pathState) {
+    switch (usrConfig->pathState) {
 
         case Home:
             if (pathLength > 1) {
@@ -150,9 +149,9 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, PathState
     return;
 }
 
-void printPathNoBg(ColorPointers* colors, PathState pathState, char* path, int pathLength) {
+void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength) {
 
-    switch (pathState) {
+    switch (usrConfig->pathState) {
 
         case Home:
             if (pathLength > 1) {
