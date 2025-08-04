@@ -285,8 +285,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
     colors->time_color = &colorDefs->reset[0];
     colors->branch_color = &colorDefs->reset[0];
     colors->path_color = &colorDefs->reset[0];
-    colors->mnt_color = &colorDefs->reset[0];
-    colors->root_color = &colorDefs->reset[0];
 
     colors->unstaged = &colorDefs->reset[0];
     colors->staged = &colorDefs->reset[0];
@@ -297,8 +295,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
     colors->time_bg = &colorDefs->reset[0];
     colors->branch_bg = &colorDefs->reset[0];
     colors->path_bg = &colorDefs->reset[0];
-    colors->root_bg = &colorDefs->reset[0];
-    colors->mnt_bg = &colorDefs->reset[0];
 
     if (usrConfig->background) {
 
@@ -306,9 +302,23 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 
             case Tokyonight:
 
-                colors->usr_txt = &colorDefs->teal[0];
-                colors->usr_color = &colorDefs->cyan[0];
-                colors->usr_bg = &colorDefs->cyan_bg[0];
+                switch (usrConfig->pathState) {
+                    case Home:
+                        colors->usr_txt = &colorDefs->teal[0];
+                        colors->usr_color = &colorDefs->cyan[0];
+                        colors->usr_bg = &colorDefs->cyan_bg[0];
+                        break;
+                    case Mnt:
+                        colors->usr_txt = &colorDefs->beige[0];
+                        colors->usr_color = &colorDefs->sandy_orange[0];
+                        colors->usr_bg = &colorDefs->sandy_orange_bg[0];
+                        break;
+                    case Root:
+                        colors->usr_txt = &colorDefs->khaki[0];
+                        colors->usr_color = &colorDefs->rose[0];
+                        colors->usr_bg = &colorDefs->rose_bg[0];
+                        break;
+                }
 
                 colors->time_txt = &colorDefs->smoke[0];
                 colors->time_color = &colorDefs->slate[0];
@@ -322,14 +332,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
-                colors->mnt_txt = &colorDefs->khaki[0];
-                colors->mnt_color = &colorDefs->sandy_orange[0];
-                colors->mnt_bg = &colorDefs->sandy_orange_bg[0];
-
-                colors->root_txt = &colorDefs->peach[0];
-                colors->root_color = &colorDefs->pink[0];
-                colors->root_bg = &colorDefs->pink_bg[0];
-
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->orchid[0];
                 colors->committed = &colorDefs->pale_green[0];
@@ -338,15 +340,29 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 
             case Catppuccin:
 
-                colors->usr_txt = &colorDefs->surface1[0];
-                colors->usr_color = &colorDefs->peach[0];
-                colors->usr_bg = &colorDefs->peach_bg[0];
+                switch (usrConfig->pathState) {
+                    case Home:
+                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_color = &colorDefs->peach[0];
+                        colors->usr_bg = &colorDefs->peach_bg[0];
+                        break;
+                    case Mnt:
+                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_color = &colorDefs->gold[0];
+                        colors->usr_bg = &colorDefs->gold_bg[0];
+                        break;
+                    case Root:
+                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_color = &colorDefs->rose[0];
+                        colors->usr_bg = &colorDefs->rose_bg[0];
+                        break;
+                }
 
-                colors->time_txt = &colorDefs->rose[0];
+                colors->time_txt = &colorDefs->rosewater[0];
                 colors->time_color = &colorDefs->surface1[0];
                 colors->time_bg = &colorDefs->surface1_bg[0];
 
-                colors->branch_txt = &colorDefs->light_purple[0];
+                colors->branch_txt = &colorDefs->khaki[0];
                 colors->branch_color = &colorDefs->surface2[0];
                 colors->branch_bg = &colorDefs->surface2_bg[0];
 
@@ -355,12 +371,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->path_bg = colors->branch_bg;
 
                 colors->mnt_txt = &colorDefs->beige[0];
-                colors->mnt_color = &colorDefs->gold[0];
-                colors->mnt_bg = &colorDefs->gold_bg[0];
-
                 colors->root_txt = &colorDefs->light_purple[0];
-                colors->root_color = &colorDefs->orchid[0];
-                colors->root_bg = &colorDefs->orchid_bg[0];
 
                 colors->unstaged = &colorDefs->sandy_orange[0];
                 colors->staged = &colorDefs->blue[0];
@@ -387,12 +398,8 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->path_bg = colors->branch_bg;
 
                 colors->mnt_txt = &colorDefs->khaki[0];
-                colors->mnt_color = &colorDefs->orange[0];
-                colors->mnt_bg = &colorDefs->orange_bg[0];
 
                 colors->root_txt = &colorDefs->light_purple[0];
-                colors->root_color = &colorDefs->purple[0];
-                colors->root_bg = &colorDefs->purple_bg[0];
 
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->blue[0];
@@ -425,8 +432,8 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
             case Catppuccin:
                 colors->usr_color = &colorDefs->peach[0];
                 colors->usr_txt = &colorDefs->peach[0];
-                colors->time_txt = &colorDefs->rose[0];
-                colors->branch_txt = &colorDefs->light_purple[0];
+                colors->time_txt = &colorDefs->rosewater[0];
+                colors->branch_txt = &colorDefs->orchid[0];
                 colors->path_txt = &colorDefs->light_purple[0];
                 colors->mnt_txt = &colorDefs->blue[0];
                 colors->root_txt = &colorDefs->gold[0];
@@ -481,6 +488,7 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->gray, "\\[\\e[38;2;154;165;206m\\]", 28);
     strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
     strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 28);
+    strncpy(colorDefs->rosewater, "\\[\\e[38;2;245;224;220m\\]", 28);
 
     strncpy(colorDefs->surface1, "\\[\\e[38;2;69;71;90m\\]", 25);
     strncpy(colorDefs->surface1_bg, "\\[\\e[48;2;69;71;90m\\]", 25);
@@ -490,8 +498,8 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
     strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
     strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
-    strncpy(colorDefs->rose, "\\[\\e[38;5;217m\\]", 20);
-    strncpy(colorDefs->rose_bg, "\\[\\e[48;5;217m\\]", 20);
+    strncpy(colorDefs->rose, "\\[\\e[38;2;247;118;142m\\]", 28);
+    strncpy(colorDefs->rose_bg, "\\[\\e[48;2;247;118;142m\\]", 28);
     strncpy(colorDefs->peach, "\\[\\e[38;2;250;179;135m\\]", 28);
     strncpy(colorDefs->peach_bg, "\\[\\e[48;2;250;179;135m\\]", 28);
     strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
@@ -502,6 +510,7 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->cyan_bg, "\\[\\e[48;2;115;218;202m\\]", 28);
     strncpy(colorDefs->blue, "\\[\\e[38;2;122;162;247m\\]", 28);
     strncpy(colorDefs->blue_bg, "\\[\\e[48;2;122;162;247m\\]", 28);
+    strncpy(colorDefs->sky, "\\[\\e[38;2;137;220;250m\\]", 28);
     strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
     strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
     strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);

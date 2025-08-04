@@ -45,106 +45,37 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* pat
 
     if (usrConfig->time) {
         if (usrConfig->inARepo && usrConfig->branchname) {
-            switch (usrConfig->pathState) {
 
-                case Home:
-                    printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
-                    break;
-
-                case Mnt:
-                    printf("%s%s%s", colors->mnt_txt, colors->mnt_bg, colors->reset);
-                    break;
-
-                case Root:
-                    printf("%s%s%s", colors->root_txt, colors->root_bg, colors->reset);
-                    break;
-            }
+            printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
 
         } else {
 
-            switch (usrConfig->pathState) {
-
-                case Home:
-                    printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
-                           colors->reset);
-                    break;
-
-                case Mnt:
-                    printf("%s%s%s%s", colors->time_color, colors->mnt_bg, colors->mnt_color,
-                           colors->reset);
-                    break;
-
-                case Root:
-                    printf("%s%s%s%s", colors->time_color, colors->root_bg, colors->root_color,
-                           colors->reset);
-                    break;
-            }
+            printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
+                   colors->reset);
         }
 
     } else {
 
         if (usrConfig->inARepo && usrConfig->branchname) {
 
-            switch (usrConfig->pathState) {
-
-                case Home:
-                    printf("%s%s%s", colors->usr_color, colors->branch_bg, colors->reset);
-                    break;
-
-                case Mnt:
-                    printf("%s%s%s", colors->usr_color, colors->mnt_bg, colors->reset);
-                    break;
-
-                case Root:
-                    printf("%s%s%s", colors->usr_color, colors->root_bg, colors->reset);
-                    break;
-            }
+            printf("%s%s%s", colors->usr_color, colors->branch_bg, colors->reset);
 
         } else {
 
-            switch (usrConfig->pathState) {
-
-                case Home:
-                    printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
-                    break;
-
-                case Mnt:
-                    printf("%s%s%s", colors->usr_color, colors->mnt_bg, colors->reset);
-                    break;
-
-                case Root:
-                    printf("%s%s%s", colors->usr_color, colors->root_bg, colors->reset);
-                    break;
-            }
+            printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
         }
     }
-
-    switch (usrConfig->pathState) {
-
-        case Home:
-            if (pathLength > 1) {
-                printf("%s%s %s%s\\W/ %s%s%s\\n", colors->path_txt, colors->path_bg, path,
-                       colors->bold, colors->reset, colors->path_color, colors->reset);
-            } else {
-                printf("%s%s %s\\W/ %s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
-                       colors->reset, colors->path_color);
-            }
-            break;
-
-        case Mnt:
-            printf("%s%s %s%s\\W/ %s%s%s\\n", colors->mnt_txt, colors->mnt_bg, path,
-                   colors->bold, colors->reset, colors->mnt_color, colors->reset);
-            break;
-
-        case Root:
-            if (pathLength > 1) {
-                printf("%s%s %s%s\\W/ %s%s%s\\n", colors->root_txt, colors->root_bg, path,
-                       colors->bold, colors->reset, colors->root_color, colors->reset);
-            } else {
-                printf("%s%s %s\\W %s%s%s\\n", colors->root_txt, colors->root_bg, colors->bold,
-                       colors->reset, colors->root_color, colors->reset);
-            }
-            break;
+    if (pathLength > 1) {
+        printf("%s%s %s%s\\W/ %s%s%s\\n", colors->path_txt, colors->path_bg, path, colors->bold,
+               colors->reset, colors->path_color, colors->reset);
+    } else {
+        if (usrConfig->pathState == Root) {
+            printf("%s%s %s\\W %s%s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
+                   colors->reset, colors->path_color, colors->reset);
+        } else {
+            printf("%s%s %s\\W/ %s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
+                   colors->reset, colors->path_color);
+        }
     }
     return;
 }

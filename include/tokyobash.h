@@ -87,8 +87,8 @@ typedef struct Colors {
     char firebrick_bg[26];
     char pink[20];
     char pink_bg[20];
-    char rose[20];
-    char rose_bg[20];
+    char rose[28];
+    char rose_bg[28];
     char peach[28];
     char peach_bg[28];
     char orange[27];
@@ -120,6 +120,8 @@ typedef struct Colors {
     char light_slate[26];
     char light_slate_bg[26];
 
+    char rosewater[28];
+    char sky[28];
     char dark_peach[28];
     char pale_yellow[28];
     char pale_teal[28];
@@ -136,8 +138,6 @@ typedef struct ColorPointers {
     char* time_color;
     char* branch_color;
     char* path_color;
-    char* mnt_color;
-    char* root_color;
 
     char* untracked;
     char* unstaged;
@@ -156,8 +156,6 @@ typedef struct ColorPointers {
     char* time_bg;
     char* branch_bg;
     char* path_bg;
-    char* mnt_bg;
-    char* root_bg;
 } ColorPointers;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
