@@ -160,7 +160,7 @@ typedef struct ColorPointers {
 } ColorPointers;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
-void populateColors(Colors* colors);
+void colorDefinitions(Colors* colors);
 void assignPointers(ColorPointers* colors, Colors* colorsDefs, ConfigSettings* usrConfig);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);

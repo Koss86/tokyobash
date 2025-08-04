@@ -65,7 +65,7 @@ int main(void) {
 
     Colors colorDefs;
     ColorPointers colors;
-    populateColors(&colorDefs);
+    colorDefinitions(&colorDefs);
     assignPointers(&colors, &colorDefs, &usrConfig);
 
     printUsrTime(&usrConfig, &colors);

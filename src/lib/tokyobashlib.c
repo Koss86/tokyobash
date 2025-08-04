@@ -468,7 +468,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
     }
     return;
 }
-void populateColors(Colors* colorDefs) {
+void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->bold, "\\[\\e[1m\\]", 13);
     strncpy(colorDefs->reset, "\\[\\e[00m\\]", 14);
     strncpy(colorDefs->red, "\\[\\e[38;2;255;77;77m\\]", 26);
