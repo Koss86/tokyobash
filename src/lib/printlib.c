@@ -65,14 +65,20 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* pat
             printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
         }
     }
+
     if (pathLength > 1) {
+
         printf("%s%s %s%s\\W/ %s%s%s\\n", colors->path_txt, colors->path_bg, path, colors->bold,
                colors->reset, colors->path_color, colors->reset);
+
     } else {
+
         if (usrConfig->pathState == Root) {
             printf("%s%s %s\\W %s%s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
                    colors->reset, colors->path_color, colors->reset);
+
         } else {
+
             printf("%s%s %s\\W/ %s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
                    colors->reset, colors->path_color);
         }

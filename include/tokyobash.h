@@ -119,14 +119,20 @@ typedef struct Colors {
     char slate_bg[26];
     char light_slate[26];
     char light_slate_bg[26];
+    char sumiInk3[25];
+    char sumiInk3_bg[25];
+    char sumiInk4[26];
+    char sumiInk4_bg[26];
+    char winter_green[25];
+    char winter_green_bg[25];
+    char surimiOrange[28];
+    char surimiOrange_bg[28];
 
+    char waveAqua2[28];
     char rosewater[28];
     char sky[28];
     char dark_peach[28];
-    char pale_yellow[28];
     char pale_teal[28];
-    char pale_green[30];
-    char pale_green_bg[30];
     char sandy_orange[30];
     char sandy_orange_bg[30];
 } Colors;

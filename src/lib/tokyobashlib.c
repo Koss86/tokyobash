@@ -110,6 +110,13 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                         usrConfig->statusbar = true;
                     }
 
+                } else if ((strncmp(keybuf, "debug", 5)) == 0) {
+
+                    if (valbuf[0] == '0') {
+                        usrConfig->debug = false;
+                    } else if (valbuf[0] == '1') {
+                        usrConfig->debug = true;
+                    }
                 } else if ((strncmp(keybuf, "git", 3)) == 0) {
 
                     if (valbuf[0] == '0') {
@@ -185,17 +192,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
                     } else if (valbuf[0] == '1') {
                         usrConfig->fetch = true;
                     }
-
                 } // add else if's here for future optoins with int vals.
-
-                else if ((strncmp(keybuf, "debug", 5)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->debug = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->debug = true;
-                    }
-                }
             }
             continue;
         }
@@ -301,7 +298,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
         switch (usrConfig->theme) {
 
             case Tokyonight:
-
                 switch (usrConfig->pathState) {
                     case Home:
                         colors->usr_txt = &colorDefs->teal[0];
@@ -319,7 +315,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->rose_bg[0];
                         break;
                 }
-
                 colors->time_txt = &colorDefs->smoke[0];
                 colors->time_color = &colorDefs->slate[0];
                 colors->time_bg = &colorDefs->slate_bg[0];
@@ -334,12 +329,11 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->orchid[0];
-                colors->committed = &colorDefs->pale_green[0];
+                colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->orange[0];
                 break;
 
             case Catppuccin:
-
                 switch (usrConfig->pathState) {
                     case Home:
                         colors->usr_txt = &colorDefs->surface1[0];
@@ -357,7 +351,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->rose_bg[0];
                         break;
                 }
-
                 colors->time_txt = &colorDefs->rosewater[0];
                 colors->time_color = &colorDefs->surface1[0];
                 colors->time_bg = &colorDefs->surface1_bg[0];
@@ -380,32 +373,44 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 break;
 
             case Kanagawa:
+                switch (usrConfig->pathState) {
+                    case Home:
+                        colors->usr_txt = &colorDefs->sumiInk3[0];
+                        colors->usr_color = &colorDefs->firebrick[0];
+                        colors->usr_bg = &colorDefs->firebrick_bg[0];
+                        break;
+                    case Mnt:
+                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_color = &colorDefs->surimiOrange[0];
+                        colors->usr_bg = &colorDefs->surimiOrange_bg[0];
+                        break;
+                    case Root:
+                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_color = &colorDefs->orchid[0];
+                        colors->usr_bg = &colorDefs->orchid_bg[0];
+                        break;
+                }
+                colors->time_txt = &colorDefs->waveAqua2[0];
+                colors->time_color = &colorDefs->sumiInk3[0];
+                colors->time_bg = &colorDefs->sumiInk3_bg[0];
 
-                colors->usr_txt = &colorDefs->rose[0];
-                colors->usr_color = &colorDefs->firebrick[0];
-                colors->usr_bg = &colorDefs->firebrick_bg[0];
+                colors->branch_txt = &colorDefs->surimiOrange[0];
+                colors->branch_color = &colorDefs->sumiInk4[0];
+                colors->branch_bg = &colorDefs->sumiInk4_bg[0];
 
-                colors->time_txt = &colorDefs->beige[0];
-                colors->time_color = &colorDefs->smoke[0];
-                colors->time_bg = &colorDefs->smoke_bg[0];
-
-                colors->branch_txt = &colorDefs->white[0];
-                colors->branch_color = &colorDefs->light_gold[0];
-                colors->branch_bg = &colorDefs->light_gold_bg[0];
-
-                colors->path_txt = colors->branch_txt;
+                colors->path_txt = &colorDefs->light_gold[0];
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
-                colors->mnt_txt = &colorDefs->khaki[0];
+                colors->mnt_txt = colors->path_txt;
+                colors->root_txt = colors->path_txt;
 
-                colors->root_txt = &colorDefs->light_purple[0];
-
-                colors->unstaged = &colorDefs->gold[0];
+                colors->unstaged = &colorDefs->surimiOrange[0];
                 colors->staged = &colorDefs->blue[0];
                 colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->pink[0];
                 break;
+
             case Orange:
                 break;
         }
@@ -489,13 +494,22 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
     strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 28);
     strncpy(colorDefs->rosewater, "\\[\\e[38;2;245;224;220m\\]", 28);
+    strncpy(colorDefs->waveAqua2, "\\[\\e[38;2;122;168;159m\\]", 28);
 
+    strncpy(colorDefs->surimiOrange, "\\[\\e[38;2;255;161;102m\\]", 28);
+    strncpy(colorDefs->surimiOrange_bg, "\\[\\e[48;2;255;161;102m\\]", 28);
+    strncpy(colorDefs->winter_green, "\\[\\e[38;2;55;65;51m\\]", 25);
+    strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;55;65;51m\\]", 25);
+    strncpy(colorDefs->sumiInk3, "\\[\\e[38;2;54;54;70m\\]", 25);
+    strncpy(colorDefs->sumiInk3_bg, "\\[\\e[48;2;54;54;70m\\]", 25);
+    strncpy(colorDefs->sumiInk4, "\\[\\e[38;2;84;84;109m\\]", 26);
+    strncpy(colorDefs->sumiInk4_bg, "\\[\\e[48;2;84;84;109m\\]", 26);
     strncpy(colorDefs->surface1, "\\[\\e[38;2;69;71;90m\\]", 25);
     strncpy(colorDefs->surface1_bg, "\\[\\e[48;2;69;71;90m\\]", 25);
     strncpy(colorDefs->surface2, "\\[\\e[38;2;88;91;112m\\]", 26);
     strncpy(colorDefs->surface2_bg, "\\[\\e[48;2;88;91;112m\\]", 26);
-    strncpy(colorDefs->firebrick, "\\[\\e[38;2;232;36;36m\\]", 26);
-    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;191;72;72m\\]", 26);
+    strncpy(colorDefs->firebrick, "\\[\\e[38;2;255;67;74m\\]", 26);
+    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;255;67;74m\\]", 26);
     strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
     strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
     strncpy(colorDefs->rose, "\\[\\e[38;2;247;118;142m\\]", 28);
@@ -533,8 +547,6 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->slate_bg, "\\[\\e[48;2;65;72;104m\\]", 26);
     strncpy(colorDefs->light_slate, "\\[\\e[38;2;86;95;137m\\]", 26);
     strncpy(colorDefs->light_slate_bg, "\\[\\e[48;2;86;95;137m\\]", 26);
-    strncpy(colorDefs->pale_green, "\\[\\e[38;2;158;206;106m\\]", 28);
-    strncpy(colorDefs->pale_green_bg, "\\[\\e[48;2;158;206;106m\\]", 28);
     strncpy(colorDefs->sandy_orange, "\\[\\e[38;2;255;158;100m\\]", 28);
     strncpy(colorDefs->sandy_orange_bg, "\\[\\e[48;2;255;158;100m\\]", 28);
     return;
