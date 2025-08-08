@@ -196,7 +196,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             return true;
 
         } else if ((modifier == Hour && hrDif < limit) ||
-                   modifier == Hour && time.curnt_min < time.fetch_min) {
+                   (modifier == Hour && time.curnt_min < time.fetch_min)) {
 
             return false;
         }
