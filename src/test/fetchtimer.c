@@ -204,34 +204,26 @@ bool shouldFetchTest(Tester* fetchConfig) {
                 hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
             }
 
+            ////////////// REMOVE FROM MAIN LIB ////////////////
             printf("in Day: hrDif = %i\n", hrDif);
+            if (time.curnt_min >= time.fetch_min) {
 
-            if (hrDif > HOURS_IN_DAY) {
+                minDif = time.curnt_min - time.fetch_min;
+
+            } else {
+
+                minDif = time.fetch_min - time.curnt_min;
+            }
+
+            printf("in Day: minDif = %i\n", minDif);
+            /////////////////////////////////////////////////////
+            if (hrDif > HOURS_IN_DAY || time.curnt_min < time.fetch_min) {
 
                 return false;
 
             } else {
 
-                ////////////// REMOVE FROM MAIN LIB ////////////////
-                if (time.curnt_min >= time.fetch_min) {
-
-                    minDif = time.curnt_min - time.fetch_min;
-
-                } else {
-
-                    minDif = time.fetch_min - time.curnt_min;
-                }
-
-                printf("in Day: minDif = %i\n", minDif);
-                /////////////////////////////////////////////////////
-                if (time.curnt_min >= time.fetch_min) {
-
-                    return true;
-
-                } else {
-
-                    return false;
-                }
+                return true;
             }
         }
     }
@@ -247,45 +239,36 @@ bool shouldFetchTest(Tester* fetchConfig) {
             hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
+        ////////////// REMOVE FROM MAIN LIB ////////////////
         printf("in Hour: hrDif = %i\n", hrDif);
-        if ((modifier == Hour && hrDif > limit) || (modifier != Hour && hrDif > 1)) {
+        if (time.curnt_min >= time.fetch_min) {
+
+            minDif = time.curnt_min - time.fetch_min;
+
+        } else {
+
+            minDif = time.fetch_min - time.curnt_min;
+        }
+
+        printf("in Hour: minDif = %i\n", minDif);
+        ////////////////////////////////////////////////////
+        if ((modifier == Hour && hrDif > limit) ||
+            (modifier == Hour && time.curnt_min >= time.fetch_min) ||
+            (modifier != Hour && hrDif > 1)) {
 
             return true;
 
-        } else if (modifier == Hour && hrDif < limit) {
+        } else if ((modifier == Hour && hrDif < limit) ||
+                   modifier == Hour && time.curnt_min < time.fetch_min) {
 
             return false;
-
-        } else if (modifier == Hour) {
-
-            ////////////// REMOVE FROM MAIN LIB ////////////////
-            if (time.curnt_min >= time.fetch_min) {
-                // if (hrDif > 0){
-
-                minDif = time.curnt_min - time.fetch_min;
-
-            } else {
-
-                minDif = time.fetch_min - time.curnt_min;
-            }
-
-            printf("in Hour: minDif = %i\n", minDif);
-            ////////////////////////////////////////////////////
-            if (time.curnt_min >= time.fetch_min) {
-
-                return true;
-
-            } else {
-
-                return false;
-            }
         }
+
     }
 
     if (time.curnt_min != time.fetch_min) { // Minute
 
         if (hrDif == 0) {
-            // if (time.curnt_min >= time.fetch_min) {
 
             minDif = time.curnt_min - time.fetch_min;
 
