@@ -148,8 +148,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
-        printf("in Day: dayDif = %i\n", dayDif);
-
         if ((modifier == Day && dayDif > limit) || (modifier != Day && dayDif > 1)) {
 
             return true;
@@ -202,7 +200,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
             return false;
         }
-
     }
 
     if (time.curnt_min != time.fetch_min) { // Minute
