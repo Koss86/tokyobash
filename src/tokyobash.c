@@ -8,7 +8,7 @@ int main(void) {
     usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
-    usrConfig.statusbar = false;
+    usrConfig.statusbar = true;
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
