@@ -43,7 +43,7 @@ Displays (in order):
 The status bar will only display when there are changes to the repo. And only show items that were changed.
 
 It is disabled by default, but can be enabled via the `statusbar` [Config](#config) setting.
- 
+
 #
 
 #### Themes
@@ -62,6 +62,36 @@ Kanagawa:
 ![tokyobash_kanagawa](https://github.com/user-attachments/assets/3bc22047-44d2-4674-a20d-01537a94b5d7)
 
 Can be changed via the `theme` [Config](#config) setting.
+
+#
+
+#### Theme Backgrounds
+  
+  Each theme has an optional background you can enable via the `background` [Config](#config) setting.
+  
+ Instead of changing path text color when in $HOME, mnt, or root it will change user background color.
+
+  Tokyonight:
+  
+<img width="225" height="43" alt="tokyobash_tokyonight_bg" src="https://github.com/user-attachments/assets/9b1ff712-c651-42f1-9d1a-b2e7ef687648" />
+<img width="225" height="43" alt="tokyobash_tokyonight_mnt_bg" src="https://github.com/user-attachments/assets/2a32ec22-434c-4782-ad5d-06998fa6e8b7" />
+<img width="220" height="40" alt="tokyobash_tokyonight_root_bg" src="https://github.com/user-attachments/assets/378b3bc8-7e52-419f-9d0e-9a7dcdce8b58" />
+
+#
+
+Catppuccin:
+
+<img width="225" height="43" alt="tokyobash_catppuccin_bg" src="https://github.com/user-attachments/assets/cfda0f0e-bd70-48b0-8f86-5a8575f5f3f8" />
+<img width="225" height="43" alt="tokyobash_catppuccin_mnt_bg" src="https://github.com/user-attachments/assets/1a632eb0-7b47-47e1-b436-e5142c75806f" />
+<img width="225" height="43" alt="tokyobash_catppuccin_root_bg" src="https://github.com/user-attachments/assets/099e43e2-4cc0-4604-924c-810fc12eae66" />
+
+#
+
+Kanagawa:
+
+<img width="225" height="43" alt="tokyobash_kanagawa_bg" src="https://github.com/user-attachments/assets/a9f02c41-dce0-4e56-b8f0-66950f3a6a24" />
+<img width="225" height="43" alt="tokyobash_kanagawa_mnt_bg" src="https://github.com/user-attachments/assets/a4a182d5-5e74-41a1-b2fc-bd65671db768" />
+<img width="225" height="43" alt="tokyobash_kanagawa_root_bg" src="https://github.com/user-attachments/assets/8c986c88-1426-4ba5-947a-2b654660cb2c" />
 
 ## Installation
 
@@ -150,6 +180,7 @@ theme       = tokyonight
 #theme      = catppuccin
 #theme      = kanagawa
 
+background  = 0 # turn on/off background variant
 git         = 1 # Turns all git integration on/off
 branchname  = 1 # Turn the display of branch name on/off
 statusbar   = 0 # Turn git status bar on/off
