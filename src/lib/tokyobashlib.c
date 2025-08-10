@@ -1,24 +1,17 @@
 #include "../../include/tokyobash.h"
 
-void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
+void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
     char filepath[256] = "/tokyobash/config";
-    int filePathLen = 17;
+    path[0] = '\0';
 
     if (pConfig == NULL || pConfig[0] == '\0') {
-        filePathLen = 25;
-        strncpy(filepath, "/.config/tokyobash/config", filePathLen + 1);
 
-        for (int i = 0; i < homeLength + filePathLen; i++) {
-            if (i < homeLength) {
-                path[i] = pHome[i];
-                continue;
-            }
-            path[i] = filepath[i - homeLength];
-        }
-        path[homeLength + filePathLen] = '\0';
+        strcpy(filepath, "/.config/tokyobash/config");
+        strcat(path, pHome);
+        strcat(path, filepath);
 
     } else {
 
@@ -26,23 +19,14 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
         // This check may not be needed but it's here just in case.
         if (pConfig[configPathLen - 1] == '/') {
             pConfig[configPathLen - 1] = '\0';
-            configPathLen--;
         }
-
-        for (int i = 0; i < configPathLen + filePathLen; i++) {
-            if (i < configPathLen) {
-                path[i] = pConfig[i];
-                continue;
-            }
-            path[i] = filepath[i - configPathLen];
-        }
-        path[configPathLen + filePathLen] = '\0';
+        strcat(path, pConfig);
+        strcat(path, filepath);
     }
 
     FILE* file = fopen(path, "r");
-    if (file == NULL) {
+    if (file == NULL)
         return;
-    }
 
     char c;
     bool inkey = true;
@@ -94,9 +78,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
 
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
                         usrConfig->theme = Kanagawa;
-
-                    } else if ((strncmp(valbuf, "orange", 6)) == 0) {
-                        usrConfig->theme = Orange;
                     }
                 } // add else if's here for future options with char vals.
 
@@ -197,9 +178,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
             continue;
         }
 
-        if (incomment) {
+        if (incomment)
             continue;
-        }
 
         if (c == '=') {
             invalue = true;
@@ -209,12 +189,11 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome, int homeLength) {
             continue;
         }
 
-        if (inkey) {
+        if (inkey)
             keybuf[indx++] = c;
-        }
-        if (invalue) {
+
+        if (invalue)
             valbuf[indx++] = c;
-        }
     }
     fclose(file);
     return;
@@ -272,26 +251,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
     colors->bold = &colorDefs->bold[0];
     colors->reset = &colorDefs->reset[0];
     colors->untracked = &colorDefs->yellow[0];
-
-    colors->usr_txt = &colorDefs->white[0];
-    colors->time_txt = &colorDefs->white[0];
-    colors->branch_txt = &colorDefs->white[0];
-    colors->path_txt = &colorDefs->white[0];
-
-    colors->usr_color = &colorDefs->reset[0];
-    colors->time_color = &colorDefs->reset[0];
-    colors->branch_color = &colorDefs->reset[0];
-    colors->path_color = &colorDefs->reset[0];
-
-    colors->unstaged = &colorDefs->reset[0];
-    colors->staged = &colorDefs->reset[0];
-    colors->committed = &colorDefs->reset[0];
-    colors->fetched = &colorDefs->reset[0];
-
-    colors->usr_bg = &colorDefs->reset[0];
-    colors->time_bg = &colorDefs->reset[0];
-    colors->branch_bg = &colorDefs->reset[0];
-    colors->path_bg = &colorDefs->reset[0];
 
     if (usrConfig->background) {
 
@@ -410,9 +369,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->pink[0];
                 break;
-
-            case Orange:
-                break;
         }
 
     } else {
@@ -423,7 +379,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->usr_color = &colorDefs->cyan[0];
                 colors->usr_txt = &colorDefs->cyan[0];
                 colors->time_txt = &colorDefs->sky_blue[0];
-                colors->branch_txt = &colorDefs->smoke[0];
+                colors->branch_txt = &colorDefs->blue[0];
                 colors->path_txt = &colorDefs->blue[0];
                 colors->mnt_txt = &colorDefs->gold[0];
                 colors->root_txt = &colorDefs->pink[0];
@@ -438,7 +394,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->usr_color = &colorDefs->peach[0];
                 colors->usr_txt = &colorDefs->peach[0];
                 colors->time_txt = &colorDefs->rosewater[0];
-                colors->branch_txt = &colorDefs->orchid[0];
+                colors->branch_txt = &colorDefs->light_purple[0];
                 colors->path_txt = &colorDefs->light_purple[0];
                 colors->mnt_txt = &colorDefs->blue[0];
                 colors->root_txt = &colorDefs->gold[0];
@@ -463,19 +419,6 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->pink[0];
                 break;
-
-            case Orange:
-                colors->usr_color = &colorDefs->orange[0];
-                colors->usr_txt = &colorDefs->orange[0];
-                colors->time_txt = &colorDefs->beige[0];
-                colors->branch_txt = &colorDefs->gold[0];
-                colors->path_txt = &colorDefs->white[0];
-
-                colors->unstaged = &colorDefs->red[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->green[0];
-                colors->fetched = &colorDefs->red[0];
-                break;
         }
     }
     return;
@@ -489,6 +432,7 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->lime_green, "\\[\\e[38;2;172;255;47m\\]", 27);
     strncpy(colorDefs->desat_lime, "\\[\\e[38;2;101;135;33m\\]", 27);
     strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
+    strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
     strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
     strncpy(colorDefs->gray, "\\[\\e[38;2;154;165;206m\\]", 28);
     strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
@@ -535,14 +479,12 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
     strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
     strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
-    strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
     strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
     strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
     strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
     strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
     strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
     strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
-
     strncpy(colorDefs->slate, "\\[\\e[38;2;65;72;104m\\]", 26);
     strncpy(colorDefs->slate_bg, "\\[\\e[48;2;65;72;104m\\]", 26);
     strncpy(colorDefs->light_slate, "\\[\\e[38;2;86;95;137m\\]", 26);

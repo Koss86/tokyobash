@@ -24,7 +24,6 @@ typedef enum Themes {
     Tokyonight,
     Catppuccin,
     Kanagawa,
-    Orange,
 } Themes;
 
 typedef enum FetchModifier {
@@ -164,7 +163,7 @@ typedef struct ColorPointers {
     char* path_bg;
 } ColorPointers;
 
-void parseConfig(ConfigSettings* usrConfig, char* pHome, int Hlen);
+void parseConfig(ConfigSettings* usrConfig, char* pHome);
 void colorDefinitions(Colors* colors);
 void assignPointers(ColorPointers* colors, Colors* colorsDefs, ConfigSettings* usrConfig);
 void replaceHome(char* path, int Plen, int Hlen);
