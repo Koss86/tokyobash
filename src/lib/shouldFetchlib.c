@@ -19,14 +19,45 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         return false;
     }
 
-    FILE* fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    char c;
+    int indx = 0;
+    char buf[64];
+    char path[256];
+    FILE* file;
+    FILE* fetch_status;
+
+    file = popen("git rev-parse --show-cdup", "r");
+    if (file == NULL) {
+        return false;
+    }
+
+    while ((c = fgetc(file)) != EOF) {
+        buf[indx++] = c;
+    }
+    pclose(file);
+
+    if (buf[0] == '\n') {
+
+        fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+
+    } else {
+
+        int len = strlen(buf);
+        if (buf[len - 1] == '\n') {
+            buf[len - 1] = '\0';
+        }
+        path[0] = '\0';
+        strcat(path, "stat ");
+        strcat(path, buf);
+        strcat(path, ".git/FETCH_HEAD 2>/dev/null");
+        fetch_status = popen(path, "r");
+    }
 
     if (fetch_status == NULL) {
         return false;
     }
 
-    char c;
-    int indx = 0;
+    indx = 0;
     int newline = 0;
     int space = 0;
     bool inDate = false;
