@@ -264,12 +264,12 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->cyan_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->beige[0];
+                        colors->usr_txt = &colorDefs->surface1[0];
                         colors->usr_color = &colorDefs->sandy_orange[0];
                         colors->usr_bg = &colorDefs->sandy_orange_bg[0];
                         break;
                     case Root:
-                        colors->usr_txt = &colorDefs->khaki[0];
+                        colors->usr_txt = &colorDefs->surface1[0];
                         colors->usr_color = &colorDefs->rose[0];
                         colors->usr_bg = &colorDefs->rose_bg[0];
                         break;
