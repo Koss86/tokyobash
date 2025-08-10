@@ -40,12 +40,14 @@ void getBranch(char* branch_name) {
 
     FILE* file = popen("git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
     if (file == NULL) {
-        exit(-1);
+        strcpy(branch_name, "Unknown");
+        return;
     }
 
     if (fgets(branch_name, MAX_BRANCH_LEN, file) == NULL) {
+        strcpy(branch_name, "Unknown");
         pclose(file);
-        exit(-1);
+        return;
     }
 
     int len = strlen(branch_name);
@@ -54,6 +56,7 @@ void getBranch(char* branch_name) {
         branch_name[len - 1] = '\0';
     }
     pclose(file);
+    return;
 }
 // Returns how many commits are ready to be pushed.
 int Committed(void) {
@@ -74,7 +77,6 @@ int Committed(void) {
 }
 // Counts how many staged, unstaged, and untracked files in the repo
 // on the current branch, then assigns each value to the provided variables.
-// !!Currently has a noticeable 1-2 second slow down in large repos like llvm.
 void getStatusOf(int* staged, int* unstaged, int* untracked) {
     FILE* file;
     if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
@@ -91,20 +93,19 @@ void getStatusOf(int* staged, int* unstaged, int* untracked) {
         }
 
         if (state == 0) {
+
             if (c == '?') {
                 untr++;
             } else if (c == 'M' || c == 'A' || c == 'D' || c == 'R' || c == 'C') {
                 st++;
             }
+            state = 1;
+
         } else {
+
             if (c == 'M' || c == 'D') {
                 unst++;
-            } // else if (c == 'U') to track files with merge conflicts.
-        }
-
-        if (state == 0) {
-            state = 1;
-        } else {
+            }
             state = 0;
         }
     }
@@ -112,6 +113,7 @@ void getStatusOf(int* staged, int* unstaged, int* untracked) {
     *unstaged = unst;
     *untracked = untr;
     pclose(file);
+    return;
 }
 // Checks when last the repo was updated.
 // Calls fetch if longer than specified in

@@ -33,10 +33,10 @@ int main(void) {
         exit(-1);
     }
 
+    parseConfig(&usrConfig, pHome);
+
     int pathLength = strlen(path);
     int homeLength = strlen(pHome);
-    parseConfig(&usrConfig, pHome, homeLength);
-
     if (strstr(path, pHome) != NULL) {
         replaceHome(path, pathLength, homeLength);
         pathLength = (pathLength - homeLength) + 1;

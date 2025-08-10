@@ -43,25 +43,17 @@ void printBranch(ConfigSettings* usrConfig, ColorPointers* colors) {
 
 void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength) {
 
-    if (usrConfig->time) {
-        if (usrConfig->inARepo && usrConfig->branchname) {
+    if (usrConfig->inARepo && usrConfig->branchname) {
 
-            printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
-
-        } else {
-
-            printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
-                   colors->reset);
-        }
+        printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
 
     } else {
 
-        if (usrConfig->inARepo && usrConfig->branchname) {
+        if (usrConfig->time) {
 
-            printf("%s%s%s", colors->usr_color, colors->branch_bg, colors->reset);
-
+            printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
+                   colors->reset);
         } else {
-
             printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
         }
     }
