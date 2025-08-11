@@ -14,7 +14,7 @@ void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 void getDaysInMonth(int* daysInMonth, int month);
 void generateTests(Tester* times);
 
-#define TEST_SIZE 36
+#define TEST_SIZE 37
 
 int main() {
 
@@ -33,6 +33,7 @@ int main() {
     int expectedtrue = 0;
     int expectedfalse = 0;
     char failedTests[TEST_SIZE * 3];
+    failedTests[0] = '\0';
 
     for (int i = 0; i < TEST_SIZE; i++) {
         printf("Test %i\nModifier: ", i + 1);
@@ -124,7 +125,10 @@ bool shouldFetchTest(Tester* fetchConfig) {
     if (time.curnt_year != time.fetch_year) { // Year
 
         yearDif = time.curnt_year - time.fetch_year;
+
+        //////////// REMOVE ///////////////
         printf("in Year: yearDif = %i\n", yearDif);
+        ///////////////////////////////////
 
         if (yearDif > 1) {
 
@@ -143,7 +147,9 @@ bool shouldFetchTest(Tester* fetchConfig) {
             monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
         }
 
+        //////////// REMOVE ///////////////
         printf("in Month: monthDif = %i\n", monthDif);
+        ///////////////////////////////////
 
         if (monthDif > 1) {
 
@@ -157,7 +163,9 @@ bool shouldFetchTest(Tester* fetchConfig) {
                 dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
                 dayDif += 28; // add month of Febuary.
 
+                //////////// REMOVE ///////////////
                 printf("in Month: dayDif = %d\n", dayDif);
+                ///////////////////////////////////
 
                 if (dayDif >= limit) {
 
@@ -171,7 +179,7 @@ bool shouldFetchTest(Tester* fetchConfig) {
         }
     }
 
-    if (time.curnt_day != time.fetch_day) { // Day
+    if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
 
         if (monthDif == 0) {
 
@@ -182,18 +190,24 @@ bool shouldFetchTest(Tester* fetchConfig) {
             getDaysInMonth(&days_in_month, time.fetch_month);
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
-
+        //////////// REMOVE ///////////////
         printf("in Day: dayDif = %i\n", dayDif);
+        ///////////////////////////////////
 
-        if ((modifier == Day && dayDif > limit) || (modifier != Day && dayDif > 1)) {
+        if (modifier != Day && dayDif > 1) {
 
             return true;
 
-        } else if (modifier == Day && dayDif < limit) {
+        } else if (modifier == Day) {
 
-            return false;
+            if (dayDif > limit) {
 
-        } else if (modifier == Day) { // and dayDif and limit are equal
+                return true;
+
+            } else if (dayDif < limit) {
+
+                return false;
+            }
 
             if (dayDif == 0) {
 
@@ -252,18 +266,19 @@ bool shouldFetchTest(Tester* fetchConfig) {
 
         printf("in Hour: minDif = %i\n", minDif);
         ////////////////////////////////////////////////////
-        if ((modifier == Hour && hrDif > limit) ||
-            (modifier == Hour && time.curnt_min >= time.fetch_min) ||
-            (modifier != Hour && hrDif > 1)) {
+        if (modifier == Hour) {
 
+            if (hrDif > limit || time.curnt_min >= time.fetch_min) {
+
+                return true;
+
+            } else if (hrDif < limit || time.curnt_min < time.fetch_min) {
+
+                return false;
+            }
+        } else if (hrDif > 1) {
             return true;
-
-        } else if ((modifier == Hour && hrDif < limit) ||
-                   modifier == Hour && time.curnt_min < time.fetch_min) {
-
-            return false;
         }
-
     }
 
     if (time.curnt_min != time.fetch_min) { // Minute
@@ -276,8 +291,9 @@ bool shouldFetchTest(Tester* fetchConfig) {
 
             minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
-
+        //////////// REMOVE ///////////////
         printf("in Minute: minDif = %i\n", minDif);
+        ///////////////////////////////////
 
         if (minDif >= limit) {
 
@@ -647,6 +663,15 @@ void generateTests(Tester* times) {
     times[in].settings.limit = 1;
     times[in].expected = true;
     strcpy(times[in].curnt_date, "2026-01-01");
+    strcpy(times[in].fetch_date, "2025-12-31");
+    strcpy(times[in].curnt_time, "00:01:43");
+    strcpy(times[in].fetch_time, "23:59:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2026-01-31");
     strcpy(times[in].fetch_date, "2025-12-31");
     strcpy(times[in].curnt_time, "00:01:43");
     strcpy(times[in].fetch_time, "23:59:43");
