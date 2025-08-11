@@ -27,6 +27,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     FILE* fetch_status;
 
     file = popen("git rev-parse --show-cdup", "r");
+
     if (file == NULL) {
         return false;
     }
@@ -65,8 +66,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     char fetch_date[11];
     char fetch_time[9];
 
-    // If the return of 'stat .git/FETCH_HEAD' ever
-    // changes, this will need to be refactored.
     while ((c = fgetc(fetch_status)) != EOF) {
 
         if (c == '\n') {
@@ -74,8 +73,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             continue;
         }
 
-        // Date and time we want are on the 7th line,
-        // so after 6 \n we are on the line we want to be.
         if (newline == 6 && c == ' ') {
             space++;
             if (space == 1) {
@@ -167,7 +164,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
 
-    if (time.curnt_day != time.fetch_day) { // Day
+    if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
 
         if (monthDif == 0) {
 
@@ -179,15 +176,20 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
-        if ((modifier == Day && dayDif > limit) || (modifier != Day && dayDif > 1)) {
+        if (modifier != Day && dayDif > 1) {
 
             return true;
 
-        } else if (modifier == Day && dayDif < limit) {
+        } else if (modifier == Day) {
 
-            return false;
+            if (dayDif > limit) {
 
-        } else if (modifier == Day) { // and dayDif and limit are equal
+                return true;
+
+            } else if (dayDif < limit) {
+
+                return false;
+            }
 
             if (dayDif == 0) {
 
@@ -220,16 +222,18 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
-        if ((modifier == Hour && hrDif > limit) ||
-            (modifier == Hour && time.curnt_min >= time.fetch_min) ||
-            (modifier != Hour && hrDif > 1)) {
+        if (modifier == Hour) {
 
+            if (hrDif > limit || time.curnt_min >= time.fetch_min) {
+
+                return true;
+
+            } else if (hrDif < limit || time.curnt_min < time.fetch_min) {
+
+                return false;
+            }
+        } else if (hrDif > 1) {
             return true;
-
-        } else if ((modifier == Hour && hrDif < limit) ||
-                   (modifier == Hour && time.curnt_min < time.fetch_min)) {
-
-            return false;
         }
     }
 
