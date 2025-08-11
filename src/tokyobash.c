@@ -84,10 +84,11 @@ int main(void) {
             printBranch(&usrConfig, &colors);
         }
 
-        if (usrConfig.background)
+        if (usrConfig.background) {
             printPathWithBg(&usrConfig, &colors, path, pathLength);
-        else
+        } else {
             printPathNoBg(&usrConfig, &colors, path, pathLength);
+        }
 
         if (usrConfig.statusbar || usrConfig.debug) {
 

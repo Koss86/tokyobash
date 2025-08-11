@@ -71,13 +71,26 @@ typedef struct Colors {
     char red[26];
     char yellow[26];
     char lime_green[27];
-    char desat_lime[27];
     char white[28];
     char black[16];
     char beige[28];
     char green[24];
     char gray[28];
 
+    char boat_yellow2[28];
+    char spring_green[28];
+    char sumiInk2[25];
+
+    char mocha_purple[28];
+    char mocha_purple_bg[28];
+    char oni_violet[28];
+    char oni_violet_bg[28];
+    char autumn_red[26];
+    char autumn_red_bg[26];
+    char mocha_green[28];
+    char mocha_green_bg[28];
+    char mocha_blue[28];
+    char mocha_blue_bg[28];
     char surface1[25];
     char surface1_bg[25];
     char surface2[26];
@@ -88,6 +101,8 @@ typedef struct Colors {
     char pink_bg[20];
     char rose[28];
     char rose_bg[28];
+    char maroon[26];
+    char maroon_bg[26];
     char peach[28];
     char peach_bg[28];
     char orange[27];
@@ -114,6 +129,10 @@ typedef struct Colors {
     char gold_bg[27];
     char light_gold[28];
     char light_gold_bg[28];
+    char latte_yellow[27];
+    char latte_yellow_bg[27];
+    char frappe_yellow[28];
+    char frappe_yellow_bg[28];
     char slate[26];
     char slate_bg[26];
     char light_slate[26];
@@ -122,18 +141,19 @@ typedef struct Colors {
     char sumiInk3_bg[25];
     char sumiInk4[26];
     char sumiInk4_bg[26];
-    char winter_green[25];
-    char winter_green_bg[25];
     char surimiOrange[28];
     char surimiOrange_bg[28];
 
     char waveAqua2[28];
+    char waveAqua2_bg[28];
     char rosewater[28];
     char sky[28];
-    char dark_peach[28];
     char pale_teal[28];
     char sandy_orange[30];
     char sandy_orange_bg[30];
+    // char winter_green[25];
+    // char winter_green_bg[25];
+    // char dark_peach[27];
 } Colors;
 
 typedef struct ColorPointers {

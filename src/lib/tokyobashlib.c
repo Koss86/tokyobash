@@ -25,8 +25,9 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     }
 
     FILE* file = fopen(path, "r");
-    if (file == NULL)
+    if (file == NULL) {
         return;
+    }
 
     char c;
     bool inkey = true;
@@ -178,8 +179,9 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             continue;
         }
 
-        if (incomment)
+        if (incomment) {
             continue;
+        }
 
         if (c == '=') {
             invalue = true;
@@ -189,11 +191,13 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             continue;
         }
 
-        if (inkey)
+        if (inkey) {
             keybuf[indx++] = c;
+        }
 
-        if (invalue)
+        if (invalue) {
             valbuf[indx++] = c;
+        }
     }
     fclose(file);
     return;
@@ -264,12 +268,12 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->cyan_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_txt = &colorDefs->sumiInk3[0];
                         colors->usr_color = &colorDefs->sandy_orange[0];
                         colors->usr_bg = &colorDefs->sandy_orange_bg[0];
                         break;
                     case Root:
-                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_txt = &colorDefs->sumiInk3[0];
                         colors->usr_color = &colorDefs->rose[0];
                         colors->usr_bg = &colorDefs->rose_bg[0];
                         break;
@@ -300,30 +304,30 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->peach_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->surface1[0];
-                        colors->usr_color = &colorDefs->gold[0];
-                        colors->usr_bg = &colorDefs->gold_bg[0];
+                        colors->usr_txt = &colorDefs->sumiInk3[0];
+                        colors->usr_color = &colorDefs->mocha_blue[0];
+                        colors->usr_bg = &colorDefs->mocha_blue_bg[0];
                         break;
                     case Root:
-                        colors->usr_txt = &colorDefs->surface1[0];
-                        colors->usr_color = &colorDefs->rose[0];
-                        colors->usr_bg = &colorDefs->rose_bg[0];
+                        colors->usr_txt = &colorDefs->sumiInk3[0];
+                        colors->usr_color = &colorDefs->mocha_green[0];
+                        colors->usr_bg = &colorDefs->mocha_green_bg[0];
                         break;
                 }
                 colors->time_txt = &colorDefs->rosewater[0];
                 colors->time_color = &colorDefs->surface1[0];
                 colors->time_bg = &colorDefs->surface1_bg[0];
 
-                colors->branch_txt = &colorDefs->khaki[0];
+                colors->branch_txt = &colorDefs->frappe_yellow[0];
                 colors->branch_color = &colorDefs->surface2[0];
                 colors->branch_bg = &colorDefs->surface2_bg[0];
 
-                colors->path_txt = &colorDefs->orchid[0];
+                colors->path_txt = &colorDefs->mocha_purple[0];
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
-                colors->mnt_txt = &colorDefs->beige[0];
-                colors->root_txt = &colorDefs->light_purple[0];
+                colors->mnt_txt = &colorDefs->mocha_purple[0];
+                colors->root_txt = &colorDefs->mocha_purple[0];
 
                 colors->unstaged = &colorDefs->sandy_orange[0];
                 colors->staged = &colorDefs->blue[0];
@@ -334,30 +338,30 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
             case Kanagawa:
                 switch (usrConfig->pathState) {
                     case Home:
-                        colors->usr_txt = &colorDefs->sumiInk3[0];
-                        colors->usr_color = &colorDefs->firebrick[0];
-                        colors->usr_bg = &colorDefs->firebrick_bg[0];
+                        colors->usr_txt = &colorDefs->sumiInk2[0];
+                        colors->usr_color = &colorDefs->autumn_red[0];
+                        colors->usr_bg = &colorDefs->autumn_red_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->surface1[0];
+                        colors->usr_txt = &colorDefs->sumiInk2[0];
+                        colors->usr_color = &colorDefs->waveAqua2[0];
+                        colors->usr_bg = &colorDefs->waveAqua2_bg[0];
+                        break;
+                    case Root:
+                        colors->usr_txt = &colorDefs->sumiInk2[0];
                         colors->usr_color = &colorDefs->surimiOrange[0];
                         colors->usr_bg = &colorDefs->surimiOrange_bg[0];
                         break;
-                    case Root:
-                        colors->usr_txt = &colorDefs->surface1[0];
-                        colors->usr_color = &colorDefs->orchid[0];
-                        colors->usr_bg = &colorDefs->orchid_bg[0];
-                        break;
                 }
-                colors->time_txt = &colorDefs->waveAqua2[0];
+                colors->time_txt = &colorDefs->oni_violet[0];
                 colors->time_color = &colorDefs->sumiInk3[0];
                 colors->time_bg = &colorDefs->sumiInk3_bg[0];
 
-                colors->branch_txt = &colorDefs->surimiOrange[0];
+                colors->branch_txt = &colorDefs->spring_green[0];
                 colors->branch_color = &colorDefs->sumiInk4[0];
                 colors->branch_bg = &colorDefs->sumiInk4_bg[0];
 
-                colors->path_txt = &colorDefs->light_gold[0];
+                colors->path_txt = &colorDefs->boat_yellow2[0];
                 colors->path_color = colors->branch_color;
                 colors->path_bg = colors->branch_bg;
 
@@ -378,14 +382,14 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
             case Tokyonight:
                 colors->usr_color = &colorDefs->cyan[0];
                 colors->usr_txt = &colorDefs->cyan[0];
-                colors->time_txt = &colorDefs->sky_blue[0];
+                colors->time_txt = &colorDefs->smoke[0];
                 colors->branch_txt = &colorDefs->blue[0];
                 colors->path_txt = &colorDefs->blue[0];
                 colors->mnt_txt = &colorDefs->gold[0];
                 colors->root_txt = &colorDefs->pink[0];
 
                 colors->unstaged = &colorDefs->gold[0];
-                colors->staged = &colorDefs->orchid[0];
+                colors->staged = &colorDefs->blue[0];
                 colors->committed = &colorDefs->lime_green[0];
                 colors->fetched = &colorDefs->orange[0];
                 break;
@@ -394,10 +398,10 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 colors->usr_color = &colorDefs->peach[0];
                 colors->usr_txt = &colorDefs->peach[0];
                 colors->time_txt = &colorDefs->rosewater[0];
-                colors->branch_txt = &colorDefs->light_purple[0];
-                colors->path_txt = &colorDefs->light_purple[0];
-                colors->mnt_txt = &colorDefs->blue[0];
-                colors->root_txt = &colorDefs->gold[0];
+                colors->branch_txt = &colorDefs->orchid[0];
+                colors->path_txt = &colorDefs->orchid[0];
+                colors->mnt_txt = &colorDefs->mocha_blue[0];
+                colors->root_txt = &colorDefs->mocha_green[0];
 
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->blue[0];
@@ -406,13 +410,13 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                 break;
 
             case Kanagawa:
-                colors->usr_color = &colorDefs->firebrick[0];
-                colors->usr_txt = &colorDefs->firebrick[0];
-                colors->time_txt = &colorDefs->smoke[0];
-                colors->branch_txt = &colorDefs->khaki[0];
-                colors->path_txt = &colorDefs->khaki[0];
-                colors->mnt_txt = &colorDefs->orange[0];
-                colors->root_txt = &colorDefs->light_purple[0];
+                colors->usr_color = &colorDefs->autumn_red[0];
+                colors->usr_txt = &colorDefs->autumn_red[0];
+                colors->time_txt = &colorDefs->oni_violet[0];
+                colors->branch_txt = &colorDefs->boat_yellow2[0];
+                colors->path_txt = &colorDefs->boat_yellow2[0];
+                colors->mnt_txt = &colorDefs->waveAqua2[0];
+                colors->root_txt = &colorDefs->surimiOrange[0];
 
                 colors->unstaged = &colorDefs->gold[0];
                 colors->staged = &colorDefs->blue[0];
@@ -426,24 +430,46 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
 void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->bold, "\\[\\e[1m\\]", 13);
     strncpy(colorDefs->reset, "\\[\\e[00m\\]", 14);
+    strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
     strncpy(colorDefs->red, "\\[\\e[38;2;255;77;77m\\]", 26);
     strncpy(colorDefs->yellow, "\\[\\e[38;2;255;255;0m\\]", 26);
     strncpy(colorDefs->green, "\\[\\e[38;2;0;255;0m\\]", 24);
     strncpy(colorDefs->lime_green, "\\[\\e[38;2;172;255;47m\\]", 27);
-    strncpy(colorDefs->desat_lime, "\\[\\e[38;2;101;135;33m\\]", 27);
     strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
     strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
-    strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
     strncpy(colorDefs->gray, "\\[\\e[38;2;154;165;206m\\]", 28);
     strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
-    strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 28);
+    // strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 27);
     strncpy(colorDefs->rosewater, "\\[\\e[38;2;245;224;220m\\]", 28);
     strncpy(colorDefs->waveAqua2, "\\[\\e[38;2;122;168;159m\\]", 28);
+    strncpy(colorDefs->waveAqua2_bg, "\\[\\e[48;2;122;168;159m\\]", 28);
+    strncpy(colorDefs->sumiInk2, "\\[\\e[38;2;42;42;55m\\]", 25);
+    strncpy(colorDefs->boat_yellow2, "\\[\\e[38;2;206;163;110m\\]", 28);
+    strncpy(colorDefs->spring_green, "\\[\\e[38;2;151;187;108m\\]", 28);
 
+    // strncpy(colorDefs->latte_yellow, "\\[\\e[38;2;223;142;29m\\]", 27);
+    // strncpy(colorDefs->latte_yellow_bg, "\\[\\e[48;2;223;142;29m\\]", 27);
+    // strncpy(colorDefs->winter_green, "\\[\\e[38;2;55;65;51m\\]", 25);
+    // strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;55;65;51m\\]", 25);
+
+    strncpy(colorDefs->oni_violet, "\\[\\e[38;2;149;127;184m\\]", 28);
+    strncpy(colorDefs->oni_violet_bg, "\\[\\e[48;2;149;127;184m\\]", 28);
+    strncpy(colorDefs->mocha_purple, "\\[\\e[38;2;203;166;247m\\]", 28);
+    strncpy(colorDefs->mocha_purple_bg, "\\[\\e[48;2;203;166;247m\\]", 28);
+    strncpy(colorDefs->mocha_green, "\\[\\e[38;2;166;227;161m\\]", 28);
+    strncpy(colorDefs->mocha_green_bg, "\\[\\e[48;2;166;227;161m\\]", 28);
+    strncpy(colorDefs->mocha_blue, "\\[\\e[38;2;137;180;250m\\]", 28);
+    strncpy(colorDefs->mocha_blue_bg, "\\[\\e[48;2;137;180;250m\\]", 28);
+    strncpy(colorDefs->frappe_yellow, "\\[\\e[38;2;229;200;129m\\]", 28);
+    strncpy(colorDefs->frappe_yellow_bg, "\\[\\e[48;2;229;200;129m\\]", 28);
+    strncpy(colorDefs->orchid, "\\[\\e[38;2;186;154;247m\\]", 28);
+    strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;186;154;247m\\]", 28);
+    strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
+    strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
+    strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
+    strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
     strncpy(colorDefs->surimiOrange, "\\[\\e[38;2;255;161;102m\\]", 28);
     strncpy(colorDefs->surimiOrange_bg, "\\[\\e[48;2;255;161;102m\\]", 28);
-    strncpy(colorDefs->winter_green, "\\[\\e[38;2;55;65;51m\\]", 25);
-    strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;55;65;51m\\]", 25);
     strncpy(colorDefs->sumiInk3, "\\[\\e[38;2;54;54;70m\\]", 25);
     strncpy(colorDefs->sumiInk3_bg, "\\[\\e[48;2;54;54;70m\\]", 25);
     strncpy(colorDefs->sumiInk4, "\\[\\e[38;2;84;84;109m\\]", 26);
@@ -452,12 +478,14 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->surface1_bg, "\\[\\e[48;2;69;71;90m\\]", 25);
     strncpy(colorDefs->surface2, "\\[\\e[38;2;88;91;112m\\]", 26);
     strncpy(colorDefs->surface2_bg, "\\[\\e[48;2;88;91;112m\\]", 26);
-    strncpy(colorDefs->firebrick, "\\[\\e[38;2;255;67;74m\\]", 26);
-    strncpy(colorDefs->firebrick_bg, "\\[\\e[48;2;255;67;74m\\]", 26);
+    strncpy(colorDefs->autumn_red, "\\[\\e[38;2;195;64;66m\\]", 26);
+    strncpy(colorDefs->autumn_red_bg, "\\[\\e[48;2;195;64;66m\\]", 26);
     strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
     strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
     strncpy(colorDefs->rose, "\\[\\e[38;2;247;118;142m\\]", 28);
     strncpy(colorDefs->rose_bg, "\\[\\e[48;2;247;118;142m\\]", 28);
+    strncpy(colorDefs->maroon, "\\[\\e[38;2;230;69;82m\\]", 26);
+    strncpy(colorDefs->maroon_bg, "\\[\\e[48;2;230;69;82m\\]", 26);
     strncpy(colorDefs->peach, "\\[\\e[38;2;250;179;135m\\]", 28);
     strncpy(colorDefs->peach_bg, "\\[\\e[48;2;250;179;135m\\]", 28);
     strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
@@ -473,12 +501,6 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
     strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);
     strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
-    strncpy(colorDefs->orchid, "\\[\\e[38;2;186;154;247m\\]", 28);
-    strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;186;154;247m\\]", 28);
-    strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
-    strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
-    strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
-    strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
     strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
     strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
     strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
