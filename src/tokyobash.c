@@ -2,21 +2,6 @@
 
 int main(void) {
 
-    ConfigSettings usrConfig;
-    usrConfig.git = true;
-    usrConfig.time = true;
-    usrConfig.fetch = false;
-    usrConfig.debug = false;
-    usrConfig.inARepo = false;
-    usrConfig.statusbar = true;
-    usrConfig.branchname = true;
-    usrConfig.background = false;
-    usrConfig.theme = Tokyonight;
-    usrConfig.fetchConfig.limit = 1;
-    usrConfig.fetchConfig.modifier = Day;
-    usrConfig.gitAccessible = false;
-    usrConfig.gitAccessible = isGitAccessible();
-
     char path[PATH_MAX];
     getcwd(path, sizeof(path));
 
@@ -32,6 +17,20 @@ int main(void) {
         printf("\\u@\\h: ");
         exit(-1);
     }
+
+    ConfigSettings usrConfig;
+    usrConfig.time = true;
+    usrConfig.fetch = false;
+    usrConfig.debug = false;
+    usrConfig.inARepo = false;
+    usrConfig.statusbar = true;
+    usrConfig.branchname = true;
+    usrConfig.background = false;
+    usrConfig.theme = Tokyonight;
+    usrConfig.fetchConfig.limit = 1;
+    usrConfig.fetchConfig.modifier = Day;
+    usrConfig.gitAccessible = false;
+    usrConfig.gitAccessible = isGitAccessible();
 
     parseConfig(&usrConfig, pHome);
 
@@ -57,37 +56,35 @@ int main(void) {
         pathLength = ABV_PATH_LEN_T;
     }
 
-    if (usrConfig.git && usrConfig.gitAccessible) {
+    if (usrConfig.gitAccessible) {
         usrConfig.inARepo = checkIfInRepo();
     }
 
     Colors colorDefs;
-    ColorPointers colors;
-    colorDefinitions(&colorDefs);
-    assignPointers(&colors, &colorDefs, &usrConfig);
+    defineColors(&usrConfig, &colorDefs);
 
-    printUsrTime(&usrConfig, &colors);
+    printUsrTime(&usrConfig, &colorDefs);
 
     remCurntDir(path, pathLength);
 
-    if ((!usrConfig.git || !usrConfig.gitAccessible) || !usrConfig.inARepo) {
+    if (!usrConfig.gitAccessible || !usrConfig.inARepo) {
 
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, &colors, path, pathLength);
+            printPathWithBg(&usrConfig, &colorDefs, path, pathLength);
         } else {
-            printPathNoBg(&usrConfig, &colors, path, pathLength);
+            printPathNoBg(&usrConfig, &colorDefs, path, pathLength);
         }
 
     } else {
 
         if (usrConfig.branchname) {
-            printBranch(&usrConfig, &colors);
+            printBranch(&usrConfig, &colorDefs);
         }
 
         if (usrConfig.background) {
-            printPathWithBg(&usrConfig, &colors, path, pathLength);
+            printPathWithBg(&usrConfig, &colorDefs, path, pathLength);
         } else {
-            printPathNoBg(&usrConfig, &colors, path, pathLength);
+            printPathNoBg(&usrConfig, &colorDefs, path, pathLength);
         }
 
         if (usrConfig.statusbar || usrConfig.debug) {
@@ -111,10 +108,10 @@ int main(void) {
             }
 
             if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
-                printStatusBar(&colors, untracked, unstaged, staged, committed, fetched);
+                printStatusBar(&colorDefs, untracked, unstaged, staged, committed, fetched);
             }
         }
     }
-    printf("  %s%s┗>$ %s", colors.bold, colors.usr_color, colors.reset);
+    printf("  %s%s┗>$ %s", colorDefs.bold, colorDefs.usr_color, colorDefs.reset);
     return 0;
 }

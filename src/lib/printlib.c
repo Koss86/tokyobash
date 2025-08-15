@@ -1,26 +1,26 @@
 #include "../../include/tokyobash.h"
 
-void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors) {
+void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
-        printf("%s%s%s\\u@\\h%s%s", colors->usr_color, colors->usr_txt, colors->usr_bg,
-               colors->usr_color, colors->reset);
+        printf("%s%s%s\\u@\\h%s%s", colorDefs->usr_color, colorDefs->usr_txt, colorDefs->usr_bg,
+               colorDefs->usr_color, colorDefs->reset);
     } else {
-        printf("%s%s\\u@\\h%s:", colors->bold, colors->usr_txt, colors->reset);
+        printf("%s%s\\u@\\h%s:", colorDefs->bold, colorDefs->usr_txt, colorDefs->reset);
     }
 
     if (usrConfig->time) {
         if (usrConfig->background) {
-            printf("%s%s %s%s\\t %s", colors->usr_color, colors->time_bg, colors->time_txt,
-                   colors->time_bg, colors->reset);
+            printf("%s%s %s%s\\t %s", colorDefs->usr_color, colorDefs->time_bg,
+                   colorDefs->time_txt, colorDefs->time_bg, colorDefs->reset);
         } else {
-            printf("%s [\\t]", colors->time_txt);
+            printf("%s [\\t]", colorDefs->time_txt);
         }
     }
     return;
 }
 
-void printBranch(ConfigSettings* usrConfig, ColorPointers* colors) {
+void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     char branch_name[MAX_BRANCH_LEN];
     getBranch(&branch_name[0]);
@@ -28,87 +28,85 @@ void printBranch(ConfigSettings* usrConfig, ColorPointers* colors) {
     if (usrConfig->background) {
 
         if (usrConfig->time) {
-            printf("%s%s %s%s%s  %s", colors->branch_bg, colors->time_color,
-                   colors->branch_txt, colors->branch_bg, branch_name, colors->reset);
+            printf("%s%s %s%s%s  %s", colorDefs->branch_bg, colorDefs->time_color,
+                   colorDefs->branch_txt, colorDefs->branch_bg, branch_name, colorDefs->reset);
         } else {
-            printf("%s%s %s%s%s  %s", colors->branch_bg, colors->usr_color,
-                   colors->branch_txt, colors->branch_bg, branch_name, colors->reset);
+            printf("%s%s %s%s%s  %s", colorDefs->branch_bg, colorDefs->usr_color,
+                   colorDefs->branch_txt, colorDefs->branch_bg, branch_name, colorDefs->reset);
         }
 
     } else {
-        printf(" %s%s %s", colors->branch_txt, branch_name, colors->usr_color);
+        printf(" %s%s %s", colorDefs->branch_txt, branch_name, colorDefs->usr_color);
     }
     return;
 }
 
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength) {
+void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength) {
 
     if (usrConfig->inARepo && usrConfig->branchname) {
 
-        printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
+        printf("%s%s%s", colorDefs->path_txt, colorDefs->branch_bg, colorDefs->reset);
 
     } else {
 
         if (usrConfig->time) {
 
-            printf("%s%s%s%s", colors->time_color, colors->path_bg, colors->path_color,
-                   colors->reset);
+            printf("%s%s%s%s", colorDefs->time_color, colorDefs->path_bg, colorDefs->path_color,
+                   colorDefs->reset);
         } else {
-            printf("%s%s%s", colors->usr_color, colors->path_bg, colors->reset);
+            printf("%s%s%s", colorDefs->usr_color, colorDefs->path_bg, colorDefs->reset);
         }
     }
 
     if (pathLength > 1) {
 
-        printf("%s%s %s%s\\W/ %s%s%s\\n", colors->path_txt, colors->path_bg, path, colors->bold,
-               colors->reset, colors->path_color, colors->reset);
+        printf("%s%s %s%s%s\\W/ %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg, path,
+               colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
+               colorDefs->reset);
 
     } else {
 
         if (usrConfig->pathState == Root) {
-            printf("%s%s %s\\W %s%s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
-                   colors->reset, colors->path_color, colors->reset);
+
+            printf("%s%s %s%s\\W %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
+                   colorDefs->reset);
 
         } else {
 
-            printf("%s%s %s\\W/ %s%s\\n", colors->path_txt, colors->path_bg, colors->bold,
-                   colors->reset, colors->path_color);
+            printf("%s%s %s%s\\W/ %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
+                   colorDefs->reset);
         }
     }
     return;
 }
 
-void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength) {
+void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength) {
 
-    switch (usrConfig->pathState) {
+    if (pathLength > 1) {
 
-        case Home:
-            if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", colors->path_txt, path, colors->bold);
-            } else {
-                printf(" %s%s\\W/\\n", colors->path_txt, colors->bold);
-            }
-            break;
+        printf(" %s%s%s%s\\W/\\n", colorDefs->path_txt, path, colorDefs->curDir_txt,
+               colorDefs->bold);
 
-        case Mnt:
-            printf(" %s%s%s\\W/\\n", colors->mnt_txt, path, colors->bold);
-            break;
+    } else {
 
-        case Root:
-            if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", colors->root_txt, path, colors->bold);
-            } else {
-                printf(" %s%s\\W\\n", colors->root_txt, colors->bold);
-            }
-            break;
+        if (usrConfig->pathState == Root) {
+
+            printf(" %s%s\\W\\n", colorDefs->curDir_txt, colorDefs->bold);
+
+        } else {
+
+            printf(" %s%s\\W/\\n", colorDefs->curDir_txt, colorDefs->bold);
+        }
     }
     return;
 }
 
-void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int staged, int committed,
+void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged, int committed,
                     int fetched) {
 
-    printf("  %s┗┳[%s", colors->usr_color, colors->reset);
+    printf("  %s┗┳[%s", colorDefs->usr_color, colorDefs->reset);
 
     int ct = 0;
     if (untracked > 0)
@@ -129,48 +127,48 @@ void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int stag
     }
 
     if (untracked > 0) {
-        printf("%s%s %d", colors->untracked, colors->reset, untracked);
+        printf("%s%s %d", colorDefs->untracked, colorDefs->reset, untracked);
 
         if (ct > 0 && ct != 1) {
-            printf("%s | ", colors->usr_color);
+            printf("%s | ", colorDefs->usr_color);
             ct--;
         }
     }
     if (unstaged > 0) {
-        printf("%s%s %d", colors->unstaged, colors->reset, unstaged);
+        printf("%s%s %d", colorDefs->unstaged, colorDefs->reset, unstaged);
 
         if (ct > 0 && ct != 1) {
-            printf("%s | ", colors->usr_color);
+            printf("%s | ", colorDefs->usr_color);
             ct--;
         }
     }
     if (staged > 0) {
-        printf("%s󱝣%s %d", colors->staged, colors->reset, staged);
+        printf("%s󱝣%s %d", colorDefs->staged, colorDefs->reset, staged);
 
         if (ct > 0 && ct != 1) {
-            printf("%s | ", colors->usr_color);
+            printf("%s | ", colorDefs->usr_color);
             ct--;
         }
     }
     if (committed > 0) {
-        printf("%s%s %d", colors->committed, colors->reset, committed);
+        printf("%s%s %d", colorDefs->committed, colorDefs->reset, committed);
 
         if (ct > 0 && ct != 1) {
-            printf("%s | ", colors->usr_color);
+            printf("%s | ", colorDefs->usr_color);
             ct--;
         }
     }
     if (fetched > 0) {
-        printf("%s%s %d", colors->fetched, colors->reset, fetched);
+        printf("%s%s %d", colorDefs->fetched, colorDefs->reset, fetched);
 
         if (ct > 0 && ct != 1) {
-            printf("%s | ", colors->usr_color);
+            printf("%s | ", colorDefs->usr_color);
             ct--;
         }
     }
     if (space) {
         printf(" ");
     }
-    printf("%s%s]\\n ", colors->bold, colors->usr_color);
+    printf("%s%s]\\n ", colorDefs->bold, colorDefs->usr_color);
     return;
 }

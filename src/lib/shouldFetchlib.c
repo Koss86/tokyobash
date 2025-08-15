@@ -14,7 +14,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (!strftime(curnt_date, sizeof(curnt_date), "%Y-%m-%d", time_struct)) {
         return false;
     }
-
     if (!strftime(curnt_time, sizeof(curnt_time), "%X", time_struct)) {
         return false;
     }
@@ -31,22 +30,17 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (file == NULL) {
         return false;
     }
-
     while ((c = fgetc(file)) != EOF) {
         buf[indx++] = c;
     }
     pclose(file);
 
     if (buf[0] == '\n') {
-
         fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
-
     } else {
-
         int len = strlen(buf);
-        if (buf[len - 1] == '\n') {
+        if (buf[len - 1] == '\n')
             buf[len - 1] = '\0';
-        }
         path[0] = '\0';
         strcat(path, "stat ");
         strcat(path, buf);
@@ -122,42 +116,31 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (time.curnt_year != time.fetch_year) { // Year
 
         yearDif = time.curnt_year - time.fetch_year;
-
         if (yearDif > 1) {
-
             return true;
         }
     }
 
     if (time.curnt_month != time.fetch_month) { // Month
 
-        if (time.curnt_month >= time.fetch_month) {
-
+        if (yearDif == 0) {
             monthDif = time.curnt_month - time.fetch_month;
-
         } else {
-
             monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
         }
 
         if (monthDif > 1) {
 
             if ((time.curnt_month != 3 && time.fetch_month != 1) || modifier != Day) {
-
                 return true;
-
             } else {
-
                 getDaysInMonth(&days_in_month, time.fetch_month);
                 dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
                 dayDif += 28; // add month of Febuary.
 
                 if (dayDif >= limit) {
-
                     return true;
-
                 } else {
-
                     return false;
                 }
             }
@@ -167,71 +150,57 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
 
         if (monthDif == 0) {
-
             dayDif = time.curnt_day - time.fetch_day;
-
         } else {
-
             getDaysInMonth(&days_in_month, time.fetch_month);
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
         if (modifier != Day && dayDif > 1) {
-
             return true;
+        }
 
-        } else if (modifier == Day) {
+        else if (modifier == Day) {
 
             if (dayDif > limit) {
-
                 return true;
-
             } else if (dayDif < limit) {
-
                 return false;
             }
 
-            if (dayDif == 0) {
-
-                hrDif = time.curnt_hour - time.fetch_hour;
-
-            } else {
-
-                hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
+            if (time.curnt_hour < time.fetch_hour) {
+                return false;
             }
 
-            if (hrDif > HOURS_IN_DAY || time.curnt_min < time.fetch_min) {
+            if (time.curnt_hour > time.fetch_hour) {
+                return true;
+            }
 
+            if (time.curnt_min < time.fetch_min) {
                 return false;
-
             } else {
-
                 return true;
             }
         }
     }
 
-    if (time.curnt_hour != time.fetch_hour || modifier == Hour) { // Hour
+    if (modifier == Hour || time.curnt_hour != time.fetch_hour) { // Hour
 
-        if (time.curnt_hour >= time.fetch_hour) {
-
+        if (dayDif == 0) {
             hrDif = time.curnt_hour - time.fetch_hour;
-
         } else {
-
             hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
         }
 
         if (modifier == Hour) {
 
             if (hrDif > limit || time.curnt_min >= time.fetch_min) {
-
                 return true;
-
-            } else if (hrDif < limit || time.curnt_min < time.fetch_min) {
-
+            }
+            if (hrDif < limit || time.curnt_min < time.fetch_min) {
                 return false;
             }
+
         } else if (hrDif > 1) {
             return true;
         }
@@ -240,16 +209,12 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (time.curnt_min != time.fetch_min) { // Minute
 
         if (hrDif == 0) {
-
             minDif = time.curnt_min - time.fetch_min;
-
         } else {
-
             minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
 
         if (minDif >= limit) {
-
             return true;
         }
     }
@@ -278,14 +243,15 @@ static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char cu
 
     dateData->curnt_min = atoi(&curnt_time[MIN_INDX]);
     dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
+    return;
 }
 static void getDaysInMonth(int* daysInMonth, int month) {
 
-    if (month == 4 || month == 6 || month == 9 || month == 11) {
+    if (month == 4 || month == 6 || month == 9 || month == 11)
         *daysInMonth = 30;
-    } else if (month != 2) {
+    else if (month != 2)
         *daysInMonth = 31;
-    } else {
+    else
         *daysInMonth = 28;
-    }
+    return;
 }
