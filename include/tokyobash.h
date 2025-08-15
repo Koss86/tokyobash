@@ -103,7 +103,7 @@ typedef struct Colors {
     char cyan_bg[28];
     char blue[28];
     char teal[26];
-    char smoke[29];
+    char smoke[28];
     char orchid[28];
     char gold[27];
     char latte_yellow[27];

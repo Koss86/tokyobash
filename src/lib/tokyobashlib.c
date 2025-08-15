@@ -353,7 +353,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->surimiOrange_bg[0];
                         break;
                 }
-                colors->time_txt = &colorDefs->oni_violet[0];
+                colors->time_txt = &colorDefs->light_slate[0];
                 colors->time_color = &colorDefs->sumiInk3[0];
                 colors->time_bg = &colorDefs->sumiInk3_bg[0];
 
@@ -412,7 +412,7 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
             case Kanagawa:
                 colors->usr_color = &colorDefs->autumn_red[0];
                 colors->usr_txt = &colorDefs->autumn_red[0];
-                colors->time_txt = &colorDefs->oni_violet[0];
+                colors->time_txt = &colorDefs->smoke[0];
                 colors->branch_txt = &colorDefs->boat_yellow2[0];
                 colors->path_txt = &colorDefs->boat_yellow2[0];
                 colors->mnt_txt = &colorDefs->waveAqua2[0];
@@ -441,7 +441,7 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->blue, "\\[\\e[38;2;122;162;247m\\]", 28);
     strncpy(colorDefs->teal, "\\[\\e[38;2;0;103;103m\\]", 26);
     strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
-    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 29);
+    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 28);
 
     strncpy(colorDefs->waveAqua2, "\\[\\e[38;2;122;168;159m\\]", 28);
     strncpy(colorDefs->waveAqua2_bg, "\\[\\e[48;2;122;168;159m\\]", 28);
@@ -482,35 +482,36 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->light_slate_bg, "\\[\\e[48;2;86;95;137m\\]", 26);
     strncpy(colorDefs->sandy_orange, "\\[\\e[38;2;255;158;100m\\]", 28);
     strncpy(colorDefs->sandy_orange_bg, "\\[\\e[48;2;255;158;100m\\]", 28);
+
+    // strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
+    // strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
+    // strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 27);
+    // strncpy(colorDefs->green, "\\[\\e[38;2;0;255;0m\\]", 24);
+    // strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
+    // strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
+    // strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
+    // strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;186;154;247m\\]", 28);
+    // strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
+    // strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
+    // strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
+    // strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
+    // strncpy(colorDefs->maroon, "\\[\\e[38;2;230;69;82m\\]", 26);
+    // strncpy(colorDefs->maroon_bg, "\\[\\e[48;2;230;69;82m\\]", 26);
+    // strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
+    // strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
+    // strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
+    // strncpy(colorDefs->blue_bg, "\\[\\e[48;2;122;162;247m\\]", 28);
+    // strncpy(colorDefs->sky, "\\[\\e[38;2;137;220;250m\\]", 28);
+    // strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
+    // strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
+    // strncpy(colorDefs->latte_yellow, "\\[\\e[38;2;223;142;29m\\]", 27);
+    // strncpy(colorDefs->latte_yellow_bg, "\\[\\e[48;2;223;142;29m\\]", 27);
+    // strncpy(colorDefs->winter_green, "\\[\\e[38;2;55;65;51m\\]", 25);
+    // strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;55;65;51m\\]", 25);
+    // strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
+    // strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
+    // strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
+    // strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
+    // strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
     return;
 }
-// strncpy(colorDefs->pink_bg, "\\[\\e[48;5;204m\\]", 20);
-// strncpy(colorDefs->dark_peach, "\\[\\e[38;2;246;117;37m\\]", 27);
-// strncpy(colorDefs->green, "\\[\\e[38;2;0;255;0m\\]", 24);
-// strncpy(colorDefs->white, "\\[\\e[38;2;255;255;255m\\]", 28);
-// strncpy(colorDefs->beige, "\\[\\e[38;2;239;239;200m\\]", 28);
-// strncpy(colorDefs->pale_teal, "\\[\\e[38;2;148;226;213m\\]", 28);
-// strncpy(colorDefs->black, "\\[\\e[0;30m\\]", 16);
-// strncpy(colorDefs->orchid_bg, "\\[\\e[48;2;186;154;247m\\]", 28);
-// strncpy(colorDefs->light_purple, "\\[\\e[38;5;182m\\]", 20);
-// strncpy(colorDefs->light_purple_bg, "\\[\\e[48;5;182m\\]", 20);
-// strncpy(colorDefs->purple, "\\[\\e[38;2;153;102;204m\\]", 28);
-// strncpy(colorDefs->purple_bg, "\\[\\e[48;2;153;102;204m\\]", 28);
-// strncpy(colorDefs->maroon, "\\[\\e[38;2;230;69;82m\\]", 26);
-// strncpy(colorDefs->maroon_bg, "\\[\\e[48;2;230;69;82m\\]", 26);
-// strncpy(colorDefs->orange_bg, "\\[\\e[48;2;255;149;20m\\]", 27);
-// strncpy(colorDefs->khaki, "\\[\\e[38;2;238;232;170m\\]", 28);
-// strncpy(colorDefs->khaki_bg, "\\[\\e[48;2;238;232;170m\\]", 28);
-// strncpy(colorDefs->blue_bg, "\\[\\e[48;2;122;162;247m\\]", 28);
-// strncpy(colorDefs->sky, "\\[\\e[38;2;137;220;250m\\]", 28);
-// strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
-// strncpy(colorDefs->sky_blue_bg, "\\[\\e[48;5;117m\\]", 20);
-// strncpy(colorDefs->latte_yellow, "\\[\\e[38;2;223;142;29m\\]", 27);
-// strncpy(colorDefs->latte_yellow_bg, "\\[\\e[48;2;223;142;29m\\]", 27);
-// strncpy(colorDefs->winter_green, "\\[\\e[38;2;55;65;51m\\]", 25);
-// strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;55;65;51m\\]", 25);
-// strncpy(colorDefs->teal_bg, "\\[\\e[48;2;0;103;103m\\]", 26);
-// strncpy(colorDefs->gold_bg, "\\[\\e[48;2;245;181;61m\\]", 27);
-// strncpy(colorDefs->light_gold, "\\[\\e[38;2;248;199;109m\\]", 28);
-// strncpy(colorDefs->light_gold_bg, "\\[\\e[48;2;248;199;109m\\]", 28);
-// strncpy(colorDefs->smoke_bg, "\\[\\e[48;2;104;155;196m\\]", 29);
