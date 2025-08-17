@@ -71,12 +71,24 @@ typedef struct Colors {
     char red[26];
     char yellow[26];
     char lime_green[27];
-
     char gray[28];
     char boat_yellow2[28];
     char spring_green[28];
     char sumiInk2[25];
+    char rosewater[28];
+    char khaki[28];
+    char carp_yellow[28];
+    char sky_blue[20];
+    char crystal_blue[28];
 
+    char winter_green[25];
+    char winter_green_bg[25];
+    char winter_red[25];
+    char winter_red_bg[25];
+    char winter_yellow[25];
+    char winter_yellow_bg[25];
+    char winter_blue[25];
+    char winter_blue_bg[25];
     char mocha_purple[28];
     char mocha_purple_bg[28];
     char oni_violet[28];
@@ -122,10 +134,8 @@ typedef struct Colors {
     char surimiOrange_bg[28];
     char sandy_orange[30];
     char sandy_orange_bg[30];
-
     char waveAqua2[28];
     char waveAqua2_bg[28];
-    char rosewater[28];
 
     // char white[28];
     // char black[16];
@@ -136,7 +146,6 @@ typedef struct Colors {
     // char maroon_bg[26];
     // char orange_bg[27];
     // char blue_bg[28];
-    // char sky_blue[20];
     // char sky_blue_bg[20];
     // char teal_bg[26];
     // char smoke_bg[29];
@@ -145,7 +154,6 @@ typedef struct Colors {
     // char light_purple_bg[20];
     // char purple[28];
     // char purple_bg[28];
-    // char khaki[28];
     // char khaki_bg[28];
     // char gold_bg[27];
     // char light_gold[28];
@@ -158,30 +166,28 @@ typedef struct Colors {
 } Colors;
 
 typedef struct ColorPointers {
+
     char* bold;
     char* reset;
+
     char* usr_color;
+    char* usr_bg;
+    char* usr_txt;
     char* time_color;
+    char* time_bg;
+    char* time_txt;
     char* branch_color;
+    char* branch_bg;
+    char* branch_txt;
     char* path_color;
+    char* path_bg;
+    char* path_txt;
 
     char* untracked;
     char* unstaged;
     char* staged;
     char* committed;
     char* fetched;
-
-    char* usr_txt;
-    char* time_txt;
-    char* branch_txt;
-    char* path_txt;
-    char* mnt_txt;
-    char* root_txt;
-
-    char* usr_bg;
-    char* time_bg;
-    char* branch_bg;
-    char* path_bg;
 } ColorPointers;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome);

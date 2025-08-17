@@ -45,7 +45,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* pat
 
     if (usrConfig->inARepo && usrConfig->branchname) {
 
-        printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
+        printf("%s%s%s", colors->branch_txt, colors->branch_bg, colors->reset);
 
     } else {
 
@@ -91,14 +91,14 @@ void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path,
             break;
 
         case Mnt:
-            printf(" %s%s%s\\W/\\n", colors->mnt_txt, path, colors->bold);
+            printf(" %s%s%s\\W/\\n", colors->path_txt, path, colors->bold);
             break;
 
         case Root:
             if (pathLength > 1) {
-                printf(" %s%s%s\\W/\\n", colors->root_txt, path, colors->bold);
+                printf(" %s%s%s\\W/\\n", colors->path_txt, path, colors->bold);
             } else {
-                printf(" %s%s\\W\\n", colors->root_txt, colors->bold);
+                printf(" %s%s\\W\\n", colors->path_txt, colors->bold);
             }
             break;
     }
