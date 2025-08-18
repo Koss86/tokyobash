@@ -81,6 +81,9 @@ typedef struct Colors {
     char sky_blue[20];
     char crystal_blue[28];
 
+    char mntTestColor[30];
+    char rootTestColor[30];
+
     char winter_green[25];
     char winter_green_bg[25];
     char winter_red[25];

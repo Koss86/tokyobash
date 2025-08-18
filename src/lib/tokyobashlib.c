@@ -268,12 +268,12 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
                         colors->usr_bg = &colorDefs->cyan_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->sumiInk3[0];
+                        colors->usr_txt = &colorDefs->mntTestColor[0];
                         colors->usr_color = &colorDefs->sandy_orange[0];
                         colors->usr_bg = &colorDefs->sandy_orange_bg[0];
                         break;
                     case Root:
-                        colors->usr_txt = &colorDefs->sumiInk3[0];
+                        colors->usr_txt = &colorDefs->rootTestColor[0];
                         colors->usr_color = &colorDefs->rose[0];
                         colors->usr_bg = &colorDefs->rose_bg[0];
                         break;
@@ -335,17 +335,17 @@ void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* us
             case Kanagawa:
                 switch (usrConfig->pathState) {
                     case Home:
-                        colors->usr_txt = &colorDefs->sumiInk2[0];
+                        colors->usr_txt = &colorDefs->gray[0];
                         colors->usr_color = &colorDefs->autumn_red[0];
                         colors->usr_bg = &colorDefs->autumn_red_bg[0];
                         break;
                     case Mnt:
-                        colors->usr_txt = &colorDefs->sumiInk2[0];
+                        colors->usr_txt = &colorDefs->sumiInk4[0];
                         colors->usr_color = &colorDefs->waveAqua2[0];
                         colors->usr_bg = &colorDefs->waveAqua2_bg[0];
                         break;
                     case Root:
-                        colors->usr_txt = &colorDefs->sumiInk2[0];
+                        colors->usr_txt = &colorDefs->sumiInk4[0];
                         colors->usr_color = &colorDefs->surimiOrange[0];
                         colors->usr_bg = &colorDefs->surimiOrange_bg[0];
                         break;
@@ -466,6 +466,9 @@ void colorDefinitions(Colors* colorDefs) {
     strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
     strncpy(colorDefs->winter_green, "\\[\\e[38;2;43;51;40m\\]", 25);
     strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;43;51;40m\\]", 25);
+
+    strncpy(colorDefs->mntTestColor, "\\[\\e[38;2;134;85;57m\\]", 30);
+    strncpy(colorDefs->rootTestColor, "\\[\\e[38;2;130;66;77m\\]", 30);
 
     strncpy(colorDefs->winter_red, "\\[\\e[38;2;67;36;43m\\]", 25);
     strncpy(colorDefs->winter_red_bg, "\\[\\e[48;2;67;36;43m\\]", 25);
