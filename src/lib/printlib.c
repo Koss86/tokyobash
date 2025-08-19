@@ -45,7 +45,7 @@ void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* pat
 
     if (usrConfig->inARepo && usrConfig->branchname) {
 
-        printf("%s%s%s", colors->branch_txt, colors->branch_bg, colors->reset);
+        printf("%s%s%s", colors->path_txt, colors->branch_bg, colors->reset);
 
     } else {
 
