@@ -26,7 +26,7 @@ int main() {
 
     generateTests(times);
 
-    int failed;
+    int failed = 0;
     char buffer[16];
     char reset[] = "\e[00m";
     char red[] = "\e[31m";
@@ -38,14 +38,21 @@ int main() {
     failedTests[0] = '\0';
 
     for (int i = 0; i < TEST_SIZE; i++) {
+
         printf("Test %i\nModifier: ", i + 1);
+
         if (times[i].settings.modifier == Day) {
+
             printf("Day");
+
         } else if (times[i].settings.modifier == Hour) {
+
             printf("Hour");
+
         } else {
             printf("Minute");
         }
+
         printf("  Limit: %i\n", times[i].settings.limit);
         printf("Current Date: %s\n", times[i].curnt_date);
         printf("Fetch Date: %s\n", times[i].fetch_date);
@@ -182,9 +189,12 @@ bool shouldFetchTest(Tester* fetchConfig) {
         printf("in Day: dayDif = %i\n", dayDif);
         if (dayDif == 0) {
             hrDif = time.curnt_hour - time.fetch_hour;
-            minDif = time.curnt_min - time.fetch_min;
         } else {
             hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
+        }
+        if (hrDif == 0) {
+            minDif = time.curnt_min - time.fetch_min;
+        } else {
             minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
         // printf("%sin Day: hrDif = %i%s\n", red, hrDif, reset);
