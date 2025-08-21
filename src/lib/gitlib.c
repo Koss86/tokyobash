@@ -123,18 +123,21 @@ int Fetched(FetchOpts* fetchConfig) {
 
     if (shouldFetch(fetchConfig)) {
         FILE* gitFetch = popen("git fetch 2>/dev/null", "r");
+        if (gitFetch == NULL) {
+            return 0;
+        }
         pclose(gitFetch);
     }
 
     FILE* file = popen("git rev-list --count ..@{u} 2>/dev/null", "r");
     if (file == NULL) {
-        return -1;
+        return 0;
     }
 
     char buf[16];
     if (fgets(buf, sizeof(buf), file) == NULL) {
         pclose(file);
-        return -1;
+        return 0;
     }
 
     pclose(file);
