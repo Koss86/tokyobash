@@ -421,6 +421,7 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
         char winter_green[] = "\\[\\e[38;2;43;51;40m\\]";
         char winter_green_bg[] = "\\[\\e[48;2;43;51;40m\\]";
         char carp_yellow[] = "\\[\\e[38;2;230;196;132m\\]";
+        char light_carp_yellow[] = "\\[\\e[38;2;234;201;145m\\]";
 
         if (usrConfig->background) {
 
@@ -470,7 +471,7 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
         strcpy(colorDefs->branch_txt, boat_yellow2);
 
         strcpy(colorDefs->path_txt, carp_yellow);
-        strcpy(colorDefs->curDir_txt, carp_yellow);
+        strcpy(colorDefs->curDir_txt, light_carp_yellow);
 
         strcpy(colorDefs->unstaged, surimiOrange);
         strcpy(colorDefs->staged, blue);
