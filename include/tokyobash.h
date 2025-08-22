@@ -38,7 +38,6 @@ typedef struct FetchOpts {
 } FetchOpts;
 
 typedef struct ConfigSettings {
-    bool git;
     bool time;
     bool fetch;
     bool debug;

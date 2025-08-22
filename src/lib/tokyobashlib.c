@@ -99,14 +99,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                     } else if (valbuf[0] == '1') {
                         usrConfig->debug = true;
                     }
-                } else if ((strncmp(keybuf, "git", 3)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->git = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->git = true;
-                    }
-
                 } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
 
                     if (valbuf[0] == '0') {
