@@ -65,106 +65,39 @@ typedef struct IntTimesAndDates {
 } IntTimesnDates;
 
 typedef struct Colors {
-    char tok_usr_txt[26];
-    char tok_mnt_txt[26];
-    char tok_root_txt[26];
-
-    char cat_usr_txt[26];
-    char cat_mnt_txt[26];
-    char cat_root_txt[26];
-
-    char kan_usr_txt[26];
-    char kan_mnt_txt[27];
-    char kan_root_txt[27];
-
     char bold[13];
     char reset[14];
-    char red[26];
-    char yellow[26];
-    char lime_green[27];
-    char sky_blue[20];
-    char pink[20];
-    char spring_green[28];
-    char carp_yellow[28];
-    char crystal_blue[28];
-    char rosewater[28];
-    char mocha_mauve[28];
-    char mocha_yellow[28];
-    char boat_yellow2[28];
-    char orange[27];
-    char blue[28];
-    char smoke[28];
-    char gold[27];
-
-    char winter_green[25];
-    char winter_green_bg[25];
-    char winter_yellow[25];
-    char winter_yellow_bg[25];
-    char mocha_green[28];
-    char mocha_green_bg[28];
-    char mocha_blue[28];
-    char mocha_blue_bg[28];
-    char surface1[25];
-    char surface1_bg[25];
-    char surface2[26];
-    char surface2_bg[26];
-    char rose[28];
-    char rose_bg[28];
-    char peach[28];
-    char peach_bg[28];
-    char cyan[28];
-    char cyan_bg[28];
-    char slate[26];
-    char slate_bg[26];
-    char light_slate[26];
-    char light_slate_bg[26];
-    char autumn_red[26];
-    char autumn_red_bg[26];
-    char surimiOrange[28];
-    char surimiOrange_bg[28];
-    char sandy_orange[28];
-    char sandy_orange_bg[28];
-    char waveAqua2[28];
-    char waveAqua2_bg[28];
+    char usr_color[30];
+    char usr_bg[30];
+    char usr_txt[30];
+    char time_color[30];
+    char time_bg[30];
+    char time_txt[30];
+    char branch_color[30];
+    char branch_bg[30];
+    char branch_txt[30];
+    char path_color[30];
+    char path_bg[30];
+    char path_txt[30];
+    char curDir_txt[30];
+    char untracked[30];
+    char unstaged[30];
+    char staged[30];
+    char committed[30];
+    char fetched[30];
 } Colors;
 
-typedef struct ColorPointers {
-
-    char* bold;
-    char* reset;
-
-    char* usr_color;
-    char* usr_bg;
-    char* usr_txt;
-    char* time_color;
-    char* time_bg;
-    char* time_txt;
-    char* branch_color;
-    char* branch_bg;
-    char* branch_txt;
-    char* path_color;
-    char* path_bg;
-    char* path_txt;
-
-    char* untracked;
-    char* unstaged;
-    char* staged;
-    char* committed;
-    char* fetched;
-} ColorPointers;
-
 void parseConfig(ConfigSettings* usrConfig, char* pHome);
-void colorDefinitions(Colors* colors);
-void assignPointers(ColorPointers* colors, Colors* colorsDefs, ConfigSettings* usrConfig);
+void defineColors(ConfigSettings* usrConfig, Colors* colorDefs);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
 void remCurntDir(char* path, int Plen);
 
-void printUsrTime(ConfigSettings* usrConfig, ColorPointers* colors);
-void printBranch(ConfigSettings* usrConfig, ColorPointers* colors);
-void printPathWithBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
-void printPathNoBg(ConfigSettings* usrConfig, ColorPointers* colors, char* path, int pathLength);
-void printStatusBar(ColorPointers* colors, int untracked, int unstaged, int staged, int committed,
+void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs);
+void printBranch(ConfigSettings* usrConfig, Colors* colorDefs);
+void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength);
+void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength);
+void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged, int committed,
                     int fetched);
 
 bool isGitAccessible(void);

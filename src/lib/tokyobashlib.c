@@ -229,7 +229,7 @@ void abrvPath(char* path, int pathLength) {
     return;
 }
 // Remove current directory from path. We add it back with \W after
-// changing text to bold. This way the path is normal, while current dir is
+// changing text to bold and a lighter color. This way the path is normal, while current dir is
 // highlighted.
 void remCurntDir(char* path, int pathLength) {
 
@@ -242,260 +242,245 @@ void remCurntDir(char* path, int pathLength) {
     }
     return;
 }
-void assignPointers(ColorPointers* colors, Colors* colorDefs, ConfigSettings* usrConfig) {
+void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
 
-    colors->bold = &colorDefs->bold[0];
-    colors->reset = &colorDefs->reset[0];
-    colors->untracked = &colorDefs->yellow[0];
+    char lime_green[] = "\\[\\e[38;2;87;214;87m\\]";
+    char blue[] = "\\[\\e[38;2;122;162;247m\\]";
+    char pink[] = "\\[\\e[38;5;204m\\]";
 
-    if (usrConfig->background) {
+    if (usrConfig->theme == Tokyonight) {
 
-        switch (usrConfig->theme) {
+        char dark_blue[] = "\\[\\e[38;2;0;103;103m\\]";
+        char dark_orange[] = "\\[\\e[38;2;134;85;57m\\]";
+        char dark_rose[] = "\\[\\e[38;2;130;66;77m\\]";
+        char cyan[] = "\\[\\e[38;2;115;218;202m\\]";
+        char cyan_bg[] = "\\[\\e[48;2;115;218;202m\\]";
+        char sandy_orange[] = "\\[\\e[38;2;255;158;100m\\]";
+        char sandy_orange_bg[] = "\\[\\e[48;2;255;158;100m\\]";
+        char rose[] = "\\[\\e[38;2;247;118;142m\\]";
+        char rose_bg[] = "\\[\\e[48;2;247;118;142m\\]";
+        char light_slate[] = "\\[\\e[38;2;86;95;137m\\]";
+        char light_slate_bg[] = "\\[\\e[48;2;86;95;137m\\]";
+        char slate[] = "\\[\\e[38;2;65;72;104m\\]";
+        char slate_bg[] = "\\[\\e[48;2;65;72;104m\\]";
+        char sky_blue[] = "\\[\\e[38;5;117m\\]";
+        char smoke[] = "\\[\\e[38;2;98;146;182m\\]";
+        char light_blue[] = "\\[\\e[38;2;140;172;248m\\]";
+        char orange[] = "\\[\\e[38;2;255;149;20m\\]";
+        char mocha_mauve[] = "\\[\\e[38;2;212;181;248m\\]";
 
-            case Tokyonight:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_txt = &colorDefs->tok_usr_txt[0];
-                        colors->usr_color = &colorDefs->cyan[0];
-                        colors->usr_bg = &colorDefs->cyan_bg[0];
-                        break;
-                    case Mnt:
-                        colors->usr_txt = &colorDefs->tok_mnt_txt[0];
-                        colors->usr_color = &colorDefs->sandy_orange[0];
-                        colors->usr_bg = &colorDefs->sandy_orange_bg[0];
-                        break;
-                    case Root:
-                        colors->usr_txt = &colorDefs->tok_root_txt[0];
-                        colors->usr_color = &colorDefs->rose[0];
-                        colors->usr_bg = &colorDefs->rose_bg[0];
-                        break;
-                }
-                colors->time_txt = &colorDefs->sky_blue[0];
-                colors->time_color = &colorDefs->slate[0];
-                colors->time_bg = &colorDefs->slate_bg[0];
+        if (usrConfig->background) {
 
-                colors->branch_txt = &colorDefs->smoke[0];
-                colors->branch_color = &colorDefs->light_slate[0];
-                colors->branch_bg = &colorDefs->light_slate_bg[0];
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, dark_blue);
+                    strcpy(colorDefs->usr_color, cyan);
+                    strcpy(colorDefs->usr_bg, cyan_bg);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, dark_orange);
+                    strcpy(colorDefs->usr_color, sandy_orange);
+                    strcpy(colorDefs->usr_bg, sandy_orange_bg);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, dark_rose);
+                    strcpy(colorDefs->usr_color, rose);
+                    strcpy(colorDefs->usr_bg, rose_bg);
+                    break;
+            }
 
-                colors->path_txt = &colorDefs->blue[0];
-                colors->path_color = colors->branch_color;
-                colors->path_bg = colors->branch_bg;
+            strcpy(colorDefs->time_color, slate);
+            strcpy(colorDefs->time_bg, slate_bg);
+            strcpy(colorDefs->branch_color, light_slate);
+            strcpy(colorDefs->branch_bg, light_slate_bg);
+            strcpy(colorDefs->path_color, light_slate);
+            strcpy(colorDefs->path_bg, light_slate_bg);
 
-                colors->unstaged = &colorDefs->gold[0];
-                colors->staged = &colorDefs->mocha_mauve[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->orange[0];
-                break;
+        } else { // No Bg
 
-            case Catppuccin:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_txt = &colorDefs->cat_usr_txt[0];
-                        colors->usr_color = &colorDefs->peach[0];
-                        colors->usr_bg = &colorDefs->peach_bg[0];
-                        break;
-                    case Mnt:
-                        colors->usr_txt = &colorDefs->cat_mnt_txt[0];
-                        colors->usr_color = &colorDefs->mocha_blue[0];
-                        colors->usr_bg = &colorDefs->mocha_blue_bg[0];
-                        break;
-                    case Root:
-                        colors->usr_txt = &colorDefs->cat_root_txt[0];
-                        colors->usr_color = &colorDefs->mocha_green[0];
-                        colors->usr_bg = &colorDefs->mocha_green_bg[0];
-                        break;
-                }
-                colors->time_txt = &colorDefs->rosewater[0];
-                colors->time_color = &colorDefs->surface1[0];
-                colors->time_bg = &colorDefs->surface1_bg[0];
-
-                colors->branch_txt = &colorDefs->mocha_yellow[0];
-                colors->branch_color = &colorDefs->surface2[0];
-                colors->branch_bg = &colorDefs->surface2_bg[0];
-
-                colors->path_txt = &colorDefs->mocha_mauve[0];
-                colors->path_color = colors->branch_color;
-                colors->path_bg = colors->branch_bg;
-
-                colors->unstaged = &colorDefs->sandy_orange[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->pink[0];
-                break;
-
-            case Kanagawa:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_txt = &colorDefs->kan_usr_txt[0];
-                        colors->usr_color = &colorDefs->autumn_red[0];
-                        colors->usr_bg = &colorDefs->autumn_red_bg[0];
-                        break;
-                    case Mnt:
-                        colors->usr_txt = &colorDefs->kan_mnt_txt[0];
-                        colors->usr_color = &colorDefs->waveAqua2[0];
-                        colors->usr_bg = &colorDefs->waveAqua2_bg[0];
-                        break;
-                    case Root:
-                        colors->usr_txt = &colorDefs->kan_root_txt[0];
-                        colors->usr_color = &colorDefs->surimiOrange[0];
-                        colors->usr_bg = &colorDefs->surimiOrange_bg[0];
-                        break;
-                }
-                colors->time_txt = &colorDefs->crystal_blue[0];
-                colors->time_color = &colorDefs->winter_yellow[0];
-                colors->time_bg = &colorDefs->winter_yellow_bg[0];
-
-                colors->branch_txt = &colorDefs->boat_yellow2[0];
-                colors->branch_color = &colorDefs->winter_green[0];
-                colors->branch_bg = &colorDefs->winter_green_bg[0];
-
-                colors->path_txt = &colorDefs->carp_yellow[0];
-                colors->path_color = colors->branch_color;
-                colors->path_bg = colors->branch_bg;
-
-                colors->unstaged = &colorDefs->surimiOrange[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->pink[0];
-                break;
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, cyan);
+                    strcpy(colorDefs->usr_color, cyan);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, sandy_orange);
+                    strcpy(colorDefs->usr_color, sandy_orange);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, rose);
+                    strcpy(colorDefs->usr_color, rose);
+                    break;
+            }
         }
 
-    } else {
+        strcpy(colorDefs->time_txt, sky_blue);
+        strcpy(colorDefs->branch_txt, smoke);
 
-        switch (usrConfig->theme) {
+        strcpy(colorDefs->path_txt, blue);
+        strcpy(colorDefs->curDir_txt, light_blue);
 
-            case Tokyonight:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_color = &colorDefs->cyan[0];
-                        break;
-                    case Mnt:
-                        colors->usr_color = &colorDefs->sandy_orange[0];
-                        break;
-                    case Root:
-                        colors->usr_color = &colorDefs->rose[0];
-                        break;
-                }
-                colors->usr_txt = colors->usr_color;
-                colors->time_txt = &colorDefs->sky_blue[0];
-                colors->branch_txt = &colorDefs->blue[0];
-                colors->path_txt = &colorDefs->blue[0];
+        strcpy(colorDefs->unstaged, orange);
+        strcpy(colorDefs->staged, mocha_mauve);
+        strcpy(colorDefs->committed, lime_green);
+        strcpy(colorDefs->fetched, pink);
 
-                colors->unstaged = &colorDefs->gold[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->orange[0];
-                break;
+    } else if (usrConfig->theme == Catppuccin) {
 
-            case Catppuccin:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_color = &colorDefs->peach[0];
-                        break;
-                    case Mnt:
-                        colors->usr_color = &colorDefs->mocha_blue[0];
-                        break;
-                    case Root:
-                        colors->usr_color = &colorDefs->mocha_green[0];
-                        break;
-                }
-                colors->usr_txt = colors->usr_color;
-                colors->time_txt = &colorDefs->rosewater[0];
-                colors->branch_txt = &colorDefs->mocha_mauve[0];
-                colors->path_txt = &colorDefs->mocha_mauve[0];
+        char dark_peach[] = "\\[\\e[38;2;131;96;74m\\]";
+        char dark_mocha_blue[] = "\\[\\e[38;2;76;96;131m\\]";
+        char dark_mocha_green[] = "\\[\\e[38;2;89;119;87m\\]";
+        char peach[] = "\\[\\e[38;2;250;179;135m\\]";
+        char peach_bg[] = "\\[\\e[48;2;250;179;135m\\]";
+        char mocha_blue[] = "\\[\\e[38;2;137;180;250m\\]";
+        char mocha_blue_bg[] = "\\[\\e[48;2;137;180;250m\\]";
+        char mocha_green[] = "\\[\\e[38;2;166;227;161m\\]";
+        char mocha_green_bg[] = "\\[\\e[48;2;166;227;161m\\]";
+        char rosewater[] = "\\[\\e[38;2;245;224;220m\\]";
+        char surface1[] = "\\[\\e[38;2;69;71;90m\\]";
+        char surface1_bg[] = "\\[\\e[48;2;69;71;90m\\]";
+        char surface2[] = "\\[\\e[38;2;88;91;112m\\]";
+        char surface2_bg[] = "\\[\\e[48;2;88;91;112m\\]";
+        char mocha_yellow[] = "\\[\\e[38;2;249;226;175m\\]";
+        char mocha_mauve[] = "\\[\\e[38;2;212;181;248m\\]";
+        char light_mauve[] = "\\[\\e[38;2;222;197;250m\\]";
+        char sandy_orange[] = "\\[\\e[38;2;255;158;100m\\]";
 
-                colors->unstaged = &colorDefs->gold[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->pink[0];
-                break;
+        if (usrConfig->background) {
 
-            case Kanagawa:
-                switch (usrConfig->pathState) {
-                    case Home:
-                        colors->usr_color = &colorDefs->autumn_red[0];
-                        break;
-                    case Mnt:
-                        colors->usr_color = &colorDefs->waveAqua2[0];
-                        break;
-                    case Root:
-                        colors->usr_color = &colorDefs->surimiOrange[0];
-                        break;
-                }
-                colors->usr_txt = colors->usr_color;
-                colors->time_txt = &colorDefs->crystal_blue[0];
-                colors->branch_txt = &colorDefs->carp_yellow[0];
-                colors->path_txt = &colorDefs->carp_yellow[0];
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, dark_peach);
+                    strcpy(colorDefs->usr_color, peach);
+                    strcpy(colorDefs->usr_bg, peach_bg);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, dark_mocha_blue);
+                    strcpy(colorDefs->usr_color, mocha_blue);
+                    strcpy(colorDefs->usr_bg, mocha_blue_bg);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, dark_mocha_green);
+                    strcpy(colorDefs->usr_color, mocha_green);
+                    strcpy(colorDefs->usr_bg, mocha_green_bg);
+                    break;
+            }
 
-                colors->unstaged = &colorDefs->gold[0];
-                colors->staged = &colorDefs->blue[0];
-                colors->committed = &colorDefs->lime_green[0];
-                colors->fetched = &colorDefs->pink[0];
-                break;
+            strcpy(colorDefs->time_color, surface1);
+            strcpy(colorDefs->time_bg, surface1_bg);
+            strcpy(colorDefs->branch_color, surface2);
+            strcpy(colorDefs->branch_bg, surface2_bg);
+            strcpy(colorDefs->path_color, surface2);
+            strcpy(colorDefs->path_bg, surface2_bg);
+
+        } else { // No Bg
+
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, peach);
+                    strcpy(colorDefs->usr_color, peach);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, mocha_blue);
+                    strcpy(colorDefs->usr_color, mocha_blue);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, mocha_green);
+                    strcpy(colorDefs->usr_color, mocha_green);
+                    break;
+            }
         }
+
+        strcpy(colorDefs->time_txt, rosewater);
+        strcpy(colorDefs->branch_txt, mocha_yellow);
+
+        strcpy(colorDefs->path_txt, mocha_mauve);
+        strcpy(colorDefs->curDir_txt, light_mauve);
+
+        strcpy(colorDefs->unstaged, sandy_orange);
+        strcpy(colorDefs->staged, blue);
+        strcpy(colorDefs->committed, lime_green);
+        strcpy(colorDefs->fetched, pink);
+
+    } else { // Kanagawa
+
+        char dark_autumn_red[] = "\\[\\e[38;2;105;40;39m\\]";
+        char dark_waveAqua2[] = "\\[\\e[38;2;75;100;100m\\]";
+        char dark_surimiOrange[] = "\\[\\e[38;2;150;95;60m\\]";
+
+        char autumn_red[] = "\\[\\e[38;2;195;64;66m\\]";
+        char autumn_red_bg[] = "\\[\\e[48;2;195;64;66m\\]";
+        char waveAqua2[] = "\\[\\e[38;2;122;168;159m\\]";
+        char waveAqua2_bg[] = "\\[\\e[48;2;122;168;159m\\]";
+        char surimiOrange[] = "\\[\\e[38;2;255;161;102m\\]";
+        char surimiOrange_bg[] = "\\[\\e[48;2;255;161;102m\\]";
+        char crystal_blue[] = "\\[\\e[38;2;126;156;216m\\]";
+        char winter_yellow[] = "\\[\\e[38;2;73;68;60m\\]";
+        char winter_yellow_bg[] = "\\[\\e[48;2;73;68;60m\\]";
+        char boat_yellow2[] = "\\[\\e[38;2;192;163;110m\\]";
+        char winter_green[] = "\\[\\e[38;2;43;51;40m\\]";
+        char winter_green_bg[] = "\\[\\e[48;2;43;51;40m\\]";
+        char carp_yellow[] = "\\[\\e[38;2;230;196;132m\\]";
+
+        if (usrConfig->background) {
+
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, dark_autumn_red);
+                    strcpy(colorDefs->usr_color, autumn_red);
+                    strcpy(colorDefs->usr_bg, autumn_red_bg);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, dark_waveAqua2);
+                    strcpy(colorDefs->usr_color, waveAqua2);
+                    strcpy(colorDefs->usr_bg, waveAqua2_bg);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, dark_surimiOrange);
+                    strcpy(colorDefs->usr_color, surimiOrange);
+                    strcpy(colorDefs->usr_bg, surimiOrange_bg);
+                    break;
+            }
+
+            strcpy(colorDefs->time_color, winter_yellow);
+            strcpy(colorDefs->time_bg, winter_yellow_bg);
+            strcpy(colorDefs->branch_color, winter_green);
+            strcpy(colorDefs->branch_bg, winter_green_bg);
+            strcpy(colorDefs->path_color, winter_green);
+            strcpy(colorDefs->path_bg, winter_green_bg);
+
+        } else { // No Bg
+
+            switch (usrConfig->pathState) {
+                case Home:
+                    strcpy(colorDefs->usr_txt, autumn_red);
+                    strcpy(colorDefs->usr_color, autumn_red);
+                    break;
+                case Mnt:
+                    strcpy(colorDefs->usr_txt, waveAqua2);
+                    strcpy(colorDefs->usr_color, waveAqua2);
+                    break;
+                case Root:
+                    strcpy(colorDefs->usr_txt, surimiOrange);
+                    strcpy(colorDefs->usr_color, surimiOrange);
+                    break;
+            }
+        }
+        strcpy(colorDefs->time_txt, crystal_blue);
+        strcpy(colorDefs->branch_txt, boat_yellow2);
+
+        strcpy(colorDefs->path_txt, carp_yellow);
+        strcpy(colorDefs->curDir_txt, carp_yellow);
+
+        strcpy(colorDefs->unstaged, surimiOrange);
+        strcpy(colorDefs->staged, blue);
+        strcpy(colorDefs->committed, lime_green);
+        strcpy(colorDefs->fetched, pink);
     }
-    return;
-}
-void colorDefinitions(Colors* colorDefs) {
 
-    strncpy(colorDefs->tok_usr_txt, "\\[\\e[38;2;0;103;103m\\]", 26);
-    strncpy(colorDefs->tok_mnt_txt, "\\[\\e[38;2;134;85;57m\\]", 26);
-    strncpy(colorDefs->tok_root_txt, "\\[\\e[38;2;130;66;77m\\]", 26);
-    strncpy(colorDefs->cat_usr_txt, "\\[\\e[38;2;131;96;74m\\]", 26);
-    strncpy(colorDefs->cat_mnt_txt, "\\[\\e[38;2;76;96;131m\\]", 26);
-    strncpy(colorDefs->cat_root_txt, "\\[\\e[38;2;89;119;87m\\]", 26);
-    strncpy(colorDefs->kan_usr_txt, "\\[\\e[38;2;105;40;39m\\]", 26);
-    strncpy(colorDefs->kan_mnt_txt, "\\[\\e[38;2;75;100;100m\\]", 27);
-    strncpy(colorDefs->kan_root_txt, "\\[\\e[38;2;150;95;60m\\]", 27);
+    strcpy(colorDefs->untracked, "\\[\\e[38;2;255;255;0m\\]"); // yellow
+    strcpy(colorDefs->bold, "\\[\\e[1m\\]");
+    strcpy(colorDefs->reset, "\\[\\e[00m\\]");
 
-    strncpy(colorDefs->bold, "\\[\\e[1m\\]", 13);
-    strncpy(colorDefs->reset, "\\[\\e[00m\\]", 14);
-    strncpy(colorDefs->pink, "\\[\\e[38;5;204m\\]", 20);
-    strncpy(colorDefs->sky_blue, "\\[\\e[38;5;117m\\]", 20);
-    strncpy(colorDefs->red, "\\[\\e[38;2;255;77;77m\\]", 26);
-    strncpy(colorDefs->gold, "\\[\\e[38;2;245;181;61m\\]", 27);
-    strncpy(colorDefs->blue, "\\[\\e[38;2;122;162;247m\\]", 28);
-    strncpy(colorDefs->yellow, "\\[\\e[38;2;255;255;0m\\]", 26);
-    strncpy(colorDefs->smoke, "\\[\\e[38;2;104;155;196m\\]", 28);
-    strncpy(colorDefs->orange, "\\[\\e[38;2;255;149;20m\\]", 27);
-    strncpy(colorDefs->lime_green, "\\[\\e[38;2;172;255;47m\\]", 27);
-    strncpy(colorDefs->rosewater, "\\[\\e[38;2;245;224;220m\\]", 28);
-    strncpy(colorDefs->carp_yellow, "\\[\\e[38;2;230;196;132m\\]", 28);
-    strncpy(colorDefs->mocha_mauve, "\\[\\e[38;2;212;181;248m\\]", 28);
-    strncpy(colorDefs->crystal_blue, "\\[\\e[38;2;126;156;216m\\]", 28);
-    strncpy(colorDefs->mocha_yellow, "\\[\\e[38;2;249;226;175m\\]", 28);
-    strncpy(colorDefs->boat_yellow2, "\\[\\e[38;2;192;163;110m\\]", 28);
-
-    strncpy(colorDefs->sandy_orange, "\\[\\e[38;2;255;158;100m\\]", 28);
-    strncpy(colorDefs->sandy_orange_bg, "\\[\\e[48;2;255;158;100m\\]", 28);
-    strncpy(colorDefs->light_slate, "\\[\\e[38;2;86;95;137m\\]", 26);
-    strncpy(colorDefs->light_slate_bg, "\\[\\e[48;2;86;95;137m\\]", 26);
-    strncpy(colorDefs->surimiOrange, "\\[\\e[38;2;255;161;102m\\]", 28);
-    strncpy(colorDefs->surimiOrange_bg, "\\[\\e[48;2;255;161;102m\\]", 28);
-    strncpy(colorDefs->mocha_green, "\\[\\e[38;2;166;227;161m\\]", 28);
-    strncpy(colorDefs->mocha_green_bg, "\\[\\e[48;2;166;227;161m\\]", 28);
-    strncpy(colorDefs->mocha_blue, "\\[\\e[38;2;137;180;250m\\]", 28);
-    strncpy(colorDefs->mocha_blue_bg, "\\[\\e[48;2;137;180;250m\\]", 28);
-    strncpy(colorDefs->winter_yellow, "\\[\\e[38;2;73;68;60m\\]", 25);
-    strncpy(colorDefs->winter_yellow_bg, "\\[\\e[48;2;73;68;60m\\]", 25);
-    strncpy(colorDefs->surface2, "\\[\\e[38;2;88;91;112m\\]", 26);
-    strncpy(colorDefs->waveAqua2, "\\[\\e[38;2;122;168;159m\\]", 28);
-    strncpy(colorDefs->waveAqua2_bg, "\\[\\e[48;2;122;168;159m\\]", 28);
-    strncpy(colorDefs->winter_green, "\\[\\e[38;2;43;51;40m\\]", 25);
-    strncpy(colorDefs->winter_green_bg, "\\[\\e[48;2;43;51;40m\\]", 25);
-    strncpy(colorDefs->autumn_red, "\\[\\e[38;2;195;64;66m\\]", 26);
-    strncpy(colorDefs->autumn_red_bg, "\\[\\e[48;2;195;64;66m\\]", 26);
-    strncpy(colorDefs->surface2_bg, "\\[\\e[48;2;88;91;112m\\]", 26);
-    strncpy(colorDefs->rose, "\\[\\e[38;2;247;118;142m\\]", 28);
-    strncpy(colorDefs->rose_bg, "\\[\\e[48;2;247;118;142m\\]", 28);
-    strncpy(colorDefs->peach, "\\[\\e[38;2;250;179;135m\\]", 28);
-    strncpy(colorDefs->peach_bg, "\\[\\e[48;2;250;179;135m\\]", 28);
-    strncpy(colorDefs->surface1, "\\[\\e[38;2;69;71;90m\\]", 25);
-    strncpy(colorDefs->surface1_bg, "\\[\\e[48;2;69;71;90m\\]", 25);
-    strncpy(colorDefs->cyan, "\\[\\e[38;2;115;218;202m\\]", 28);
-    strncpy(colorDefs->cyan_bg, "\\[\\e[48;2;115;218;202m\\]", 28);
-    strncpy(colorDefs->slate, "\\[\\e[38;2;65;72;104m\\]", 26);
-    strncpy(colorDefs->slate_bg, "\\[\\e[48;2;65;72;104m\\]", 26);
     return;
 }
