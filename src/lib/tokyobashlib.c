@@ -4,7 +4,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
-    char filepath[256] = "/tokyobash/config";
+    char filepath[26] = "/tokyobash/config";
     path[0] = '\0';
 
     if (pConfig == NULL || pConfig[0] == '\0') {
@@ -194,6 +194,35 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     fclose(file);
     return;
 }
+// Set the look of separators.
+void setSeparator(ConfigSettings* usrConfig) {
+    if (usrConfig->styleConfig.style == 1) {
+
+        strcpy(usrConfig->styleConfig.sep_left, "");
+        strcpy(usrConfig->styleConfig.sep_right, "");
+        strcpy(usrConfig->styleConfig.right_line_sep, "");
+        strcpy(usrConfig->styleConfig.left_line_sep, "");
+        // strcpy(usrConfig->styleConfig.thin_sep_left, "");
+
+    } else if (usrConfig->styleConfig.style == 2) {
+
+        strcpy(usrConfig->styleConfig.sep_left, "");
+        strcpy(usrConfig->styleConfig.sep_right, "");
+        strcpy(usrConfig->styleConfig.right_line_sep, "");
+        strcpy(usrConfig->styleConfig.left_line_sep, "");
+        // strcpy(usrConfig->styleConfig.thin_sep_left, "");
+
+    } else if (usrConfig->styleConfig.style == 3) {
+
+        strcpy(usrConfig->styleConfig.sep_left, "");
+        strcpy(usrConfig->styleConfig.sep_right, "");
+        strcpy(usrConfig->styleConfig.right_line_sep, "");
+        strcpy(usrConfig->styleConfig.left_line_sep, "");
+        // actual slanted thin separator
+        // left = "" right = ""
+    }
+}
+
 // If path contains $HOME, replace it with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
 
