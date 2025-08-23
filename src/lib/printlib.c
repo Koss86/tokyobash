@@ -66,9 +66,18 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, i
 
     } else {
 
-        printf("%s%s %s%s\\W %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
-               colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
-               colorDefs->reset);
+        if (usrConfig->pathState == Root) {
+
+            printf("%s%s %s%s\\W %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
+                   colorDefs->reset);
+
+        } else {
+
+            printf("%s%s %s%s\\W/ %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
+                   colorDefs->reset);
+        }
     }
     return;
 }
@@ -83,8 +92,11 @@ void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int
     } else {
 
         if (usrConfig->pathState == Root) {
+
             printf(" %s%s\\W\\n", colorDefs->curDir_txt, colorDefs->bold);
+
         } else {
+
             printf(" %s%s\\W/\\n", colorDefs->curDir_txt, colorDefs->bold);
         }
     }
