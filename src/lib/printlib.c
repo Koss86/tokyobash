@@ -3,15 +3,16 @@
 void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
-        printf("%s%s%s\\u@\\h%s%s", colorDefs->usr_color, colorDefs->usr_txt, colorDefs->usr_bg,
-               colorDefs->usr_color, colorDefs->reset);
+        printf("%s%s%s%s\\u@\\h%s%s", colorDefs->usr_color, usrConfig->styleConfig.sep_left,
+               colorDefs->usr_txt, colorDefs->usr_bg, colorDefs->usr_color, colorDefs->reset);
     } else {
         printf("%s%s\\u@\\h%s:", colorDefs->bold, colorDefs->usr_txt, colorDefs->reset);
     }
 
     if (usrConfig->time) {
         if (usrConfig->background) {
-            printf("%s%s %s%s\\t %s", colorDefs->usr_color, colorDefs->time_bg,
+            printf("%s%s%s%s %s%s\\t %s", colorDefs->usr_color, colorDefs->time_bg,
+                   usrConfig->styleConfig.sep_right, usrConfig->styleConfig.thin_sep_right,
                    colorDefs->time_txt, colorDefs->time_bg, colorDefs->reset);
         } else {
             printf("%s [\\t]", colorDefs->time_txt);

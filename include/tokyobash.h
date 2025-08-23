@@ -37,6 +37,15 @@ typedef struct FetchOpts {
     int limit;
 } FetchOpts;
 
+typedef struct StyleOpts {
+    int style;
+    char sep_left[4];
+    char sep_right[4];
+    char thin_sep_left[4];
+    char thin_sep_right[4];
+
+} StyleOpts;
+
 typedef struct ConfigSettings {
     bool time;
     bool fetch;
@@ -48,6 +57,7 @@ typedef struct ConfigSettings {
     bool branchname;
     bool gitAccessible;
     PathState pathState;
+    StyleOpts styleConfig;
     FetchOpts fetchConfig;
 } ConfigSettings;
 
