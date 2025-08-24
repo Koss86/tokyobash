@@ -7,14 +7,14 @@ int main(void) {
 
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
     char* pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
@@ -23,32 +23,17 @@ int main(void) {
     usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
+    usrConfig.style = Pointed;
     usrConfig.statusbar = true;
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
     usrConfig.fetchConfig.limit = 1;
-    usrConfig.styleConfig.style = 2;
     usrConfig.fetchConfig.modifier = Day;
     usrConfig.gitAccessible = false;
     usrConfig.gitAccessible = isGitAccessible();
 
     parseConfig(&usrConfig, pHome);
-
-    // left = "" right = ""
-    // left = "" right = ""
-    // left = "" right = ""
-    // left = "" right = ""
-    if (usrConfig.styleConfig.style == 1) {
-        strcpy(usrConfig.styleConfig.sep_left, "");
-        strcpy(usrConfig.styleConfig.sep_right, "");
-        strcpy(usrConfig.styleConfig.thin_sep_right, "");
-        strcpy(usrConfig.styleConfig.thin_sep_left, "");
-    } else if (usrConfig.styleConfig.style == 2) {
-        strcpy(usrConfig.styleConfig.sep_left, "");
-        strcpy(usrConfig.styleConfig.sep_right, "");
-        strcpy(usrConfig.styleConfig.thin_sep_right, "");
-    }
 
     int pathLength = strlen(path);
     int homeLength = strlen(pHome);

@@ -80,6 +80,21 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
                         usrConfig->theme = Kanagawa;
                     }
+
+                } else if ((strncmp(keybuf, "style", 5)) == 0) {
+
+                    if ((strncmp(valbuf, "pointed", 7)) == 0) {
+
+                        usrConfig->style = Pointed;
+
+                    } else if ((strncmp(valbuf, "rounded", 7)) == 0) {
+
+                        usrConfig->style = Rounded;
+
+                    } else if ((strncmp(valbuf, "slanted", 7)) == 0) {
+
+                        usrConfig->style = Slanted;
+                    }
                 } // add else if's here for future options with char vals.
 
             } else {
@@ -166,6 +181,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                     } else if (valbuf[0] == '1') {
                         usrConfig->fetch = true;
                     }
+
                 } // add else if's here for future optoins with int vals.
             }
             continue;
@@ -192,35 +208,41 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
         }
     }
     fclose(file);
+    setSeparator(usrConfig);
     return;
 }
 // Set the look of separators.
 void setSeparator(ConfigSettings* usrConfig) {
-    if (usrConfig->styleConfig.style == 1) {
 
-        strcpy(usrConfig->styleConfig.sep_left, "");
-        strcpy(usrConfig->styleConfig.sep_right, "");
-        strcpy(usrConfig->styleConfig.right_line_sep, "");
-        strcpy(usrConfig->styleConfig.left_line_sep, "");
-        // strcpy(usrConfig->styleConfig.thin_sep_left, "");
+    switch (usrConfig->style) {
 
-    } else if (usrConfig->styleConfig.style == 2) {
+        case Pointed:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->thin_sep_left, "");
+            break;
 
-        strcpy(usrConfig->styleConfig.sep_left, "");
-        strcpy(usrConfig->styleConfig.sep_right, "");
-        strcpy(usrConfig->styleConfig.right_line_sep, "");
-        strcpy(usrConfig->styleConfig.left_line_sep, "");
-        // strcpy(usrConfig->styleConfig.thin_sep_left, "");
+        case Rounded:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->thin_sep_left, "");
+            break;
 
-    } else if (usrConfig->styleConfig.style == 3) {
-
-        strcpy(usrConfig->styleConfig.sep_left, "");
-        strcpy(usrConfig->styleConfig.sep_right, "");
-        strcpy(usrConfig->styleConfig.right_line_sep, "");
-        strcpy(usrConfig->styleConfig.left_line_sep, "");
-        // actual slanted thin separator
-        // left = "" right = ""
+        case Slanted:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // actual slanted thin separator
+            // left = "" right = ""
+            // 
+            break;
     }
+    return;
 }
 
 // If path contains $HOME, replace it with '~'.

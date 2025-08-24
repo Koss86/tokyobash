@@ -32,33 +32,34 @@ typedef enum FetchModifier {
     Day,
 } FetchModifier;
 
+typedef enum Styles {
+    Pointed,
+    Rounded,
+    Slanted,
+} Styles;
+
 typedef struct FetchOpts {
     FetchModifier modifier;
     int limit;
 } FetchOpts;
-
-typedef struct StyleOpts {
-    int style;
-    char sep_left[4];
-    char sep_right[4];
-    char thin_sep_left[4];
-    char thin_sep_right[4];
-
-} StyleOpts;
 
 typedef struct ConfigSettings {
     bool time;
     bool fetch;
     bool debug;
     Themes theme;
+    Styles style;
     bool inARepo;
     bool statusbar;
     bool background;
     bool branchname;
+    char sep_left[4];
+    char sep_right[4];
     bool gitAccessible;
     PathState pathState;
-    StyleOpts styleConfig;
     FetchOpts fetchConfig;
+    char left_line_sep[8];
+    char right_line_sep[4];
 } ConfigSettings;
 
 typedef struct IntTimesAndDates {
