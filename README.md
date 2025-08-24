@@ -5,42 +5,42 @@ Requires a [Nerd Font](https://www.nerdfonts.com) to use icons.
 ## Features
 
 ### Highlights
-Highlights the current directory and changes color depending on whether you're in HOME/, root/, or /mnt.
-  
-![tokyobash_01](https://github.com/user-attachments/assets/f8f1f02f-abf7-4a15-b024-491dcbb8675f)
+Highlights the current directory and changes the color of User@Host depending on whether you're in HOME/, root/, or /mnt.
+
+  <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/c5efd9d7-79af-48c2-9617-d478631ee710" />
 
 #
 
 ### Abbreviate Path
 Abbreviates paths longer than 50 characters.
 
-<img width="750" height="1000" alt="tokyobash_02" src="https://github.com/user-attachments/assets/b3b94ac8-b229-442d-a684-4afb493649dc" /><br>
+<img width="788" height="366" alt="tok_noBg_abv" src="https://github.com/user-attachments/assets/b8dd67cf-cb70-4d86-a2d6-cab5095f67b9" />
 
 #
 
 ### Git Branch Name
 If the current directory is a repository it will display the current branch name:
- 
-![tokyobash_03](https://github.com/user-attachments/assets/7a47c858-b828-4b0e-96d9-bff82d4d7d48)
+
+ <img width="485" height="46" alt="tok_branchName" src="https://github.com/user-attachments/assets/443d36ad-83c0-4d88-a008-dad27f7dc332" />
 
 #
 
 ### Git Status Bar
 An icon bar that tracks changes to the current repository.
 
-  ![tokyobash_statusbar](https://github.com/user-attachments/assets/a94962ee-7279-4cc3-acd5-1e97b9a74e4a)
+<img width="487" height="65" alt="statusbar_clean" src="https://github.com/user-attachments/assets/b3596724-b5d4-4689-aad7-8a27bfdd711a" />
 
 Displays (in order):
 
-  - Untracked files
-  - Files with unstaged changes
-  - Files with staged changes
+  - Number of untracked files
+  - Number of files with unstaged changes
+  - Number of staged files
   - Number of local commits
   - Number of remote commits.
 
-![tokyobash_statusbarExp](https://github.com/user-attachments/assets/f3cce450-e44f-46aa-a4a2-b75f0145a9d5)
+<img width="487" height="126" alt="tokyobash_statusbar_explained" src="https://github.com/user-attachments/assets/ef044331-ef41-4f80-a320-caa8c8689eb5" />
 
-The status bar will only display when there are changes to the repo. And only show items that were changed.
+The status bar will only display when there are changes to the repository. And only show items that were changed.
 > [!NOTE]
 >
 > The feature to fetch remote commits is disabled by default.
@@ -53,48 +53,41 @@ The status bar will only display when there are changes to the repo. And only sh
 You can currently choose between 3 different themes.
 
 #### Tokyonight:
-  
-![tokyobash_03](https://github.com/user-attachments/assets/75182622-9ce7-43a4-9fd0-d9f431105b26)
+
+  <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/b97f6193-910f-4814-bcd5-e7d1ef05fc1c" />
 
 #### Catppuccin:
 
-![tokyobash_catppuccin](https://github.com/user-attachments/assets/b99bbb0f-fe02-4c12-906b-51229efa3cb4)
+<img width="485" height="164" alt="cat_noBg_spread" src="https://github.com/user-attachments/assets/b0428e1a-1eab-4153-a92f-eefa85b9daeb" />
 
 #### Kanagawa:
 
-![tokyobash_kanagawa](https://github.com/user-attachments/assets/3bc22047-44d2-4674-a20d-01537a94b5d7)
+<img width="487" height="163" alt="kan_noBg_spread" src="https://github.com/user-attachments/assets/dacd4d04-8dbc-4e26-bf34-f6851e75e4e4" />
 
 Can be changed via the `theme` [Config](#config) setting.
 
 #
 
-### Theme Background Variants
+### Background Variants
   
-  Each theme has an optional background variant you can enable via the `background` [Config](#config) setting.
+  There are optional background variants you can enable via the `background` [Config](#config) setting.
   
- Instead of changing the path text color when in $HOME, mnt, or root it will change the user background color.
 
   #### Tokyonight:
   
-<img width="600" height="60" alt="tokyobash_tokyonight_bg" src="https://github.com/user-attachments/assets/226a16e1-78df-49ec-825d-3f0c1b4e86db" /><br>
-<img width="370" height="60" alt="tokyobash_tokyonight_bg_mnt" src="https://github.com/user-attachments/assets/1b693799-e1fc-4690-a869-c45952ea9d69" /><br>
-<img width="325" height="60" alt="tokyobash_tokyonight_bg_root" src="https://github.com/user-attachments/assets/dd928ffc-1b9e-432f-81c6-ba327abc580f" /><br>
+  <img width="544" height="163" alt="tok_Bg_spread" src="https://github.com/user-attachments/assets/fb3a5426-da87-4718-bb3e-5f623ebdd757" />
 
 #
 
 #### Catppuccin:
 
-<img width="600" height="60" alt="tokyobash_catppuccin_bg" src="https://github.com/user-attachments/assets/dd220cf3-9e6a-4eea-8aff-98214fb6df2b" /><br>
-<img width="370" height="60" alt="tokyobash_catppuccin_bg_mnt" src="https://github.com/user-attachments/assets/8ca8a448-5eb6-423f-b6fb-42b6e10f5fbd" /><br>
-<img width="325" height="60" alt="tokyobash_catppuccin_bg_root" src="https://github.com/user-attachments/assets/475552cf-6c46-497f-8870-002a5fbeb992" /><br>
+<img width="545" height="163" alt="cat_Bg_spread" src="https://github.com/user-attachments/assets/785798e4-41eb-4418-97ea-27de9bab1b60" />
 
 #
 
 #### Kanagawa:
 
-<img width="600" height="60" alt="tokyobash_kanagawa_bg" src="https://github.com/user-attachments/assets/16d85aec-f773-49f1-8b55-2fb405fc688c" /><br>
-<img width="368" height="60" alt="tokyobash_kanagawa_bg_mnt" src="https://github.com/user-attachments/assets/5fe83ea8-c51a-40f8-a083-292ff48f7003" /><br>
-<img width="325" height="60" alt="tokyobash_kanagawa_bg_root" src="https://github.com/user-attachments/assets/7c70331e-2013-4439-9e3e-244dfedba1e0" /><br>
+<img width="546" height="163" alt="kan_Bg_spread" src="https://github.com/user-attachments/assets/a45d4003-cbb4-45f7-9bc9-ae684b6c1cbf" />
 
 
 ## Installation
@@ -106,15 +99,15 @@ In the root of the tokyobash repository, there are 3 commands to use:
 
   -`make` Will build the tokyobash binary and place it in `repo_location/tokyobash/bin`.
 
-  -`make install` Will build tokyobash and create the config file in `$XDG_CONFIG_HOME/tokyobash` if one is not already present:
+  -`make install` Will build tokyobash and create then move the config file to `$HOME/.config/tokyobash` if one is not already present:
 
-  - If `$XDG_CONFIG_HOME` is not set, the config directory path will default to `$HOME/.config/tokyobash`
+  - The config directory defaults to `$HOME/.config`, but can be changed with `$XDG_CONFIG_HOME`.
 
-  -`make install prefix=custom/path` Will compile tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
+  -`make install prefix=custom/path` Will build tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
   
 #
 
-Now add this to your .bashrc (usually located at $HOME/.bashrc):
+Add this to your .bashrc (usually located at $HOME/.bashrc):
 
 ```bash
 
@@ -135,7 +128,7 @@ Now save and restart your terminal!
 #### No Make
 
 If you dont have make, use these gcc commands in the top level of the tokyobash repository:
-```
+```sh
 gcc -c src/tokyobash.c
 gcc -c src/lib/tokyobashlib.c
 gcc -c src/lib/gitlib.c
@@ -146,7 +139,7 @@ gcc -O3 tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o -o tokyo
 
 For clang:
 
-```
+```sh
 clang -c src/tokyobash.c
 clang -c src/lib/tokyobashlib.c
 clang -c src/lib/gitlib.c
@@ -155,22 +148,14 @@ clang -c src/lib/printlib.c
 clang -O3 tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o -o tokyobash
 ```
 
-You will need to manually create the directory `tokyobash` in `$XDG_CONFIG_HOME`, if set. If you don't use `$XDG_CONFIG_HOME`, create the directory in `~/.config` and copy the config file there.
+You will need to manually create the directory `tokyobash` in `~/.config`.
 
 Try these commands in your terminal:
 
-- If `XDG_CONFIG_HOME` not set:
   ```
   mkdir -p ~/.config/tokyobash/
-  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ngit = 1\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
+  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/
-  rm config
-  ```
-- If  `XDG_CONFIG_HOME` is set:
-  ```
-  mkdir -p $XDG_CONFIG_HOME/tokyobash/
-  printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ngit = 1\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
-  cp -n config $XDG_CONFIG_HOME/tokyobash/
   rm config
   ```
 
@@ -191,7 +176,6 @@ theme       = tokyonight
 #theme      = kanagawa
 
 background  = 0  # Turn background variant on/off.
-git         = 1  # Turns all git integration on/off.
 time        = 1  # Turn the display of current time on/off.
 branchname  = 1  # Turn the display of branch name on/off.
 statusbar   = 1  # Turn git status bar on/off.
@@ -203,13 +187,10 @@ fetchtimer  = 1d # See below.
 
 For example:
 
-  - If `fetchtimer = 25m` repo will update after 25 minutes.
-  - If `fetchtimer = 2h` repo will update after 2 hours.
-  - If `fetchtimer = 3d` repo will update after 3 days.
+  - If `fetchtimer = 25m` repository will update after 25 minutes.
+  - If `fetchtimer = 2h` repository will update after 2 hours.
+  - If `fetchtimer = 3d` repository will update after 3 days.
   - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
-
-Setting `git = 0` disables all git integration. This supersedes the branchname and statusbar settings.
-So, if `git = 0`, then branchname and statusbar are not displayed reguardless of their setting.
 
 ##
 
