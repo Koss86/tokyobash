@@ -1,10 +1,12 @@
 #include "../../include/tokyobash.h"
 
+static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf);
+
 void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
-    char filepath[256] = "/tokyobash/config";
+    char filepath[26] = "/tokyobash/config";
     path[0] = '\0';
 
     if (pConfig == NULL || pConfig[0] == '\0') {
@@ -50,124 +52,30 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             }
             continue;
         }
+
         if (c == '#') {
             incomment = true;
             continue;
         }
 
         if (c == '\n') {
-            if (incomment) {
+
+            if (incomment && indx == 0) {
                 inkey = true;
                 incomment = false;
                 invalue = false;
-                indx = 0;
                 continue;
+            } else if (incomment) {
+                incomment = false;
             }
+
             inkey = true;
             invalue = false;
             valbuf[indx] = '\0';
             indx = 0;
-            if (valbuf[0] >= 'a' && valbuf[0] <= 'z') {
 
-                if ((strncmp(keybuf, "theme", 5)) == 0) {
+            checkKeyValue(usrConfig, &keybuf[0], &valbuf[0]);
 
-                    if ((strncmp(valbuf, "tokyonight", 10)) == 0) {
-                        usrConfig->theme = Tokyonight;
-
-                    } else if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
-                        usrConfig->theme = Catppuccin;
-
-                    } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
-                        usrConfig->theme = Kanagawa;
-                    }
-                } // add else if's here for future options with char vals.
-
-            } else {
-
-                if ((strncmp(keybuf, "statusbar", 9)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->statusbar = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->statusbar = true;
-                    }
-
-                } else if ((strncmp(keybuf, "debug", 5)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->debug = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->debug = true;
-                    }
-                } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->branchname = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->branchname = true;
-                    }
-
-                } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
-
-                    if (valbuf[1] == 'm' || valbuf[2] == 'm') {
-
-                        usrConfig->fetchConfig.modifier = Minute;
-
-                    } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
-
-                        usrConfig->fetchConfig.modifier = Hour;
-
-                    } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
-
-                        usrConfig->fetchConfig.modifier = Day;
-                    }
-
-                    usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
-
-                    switch (usrConfig->fetchConfig.modifier) {
-
-                        case Minute:
-                            if (usrConfig->fetchConfig.limit > 60) {
-                                usrConfig->fetchConfig.limit = 60;
-                            }
-                            break;
-                        case Hour:
-                            if (usrConfig->fetchConfig.limit > 24) {
-                                usrConfig->fetchConfig.limit = 24;
-                            }
-                            break;
-                        case Day:
-                            if (usrConfig->fetchConfig.limit > 30) {
-                                usrConfig->fetchConfig.limit = 30;
-                            }
-                            break;
-                    }
-
-                } else if ((strncmp(keybuf, "time", 4)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->time = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->time = true;
-                    }
-
-                } else if ((strncmp(keybuf, "background", 10)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->background = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->background = true;
-                    }
-
-                } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
-
-                    if (valbuf[0] == '0') {
-                        usrConfig->fetch = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->fetch = true;
-                    }
-                } // add else if's here for future optoins with int vals.
-            }
             continue;
         }
 
@@ -191,7 +99,129 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             valbuf[indx++] = c;
         }
     }
+
     fclose(file);
+
+    switch (usrConfig->bgstyle) {
+
+        case Pointed:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->left_line_sep, "");
+            break;
+
+        case Rounded:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->left_line_sep, "");
+            break;
+
+        case Slanted:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            //  
+            break;
+    }
+    return;
+}
+static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf) {
+
+    if ((strncmp(keybuf, "theme", 5)) == 0) {
+
+        if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
+            usrConfig->theme = Catppuccin;
+
+        } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
+            usrConfig->theme = Kanagawa;
+        }
+
+    } else if ((strncmp(keybuf, "background", 10)) == 0) {
+
+        if (valbuf[0] == '1') {
+
+            usrConfig->background = true;
+
+        } else if (valbuf[0] == '2') {
+
+            usrConfig->background = true;
+            usrConfig->bgstyle = Rounded;
+
+        } else if (valbuf[0] == '3') {
+
+            usrConfig->background = true;
+            usrConfig->bgstyle = Slanted;
+        }
+
+    } else if ((strncmp(keybuf, "statusbar", 9)) == 0) {
+
+        if (valbuf[0] == '0') {
+            usrConfig->statusbar = false;
+        }
+
+    } else if ((strncmp(keybuf, "debug", 5)) == 0) {
+
+        if (valbuf[0] == '1') {
+            usrConfig->debug = true;
+        }
+
+    } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
+
+        if (valbuf[0] == '0') {
+            usrConfig->branchname = false;
+        }
+
+    } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
+
+        if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+
+            usrConfig->fetchConfig.modifier = Hour;
+
+        } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
+
+            usrConfig->fetchConfig.modifier = Day;
+        }
+
+        usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
+
+        switch (usrConfig->fetchConfig.modifier) {
+
+            case Minute:
+                if (usrConfig->fetchConfig.limit > 60) {
+                    usrConfig->fetchConfig.limit = 60;
+                }
+                break;
+            case Hour:
+                if (usrConfig->fetchConfig.limit > 24) {
+                    usrConfig->fetchConfig.limit = 24;
+                }
+                break;
+            case Day:
+                if (usrConfig->fetchConfig.limit > 30) {
+                    usrConfig->fetchConfig.limit = 30;
+                }
+                break;
+        }
+
+    } else if ((strncmp(keybuf, "time", 4)) == 0) {
+
+        if (valbuf[0] == '0') {
+            usrConfig->time = false;
+        } else if (valbuf[0] == '2') {
+            usrConfig->timeformat[0] = 'T';
+        }
+
+    } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
+
+        if (valbuf[0] == '1') {
+            usrConfig->fetch = true;
+        }
+    }
     return;
 }
 // If path contains $HOME, replace it with '~'.

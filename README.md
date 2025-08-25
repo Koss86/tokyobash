@@ -1,5 +1,5 @@
 # Tokyobash
-A custom bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](http://www.neovim.io).
+A configurable bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](http://www.neovim.io).
 
 Requires a [Nerd Font](https://www.nerdfonts.com) to use icons.
 ## Features
@@ -19,14 +19,14 @@ Abbreviates paths longer than 50 characters.
 #
 
 ### Git Branch Name
-If the current directory is a repository it will display the current branch name:
+If the current directory is a repository it will display the current branch name.
 
  <img width="485" height="46" alt="tok_branchName" src="https://github.com/user-attachments/assets/443d36ad-83c0-4d88-a008-dad27f7dc332" />
 
 #
 
 ### Git Status Bar
-An icon bar that tracks changes to the current repository.
+An icon bar that shows changes in the current repository.
 
 <img width="487" height="65" alt="statusbar_clean" src="https://github.com/user-attachments/assets/b3596724-b5d4-4689-aad7-8a27bfdd711a" />
 
@@ -40,7 +40,7 @@ Displays (in order):
 
 <img width="487" height="126" alt="tokyobash_statusbar_explained" src="https://github.com/user-attachments/assets/ef044331-ef41-4f80-a320-caa8c8689eb5" />
 
-The status bar will only display when there are changes to the repository. And only show items that were changed.
+The status bar will only display when there are changes to the repository. And only items that were changed.
 > [!NOTE]
 >
 > The feature to fetch remote commits is disabled by default.
@@ -68,9 +68,11 @@ Can be changed via the `theme` [Config](#config) setting.
 
 #
 
-### Background Variants
+### Backgrounds
   
-  There are optional background variants you can enable via the `background` [Config](#config) setting.
+  There are optional backgrounds you can enable via the `background` [Config](#config) setting.
+
+  There are three variatons to choose from: Pointed, Rounded, and Slanted. Pointed is shown below.
   
 
   #### Tokyonight:
@@ -93,6 +95,7 @@ Can be changed via the `theme` [Config](#config) setting.
 ## Installation
 
 The easiest way would be to have make and gcc or clang installed on your system.
+Click [Here](#no-make) for instructions on how to install without make.
 
 In the root of the tokyobash repository, there are 3 commands to use:
 
@@ -123,11 +126,47 @@ Replace `path/to/tokyobash/binary` above with the acutal path to the compiled to
 
 Now save and restart your terminal!
 
-#
+## Config
 
-#### No Make
+Config file uses standard key = value pairs.
 
-If you dont have make, use these gcc commands in the top level of the tokyobash repository:
+`#` or `//` can be used for comments.
+
+Spaces, single, and double quotes are ignored.
+
+`1 = enabled` `0 = disabled` - except for `background`, `time`, and `fetchtimer`, which have multiple options explained below.
+
+#### Default config:
+```
+theme       = tokyonight
+#theme      = catppuccin
+#theme      = kanagawa
+
+background  = 0  # 0 = Off, 1 = pointed, 2 = rounded, 3 = slanted.
+time        = 1  # 0 = Off, 1 = 24-hour clock, 2 = 12-hour clock.
+branchname  = 1  # Turn the display of branch name on/off.
+statusbar   = 1  # Turn statusbar on/off.
+fetch       = 0  # Turn fetching of commits on/off.
+fetchtimer  = 1d # See below.
+```
+
+`fetchtimer` will accept `#d`, `#h`, or `#m`. `d = days` `h = hours` and `m = minutes`.
+
+#### For example:
+
+  - If `fetchtimer = 25m` repository will update after 25 minutes.
+  - If `fetchtimer = 2h` repository will update after 2 hours.
+  - If `fetchtimer = 3d` repository will update after 3 days.
+  - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
+
+
+## No Make
+
+You will still need to have gcc or clang.
+
+But if you dont have make, you can use these commands in the top level of the tokyobash repository.
+
+For gcc:
 ```sh
 gcc -c src/tokyobash.c
 gcc -c src/lib/tokyobashlib.c
@@ -147,52 +186,18 @@ clang -c src/lib/shouldFetchlib.c
 clang -c src/lib/printlib.c
 clang -O3 tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o -o tokyobash
 ```
-
-You will need to manually create the directory `tokyobash` in `~/.config`.
+You don't need a config file if you don't plan on changing the defaults. But if you do want to change the defaults, you will need to manually create the directory `tokyobash` in `~/.config`.
 
 Try these commands in your terminal:
 
-  ```
+  ```sh
   mkdir -p ~/.config/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/
   rm config
   ```
 
-## Config
-
-Config file uses standard key = value pairs.
-
-`#` or `//` can be used for comments.
-
-Spaces, single, and double quotes are ignored.
-
-`1 = enabled` `0 = disabled`
-
-Default config:
-```
-theme       = tokyonight
-#theme      = catppuccin
-#theme      = kanagawa
-
-background  = 0  # Turn background variant on/off.
-time        = 1  # Turn the display of current time on/off.
-branchname  = 1  # Turn the display of branch name on/off.
-statusbar   = 1  # Turn git status bar on/off.
-fetch       = 0  # Turn fetching of commits on/off.
-fetchtimer  = 1d # See below.
-```
-
-`fetchtimer` will accept `#d`, `#h`, or `#m`. `d = days` `h = hours` and `m = minutes`.
-
-For example:
-
-  - If `fetchtimer = 25m` repository will update after 25 minutes.
-  - If `fetchtimer = 2h` repository will update after 2 hours.
-  - If `fetchtimer = 3d` repository will update after 3 days.
-  - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
-
-##
+#
 
 ### Disclaimer
 I'm not sure if this will run on all linux distros. I believe it should work on most if not all.

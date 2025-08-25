@@ -3,18 +3,17 @@
 int main(void) {
 
     char path[PATH_MAX];
-    getcwd(path, sizeof(path));
 
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
     char* pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
@@ -24,18 +23,21 @@ int main(void) {
     usrConfig.debug = false;
     usrConfig.inARepo = false;
     usrConfig.statusbar = true;
+    usrConfig.bgstyle = Pointed;
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
+    usrConfig.timeformat[0] = 't';
+    usrConfig.gitAccessible = false;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
-    usrConfig.gitAccessible = false;
     usrConfig.gitAccessible = isGitAccessible();
 
     parseConfig(&usrConfig, pHome);
 
     int pathLength = strlen(path);
     int homeLength = strlen(pHome);
+
     if (strstr(path, pHome) != NULL) {
         replaceHome(path, pathLength, homeLength);
         pathLength = (pathLength - homeLength) + 1;
@@ -63,9 +65,11 @@ int main(void) {
     Colors colorDefs;
     defineColors(&usrConfig, &colorDefs);
 
-    printUsrTime(&usrConfig, &colorDefs);
+    if (pathLength > 1) {
+        remCurntDir(path, pathLength);
+    }
 
-    remCurntDir(path, pathLength);
+    printUsrTime(&usrConfig, &colorDefs);
 
     if (!usrConfig.gitAccessible || !usrConfig.inARepo) {
 
