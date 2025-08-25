@@ -23,9 +23,9 @@ int main(void) {
     usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
-    usrConfig.style = Pointed;
+    usrConfig.bgstyle = Pointed;
     usrConfig.statusbar = true;
-    usrConfig.t_format[0] = 't';
+    usrConfig.timeformat[0] = 't';
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;

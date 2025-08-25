@@ -48,15 +48,15 @@ typedef struct ConfigSettings {
     bool fetch;
     bool debug;
     Themes theme;
-    Styles style;
     bool inARepo;
     bool statusbar;
+    Styles bgstyle;
     bool background;
     bool branchname;
-    char t_format[1];
     char sep_left[4];
     char sep_right[4];
     bool gitAccessible;
+    char timeformat[1];
     PathState pathState;
     FetchOpts fetchConfig;
     char left_line_sep[8];
