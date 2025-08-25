@@ -4,7 +4,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
-    char filepath[256] = "/tokyobash/config";
+    char filepath[26] = "/tokyobash/config";
     path[0] = '\0';
 
     if (pConfig == NULL || pConfig[0] == '\0') {
@@ -79,6 +79,21 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
                         usrConfig->theme = Kanagawa;
+                    }
+
+                } else if ((strncmp(keybuf, "style", 5)) == 0) {
+
+                    if ((strncmp(valbuf, "pointed", 7)) == 0) {
+
+                        usrConfig->style = Pointed;
+
+                    } else if ((strncmp(valbuf, "rounded", 7)) == 0) {
+
+                        usrConfig->style = Rounded;
+
+                    } else if ((strncmp(valbuf, "slanted", 7)) == 0) {
+
+                        usrConfig->style = Slanted;
                     }
                 } // add else if's here for future options with char vals.
 
@@ -166,6 +181,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                     } else if (valbuf[0] == '1') {
                         usrConfig->fetch = true;
                     }
+
                 } // add else if's here for future optoins with int vals.
             }
             continue;
@@ -192,8 +208,43 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
         }
     }
     fclose(file);
+    setSeparator(usrConfig);
     return;
 }
+// Set the look of separators.
+void setSeparator(ConfigSettings* usrConfig) {
+
+    switch (usrConfig->style) {
+
+        case Pointed:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->thin_sep_left, "");
+            break;
+
+        case Rounded:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->thin_sep_left, "");
+            break;
+
+        case Slanted:
+            strcpy(usrConfig->sep_left, "");
+            strcpy(usrConfig->sep_right, "");
+            strcpy(usrConfig->right_line_sep, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // actual slanted thin separator
+            // left = "" right = ""
+            // 
+            break;
+    }
+    return;
+}
+
 // If path contains $HOME, replace it with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
 

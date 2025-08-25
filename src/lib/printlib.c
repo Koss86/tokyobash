@@ -3,16 +3,17 @@
 void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
-        printf("%s%s%s\\u@\\h%s%s", colorDefs->usr_color, colorDefs->usr_txt, colorDefs->usr_bg,
-               colorDefs->usr_color, colorDefs->reset);
+        printf("%s%s%s", colorDefs->usr_color, usrConfig->sep_left, colorDefs->usr_txt);
+        printf("%s\\u@\\h%s%s", colorDefs->usr_bg, colorDefs->usr_color, colorDefs->reset);
     } else {
         printf("%s%s\\u@\\h%s:", colorDefs->bold, colorDefs->usr_txt, colorDefs->reset);
     }
 
     if (usrConfig->time) {
         if (usrConfig->background) {
-            printf("%s%s %s%s\\t %s", colorDefs->usr_color, colorDefs->time_bg,
-                   colorDefs->time_txt, colorDefs->time_bg, colorDefs->reset);
+            printf("%s%s%s%s ", colorDefs->usr_color, colorDefs->time_bg, usrConfig->sep_right,
+                   usrConfig->left_line_sep);
+            printf("%s%s\\t %s", colorDefs->time_txt, colorDefs->time_bg, colorDefs->reset);
         } else {
             printf("%s [\\t]", colorDefs->time_txt);
         }
@@ -28,11 +29,14 @@ void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
     if (usrConfig->background) {
 
         if (usrConfig->time) {
-            printf("%s%s %s%s%s  %s", colorDefs->branch_bg, colorDefs->time_color,
-                   colorDefs->branch_txt, colorDefs->branch_bg, branch_name, colorDefs->reset);
+            printf("%s%s%s ", colorDefs->branch_bg, colorDefs->time_color, usrConfig->sep_right);
+            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg, branch_name,
+                   colorDefs->reset);
         } else {
-            printf("%s%s %s%s%s  %s", colorDefs->branch_bg, colorDefs->usr_color,
-                   colorDefs->branch_txt, colorDefs->branch_bg, branch_name, colorDefs->reset);
+            printf("%s%s%s%s ", colorDefs->branch_bg, colorDefs->usr_color, usrConfig->sep_right,
+                   usrConfig->left_line_sep);
+            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg, branch_name,
+                   colorDefs->reset);
         }
 
     } else {
@@ -45,38 +49,40 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, i
 
     if (usrConfig->inARepo && usrConfig->branchname) {
 
-        printf("%s%s%s", colorDefs->path_txt, colorDefs->branch_bg, colorDefs->reset);
+        printf("%s%s%s%s", colorDefs->path_txt, colorDefs->branch_bg, usrConfig->right_line_sep,
+               colorDefs->reset);
 
     } else {
 
         if (usrConfig->time) {
 
-            printf("%s%s%s%s", colorDefs->time_color, colorDefs->path_bg, colorDefs->path_color,
-                   colorDefs->reset);
+            printf("%s%s%s", colorDefs->time_color, colorDefs->path_bg, usrConfig->sep_right);
+            printf("%s%s", colorDefs->path_color, colorDefs->reset);
         } else {
-            printf("%s%s%s", colorDefs->usr_color, colorDefs->path_bg, colorDefs->reset);
+            printf("%s%s", colorDefs->usr_color, colorDefs->path_bg);
+            printf("%s%s%s", usrConfig->sep_right, usrConfig->left_line_sep, colorDefs->reset);
         }
     }
 
     if (pathLength > 1) {
 
-        printf("%s%s %s%s%s\\W/ %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg, path,
-               colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
-               colorDefs->reset);
+        printf("%s%s %s", colorDefs->path_txt, colorDefs->path_bg, path);
+        printf("%s%s\\W/ %s%s%s%s\\n", colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset,
+               colorDefs->path_color, usrConfig->sep_right, colorDefs->reset);
 
     } else {
 
         if (usrConfig->pathState == Root) {
 
-            printf("%s%s %s%s\\W %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
-                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
-                   colorDefs->reset);
+            printf("%s%s %s%s\\W %s%s", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color);
+            printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
 
         } else {
 
-            printf("%s%s %s%s\\W/ %s%s%s\\n", colorDefs->path_txt, colorDefs->path_bg,
-                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color,
-                   colorDefs->reset);
+            printf("%s%s %s%s\\W/ %s%s", colorDefs->path_txt, colorDefs->path_bg,
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color);
+            printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
         }
     }
     return;

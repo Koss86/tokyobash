@@ -7,14 +7,14 @@ int main(void) {
 
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
     char* pHome = getenv("HOME");
     if (pHome == NULL) {
         perror("tokyobash error: failed to retrieve $HOME");
-        printf("\\u@\\h: ");
+        printf("\\u@\\h: \\w ");
         exit(-1);
     }
 
@@ -23,6 +23,7 @@ int main(void) {
     usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
+    usrConfig.style = Pointed;
     usrConfig.statusbar = true;
     usrConfig.branchname = true;
     usrConfig.background = false;

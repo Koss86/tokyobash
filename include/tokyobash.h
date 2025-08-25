@@ -32,6 +32,12 @@ typedef enum FetchModifier {
     Day,
 } FetchModifier;
 
+typedef enum Styles {
+    Pointed,
+    Rounded,
+    Slanted,
+} Styles;
+
 typedef struct FetchOpts {
     FetchModifier modifier;
     int limit;
@@ -42,13 +48,18 @@ typedef struct ConfigSettings {
     bool fetch;
     bool debug;
     Themes theme;
+    Styles style;
     bool inARepo;
     bool statusbar;
     bool background;
     bool branchname;
+    char sep_left[4];
+    char sep_right[4];
     bool gitAccessible;
     PathState pathState;
     FetchOpts fetchConfig;
+    char left_line_sep[8];
+    char right_line_sep[4];
 } ConfigSettings;
 
 typedef struct IntTimesAndDates {
@@ -88,6 +99,7 @@ typedef struct Colors {
 } Colors;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome);
+void setSeparator(ConfigSettings* usrConfig);
 void defineColors(ConfigSettings* usrConfig, Colors* colorDefs);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
