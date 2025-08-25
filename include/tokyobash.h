@@ -53,6 +53,7 @@ typedef struct ConfigSettings {
     bool statusbar;
     bool background;
     bool branchname;
+    char t_format[1];
     char sep_left[4];
     char sep_right[4];
     bool gitAccessible;

@@ -152,7 +152,7 @@ You will need to manually create the directory `tokyobash` in `~/.config`.
 
 Try these commands in your terminal:
 
-  ```
+  ```sh
   mkdir -p ~/.config/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
   cp -n config ~/.config/tokyobash/

@@ -71,10 +71,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
                 if ((strncmp(keybuf, "theme", 5)) == 0) {
 
-                    if ((strncmp(valbuf, "tokyonight", 10)) == 0) {
-                        usrConfig->theme = Tokyonight;
-
-                    } else if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
+                    if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
                         usrConfig->theme = Catppuccin;
 
                     } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
@@ -83,11 +80,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
                 } else if ((strncmp(keybuf, "style", 5)) == 0) {
 
-                    if ((strncmp(valbuf, "pointed", 7)) == 0) {
-
-                        usrConfig->style = Pointed;
-
-                    } else if ((strncmp(valbuf, "rounded", 7)) == 0) {
+                    if ((strncmp(valbuf, "rounded", 7)) == 0) {
 
                         usrConfig->style = Rounded;
 
@@ -103,32 +96,23 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
                     if (valbuf[0] == '0') {
                         usrConfig->statusbar = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->statusbar = true;
                     }
 
                 } else if ((strncmp(keybuf, "debug", 5)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->debug = false;
-                    } else if (valbuf[0] == '1') {
+                    if (valbuf[0] == '1') {
                         usrConfig->debug = true;
                     }
+
                 } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
 
                     if (valbuf[0] == '0') {
                         usrConfig->branchname = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->branchname = true;
                     }
 
                 } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if (valbuf[1] == 'm' || valbuf[2] == 'm') {
-
-                        usrConfig->fetchConfig.modifier = Minute;
-
-                    } else if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+                    if (valbuf[1] == 'h' || valbuf[2] == 'h') {
 
                         usrConfig->fetchConfig.modifier = Hour;
 
@@ -162,23 +146,23 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
                     if (valbuf[0] == '0') {
                         usrConfig->time = false;
-                    } else if (valbuf[0] == '1') {
-                        usrConfig->time = true;
+                    }
+
+                } else if ((strncmp(keybuf, "t_format", 8)) == 0) {
+
+                    if (valbuf[0] == '1' && valbuf[1] == '2') {
+                        usrConfig->t_format[0] = 'T';
                     }
 
                 } else if ((strncmp(keybuf, "background", 10)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->background = false;
-                    } else if (valbuf[0] == '1') {
+                    if (valbuf[0] == '1') {
                         usrConfig->background = true;
                     }
 
                 } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->fetch = false;
-                    } else if (valbuf[0] == '1') {
+                    if (valbuf[0] == '1') {
                         usrConfig->fetch = true;
                     }
 

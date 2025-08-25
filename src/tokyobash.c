@@ -25,6 +25,7 @@ int main(void) {
     usrConfig.inARepo = false;
     usrConfig.style = Pointed;
     usrConfig.statusbar = true;
+    usrConfig.t_format[0] = 't';
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
@@ -37,6 +38,7 @@ int main(void) {
 
     int pathLength = strlen(path);
     int homeLength = strlen(pHome);
+
     if (strstr(path, pHome) != NULL) {
         replaceHome(path, pathLength, homeLength);
         pathLength = (pathLength - homeLength) + 1;
@@ -64,9 +66,11 @@ int main(void) {
     Colors colorDefs;
     defineColors(&usrConfig, &colorDefs);
 
-    printUsrTime(&usrConfig, &colorDefs);
+    if (pathLength > 1) {
+        remCurntDir(path, pathLength);
+    }
 
-    remCurntDir(path, pathLength);
+    printUsrTime(&usrConfig, &colorDefs);
 
     if (!usrConfig.gitAccessible || !usrConfig.inARepo) {
 
