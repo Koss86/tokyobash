@@ -13,10 +13,10 @@ void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
         if (usrConfig->background) {
             printf("%s%s%s%s ", colorDefs->usr_color, colorDefs->time_bg, usrConfig->sep_right,
                    usrConfig->left_line_sep);
-            printf("%s%s\\%c %s", colorDefs->time_txt, colorDefs->time_bg, usrConfig->t_format[0],
+            printf("%s%s\\%c %s", colorDefs->time_txt, colorDefs->time_bg, usrConfig->timeformat[0],
                    colorDefs->reset);
         } else {
-            printf("%s [\\%c]", colorDefs->time_txt, usrConfig->t_format[0]);
+            printf("%s [\\%c]", colorDefs->time_txt, usrConfig->timeformat[0]);
         }
     }
     return;

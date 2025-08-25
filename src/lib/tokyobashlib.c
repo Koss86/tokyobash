@@ -78,16 +78,23 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                         usrConfig->theme = Kanagawa;
                     }
 
-                } else if ((strncmp(keybuf, "style", 5)) == 0) {
+                } else if ((strncmp(keybuf, "background", 10)) == 0) {
 
-                    if ((strncmp(valbuf, "rounded", 7)) == 0) {
+                    if ((strncmp(valbuf, "pointed", 7)) == 0) {
 
-                        usrConfig->style = Rounded;
+                        usrConfig->background = true;
+
+                    } else if ((strncmp(valbuf, "rounded", 7)) == 0) {
+
+                        usrConfig->background = true;
+                        usrConfig->bgstyle = Rounded;
 
                     } else if ((strncmp(valbuf, "slanted", 7)) == 0) {
 
-                        usrConfig->style = Slanted;
+                        usrConfig->background = true;
+                        usrConfig->bgstyle = Slanted;
                     }
+
                 } // add else if's here for future options with char vals.
 
             } else {
@@ -148,16 +155,10 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                         usrConfig->time = false;
                     }
 
-                } else if ((strncmp(keybuf, "t_format", 8)) == 0) {
+                } else if ((strncmp(keybuf, "timeformat", 8)) == 0) {
 
                     if (valbuf[0] == '1' && valbuf[1] == '2') {
-                        usrConfig->t_format[0] = 'T';
-                    }
-
-                } else if ((strncmp(keybuf, "background", 10)) == 0) {
-
-                    if (valbuf[0] == '1') {
-                        usrConfig->background = true;
+                        usrConfig->timeformat[0] = 'T';
                     }
 
                 } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
@@ -166,6 +167,22 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                         usrConfig->fetch = true;
                     }
 
+                } else if ((strncmp(keybuf, "background", 10)) == 0) {
+
+                    if (valbuf[0] == '1') {
+
+                        usrConfig->background = true;
+
+                    } else if (valbuf[0] == '2') {
+
+                        usrConfig->background = true;
+                        usrConfig->bgstyle = Rounded;
+
+                    } else if (valbuf[0] == '3') {
+
+                        usrConfig->background = true;
+                        usrConfig->bgstyle = Slanted;
+                    }
                 } // add else if's here for future optoins with int vals.
             }
             continue;
@@ -198,7 +215,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 // Set the look of separators.
 void setSeparator(ConfigSettings* usrConfig) {
 
-    switch (usrConfig->style) {
+    switch (usrConfig->bgstyle) {
 
         case Pointed:
             strcpy(usrConfig->sep_left, "");
