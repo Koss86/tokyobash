@@ -3,7 +3,6 @@
 int main(void) {
 
     char path[PATH_MAX];
-    getcwd(path, sizeof(path));
 
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
