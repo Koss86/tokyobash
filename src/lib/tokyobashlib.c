@@ -50,12 +50,14 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             }
             continue;
         }
+
         if (c == '#') {
             incomment = true;
             continue;
         }
 
         if (c == '\n') {
+
             if (incomment) {
                 inkey = true;
                 incomment = false;
@@ -63,127 +65,101 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
                 indx = 0;
                 continue;
             }
+
             inkey = true;
             invalue = false;
             valbuf[indx] = '\0';
             indx = 0;
-            if (valbuf[0] >= 'a' && valbuf[0] <= 'z') {
 
-                if ((strncmp(keybuf, "theme", 5)) == 0) {
+            if ((strncmp(keybuf, "theme", 5)) == 0) {
 
-                    if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
-                        usrConfig->theme = Catppuccin;
+                if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
+                    usrConfig->theme = Catppuccin;
 
-                    } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
-                        usrConfig->theme = Kanagawa;
-                    }
+                } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
+                    usrConfig->theme = Kanagawa;
+                }
 
-                } else if ((strncmp(keybuf, "background", 10)) == 0) {
+            } else if ((strncmp(keybuf, "background", 10)) == 0) {
 
-                    if ((strncmp(valbuf, "pointed", 7)) == 0) {
+                if (valbuf[0] == '1') {
 
-                        usrConfig->background = true;
+                    usrConfig->background = true;
 
-                    } else if ((strncmp(valbuf, "rounded", 7)) == 0) {
+                } else if (valbuf[0] == '2') {
 
-                        usrConfig->background = true;
-                        usrConfig->bgstyle = Rounded;
+                    usrConfig->background = true;
+                    usrConfig->bgstyle = Rounded;
 
-                    } else if ((strncmp(valbuf, "slanted", 7)) == 0) {
+                } else if (valbuf[0] == '3') {
 
-                        usrConfig->background = true;
-                        usrConfig->bgstyle = Slanted;
-                    }
+                    usrConfig->background = true;
+                    usrConfig->bgstyle = Slanted;
+                }
 
-                } // add else if's here for future options with char vals.
+            } else if ((strncmp(keybuf, "statusbar", 9)) == 0) {
 
-            } else {
+                if (valbuf[0] == '0') {
+                    usrConfig->statusbar = false;
+                }
 
-                if ((strncmp(keybuf, "statusbar", 9)) == 0) {
+            } else if ((strncmp(keybuf, "debug", 5)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->statusbar = false;
-                    }
+                if (valbuf[0] == '1') {
+                    usrConfig->debug = true;
+                }
 
-                } else if ((strncmp(keybuf, "debug", 5)) == 0) {
+            } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
 
-                    if (valbuf[0] == '1') {
-                        usrConfig->debug = true;
-                    }
+                if (valbuf[0] == '0') {
+                    usrConfig->branchname = false;
+                }
 
-                } else if ((strncmp(keybuf, "branchname", 10)) == 0) {
+            } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->branchname = false;
-                    }
+                if (valbuf[1] == 'h' || valbuf[2] == 'h') {
 
-                } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
+                    usrConfig->fetchConfig.modifier = Hour;
 
-                    if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+                } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
 
-                        usrConfig->fetchConfig.modifier = Hour;
+                    usrConfig->fetchConfig.modifier = Day;
+                }
 
-                    } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
+                usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
 
-                        usrConfig->fetchConfig.modifier = Day;
-                    }
+                switch (usrConfig->fetchConfig.modifier) {
 
-                    usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
+                    case Minute:
+                        if (usrConfig->fetchConfig.limit > 60) {
+                            usrConfig->fetchConfig.limit = 60;
+                        }
+                        break;
+                    case Hour:
+                        if (usrConfig->fetchConfig.limit > 24) {
+                            usrConfig->fetchConfig.limit = 24;
+                        }
+                        break;
+                    case Day:
+                        if (usrConfig->fetchConfig.limit > 30) {
+                            usrConfig->fetchConfig.limit = 30;
+                        }
+                        break;
+                }
 
-                    switch (usrConfig->fetchConfig.modifier) {
+            } else if ((strncmp(keybuf, "time", 4)) == 0) {
 
-                        case Minute:
-                            if (usrConfig->fetchConfig.limit > 60) {
-                                usrConfig->fetchConfig.limit = 60;
-                            }
-                            break;
-                        case Hour:
-                            if (usrConfig->fetchConfig.limit > 24) {
-                                usrConfig->fetchConfig.limit = 24;
-                            }
-                            break;
-                        case Day:
-                            if (usrConfig->fetchConfig.limit > 30) {
-                                usrConfig->fetchConfig.limit = 30;
-                            }
-                            break;
-                    }
+                if (valbuf[0] == '0') {
+                    usrConfig->time = false;
+                } else if (valbuf[0] == '2') {
+                    usrConfig->timeformat[0] = 'T';
+                }
 
-                } else if ((strncmp(keybuf, "time", 4)) == 0) {
+            } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
 
-                    if (valbuf[0] == '0') {
-                        usrConfig->time = false;
-                    }
-
-                } else if ((strncmp(keybuf, "timeformat", 8)) == 0) {
-
-                    if (valbuf[0] == '1' && valbuf[1] == '2') {
-                        usrConfig->timeformat[0] = 'T';
-                    }
-
-                } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
-
-                    if (valbuf[0] == '1') {
-                        usrConfig->fetch = true;
-                    }
-
-                } else if ((strncmp(keybuf, "background", 10)) == 0) {
-
-                    if (valbuf[0] == '1') {
-
-                        usrConfig->background = true;
-
-                    } else if (valbuf[0] == '2') {
-
-                        usrConfig->background = true;
-                        usrConfig->bgstyle = Rounded;
-
-                    } else if (valbuf[0] == '3') {
-
-                        usrConfig->background = true;
-                        usrConfig->bgstyle = Slanted;
-                    }
-                } // add else if's here for future optoins with int vals.
+                if (valbuf[0] == '1') {
+                    usrConfig->fetch = true;
+                }
             }
             continue;
         }
