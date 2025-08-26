@@ -1,5 +1,7 @@
 #include "../../include/tokyobash.h"
 
+static void setSeparator(ConfigSettings* usrConfig);
+
 void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
@@ -188,8 +190,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     setSeparator(usrConfig);
     return;
 }
-// Set the look of separators.
-void setSeparator(ConfigSettings* usrConfig) {
+static void setSeparator(ConfigSettings* usrConfig) {
 
     switch (usrConfig->bgstyle) {
 

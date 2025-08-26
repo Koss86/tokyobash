@@ -100,7 +100,6 @@ typedef struct Colors {
 } Colors;
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome);
-void setSeparator(ConfigSettings* usrConfig);
 void defineColors(ConfigSettings* usrConfig, Colors* colorDefs);
 void replaceHome(char* path, int Plen, int Hlen);
 void abrvPath(char* path, int Plen);
