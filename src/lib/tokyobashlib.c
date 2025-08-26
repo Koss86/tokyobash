@@ -1,7 +1,5 @@
 #include "../../include/tokyobash.h"
 
-static void setSeparator(ConfigSettings* usrConfig);
-
 void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
@@ -186,11 +184,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             valbuf[indx++] = c;
         }
     }
+
     fclose(file);
-    setSeparator(usrConfig);
-    return;
-}
-static void setSeparator(ConfigSettings* usrConfig) {
 
     switch (usrConfig->bgstyle) {
 
@@ -220,9 +215,9 @@ static void setSeparator(ConfigSettings* usrConfig) {
             // 
             break;
     }
+
     return;
 }
-
 // If path contains $HOME, replace it with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
 
