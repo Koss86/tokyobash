@@ -22,15 +22,15 @@ int main(void) {
     usrConfig.fetch = false;
     usrConfig.debug = false;
     usrConfig.inARepo = false;
-    usrConfig.bgstyle = Pointed;
     usrConfig.statusbar = true;
-    usrConfig.timeformat[0] = 't';
+    usrConfig.bgstyle = Pointed;
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
+    usrConfig.timeformat[0] = 't';
+    usrConfig.gitAccessible = false;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
-    usrConfig.gitAccessible = false;
     usrConfig.gitAccessible = isGitAccessible();
 
     parseConfig(&usrConfig, pHome);
