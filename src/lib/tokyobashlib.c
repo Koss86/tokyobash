@@ -58,12 +58,13 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
         if (c == '\n') {
 
-            if (incomment) {
+            if (incomment && indx == 0) {
                 inkey = true;
                 incomment = false;
                 invalue = false;
-                indx = 0;
                 continue;
+            } else if (incomment) {
+                incomment = false;
             }
 
             inkey = true;
