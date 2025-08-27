@@ -195,15 +195,15 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             strcpy(usrConfig->sep_right, "");
             strcpy(usrConfig->right_line_sep, "");
             strcpy(usrConfig->left_line_sep, "");
-            // strcpy(usrConfig->thin_sep_left, "");
+            // strcpy(usrConfig->left_line_sep, "");
             break;
 
         case Rounded:
             strcpy(usrConfig->sep_left, "");
             strcpy(usrConfig->sep_right, "");
             strcpy(usrConfig->right_line_sep, "");
-            strcpy(usrConfig->left_line_sep, "");
-            // strcpy(usrConfig->thin_sep_left, "");
+            strcpy(usrConfig->left_line_sep, "");
+            // strcpy(usrConfig->left_line_sep, "");
             break;
 
         case Slanted:
@@ -211,9 +211,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             strcpy(usrConfig->sep_right, "");
             strcpy(usrConfig->right_line_sep, "");
             strcpy(usrConfig->left_line_sep, "");
-            // actual slanted thin separator
-            // left = "" right = ""
-            // 
+            //  
             break;
     }
 
