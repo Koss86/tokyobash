@@ -182,9 +182,9 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf)
 
             usrConfig->fetchConfig.modifier = Hour;
 
-        } else if (valbuf[1] == 'd' || valbuf[2] == 'd') {
+        } else if (valbuf[1] == 'm' || valbuf[2] == 'm') {
 
-            usrConfig->fetchConfig.modifier = Day;
+            usrConfig->fetchConfig.modifier = Minute;
         }
 
         usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
