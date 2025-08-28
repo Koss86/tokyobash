@@ -58,16 +58,16 @@ int main(void) {
         pathLength = ABV_PATH_LEN_T;
     }
 
+    if (pathLength > 1) {
+        remCurntDir(path, pathLength);
+    }
+
     if (usrConfig.gitAccessible) {
         usrConfig.inARepo = checkIfInRepo();
     }
 
     Colors colorDefs;
     defineColors(&usrConfig, &colorDefs);
-
-    if (pathLength > 1) {
-        remCurntDir(path, pathLength);
-    }
 
     printUsrTime(&usrConfig, &colorDefs);
 

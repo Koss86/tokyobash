@@ -59,12 +59,13 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
         }
 
         if (c == '\n') {
-
             if (incomment && indx == 0) {
+
                 inkey = true;
                 incomment = false;
                 invalue = false;
                 continue;
+
             } else if (incomment) {
                 incomment = false;
             }
@@ -73,9 +74,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             invalue = false;
             valbuf[indx] = '\0';
             indx = 0;
-
             checkKeyValue(usrConfig, &keybuf[0], &valbuf[0]);
-
             continue;
         }
 
@@ -99,7 +98,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             valbuf[indx++] = c;
         }
     }
-
     fclose(file);
 
     switch (usrConfig->bgstyle) {
@@ -179,33 +177,34 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf)
     } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
         if (valbuf[1] == 'h' || valbuf[2] == 'h') {
-
             usrConfig->fetchConfig.modifier = Hour;
-
         } else if (valbuf[1] == 'm' || valbuf[2] == 'm') {
-
             usrConfig->fetchConfig.modifier = Minute;
         }
 
         usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
 
-        switch (usrConfig->fetchConfig.modifier) {
+        if (usrConfig->fetchConfig.limit < 1) {
+            usrConfig->fetchConfig.limit = 1;
+        } else {
+            switch (usrConfig->fetchConfig.modifier) {
 
-            case Minute:
-                if (usrConfig->fetchConfig.limit > 60) {
-                    usrConfig->fetchConfig.limit = 60;
-                }
-                break;
-            case Hour:
-                if (usrConfig->fetchConfig.limit > 24) {
-                    usrConfig->fetchConfig.limit = 24;
-                }
-                break;
-            case Day:
-                if (usrConfig->fetchConfig.limit > 30) {
-                    usrConfig->fetchConfig.limit = 30;
-                }
-                break;
+                case Minute:
+                    if (usrConfig->fetchConfig.limit > 60) {
+                        usrConfig->fetchConfig.limit = 60;
+                    }
+                    break;
+                case Hour:
+                    if (usrConfig->fetchConfig.limit > 24) {
+                        usrConfig->fetchConfig.limit = 24;
+                    }
+                    break;
+                case Day:
+                    if (usrConfig->fetchConfig.limit > 30) {
+                        usrConfig->fetchConfig.limit = 30;
+                    }
+                    break;
+            }
         }
 
     } else if ((strncmp(keybuf, "time", 4)) == 0) {
@@ -224,7 +223,7 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf)
     }
     return;
 }
-// If path contains $HOME, replace it with '~'.
+// Replace $HOME with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
 
     path[0] = '~';
@@ -243,7 +242,7 @@ void replaceHome(char* path, int pathLength, int homeLength) {
     return;
 }
 // If path lenth is greater than 50, keep first 24 chars, add '...' then
-// place last 23 chars after last '.' .
+// place last 23 chars after '...' .
 void abrvPath(char* path, int pathLength) {
 
     for (int i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
