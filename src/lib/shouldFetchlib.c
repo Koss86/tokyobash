@@ -1,7 +1,8 @@
 #include "../../include/tokyobash.h"
 
-static void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
-static void getDaysInMonth(int*, int);
+static bool getFetchTime(char*, char*);
+static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
+static int getDaysInMonth(int);
 
 bool shouldFetch(FetchOpts* fetchConfig) {
 
@@ -17,6 +18,136 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     if (!strftime(curnt_time, sizeof(curnt_time), "%X", time_struct)) {
         return false;
     }
+
+    char fetch_date[11];
+    char fetch_time[9];
+
+    if (!getFetchTime(&fetch_date[0], &fetch_time[0])) {
+        return false;
+    }
+
+    IntTimesnDates time;
+    charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
+
+    FetchModifier modifier = fetchConfig->modifier;
+    int limit = fetchConfig->limit;
+
+    const int MONTHS_IN_YR = 12;
+    const int HOURS_IN_DAY = 24;
+    const int MINS_IN_HOUR = 60;
+    int days_in_month = 0;
+
+    int yearDif = 0;
+    int monthDif = 0;
+    int dayDif = 0;
+    int hrDif = 0;
+    int minDif = 0;
+
+    if (time.curnt_year != time.fetch_year) { // Year
+
+        yearDif = time.curnt_year - time.fetch_year;
+        if (yearDif > 1) {
+            return true;
+        }
+    }
+
+    if (time.curnt_month != time.fetch_month) { // Month
+
+        if (yearDif == 0) {
+            monthDif = time.curnt_month - time.fetch_month;
+        } else {
+            monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
+        }
+
+        if (monthDif > 1) {
+
+            if (modifier != Day ||
+                (time.curnt_month != 3 && time.fetch_month != 1)) {
+                return true;
+            } else {
+                days_in_month = getDaysInMonth(time.fetch_month);
+                dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
+                dayDif += 28; // add month of Febuary.
+
+                if (dayDif >= limit) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
+
+        if (monthDif == 0) {
+            dayDif = time.curnt_day - time.fetch_day;
+        } else {
+            days_in_month = getDaysInMonth(time.fetch_month);
+            dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
+        }
+
+        if (modifier == Day) {
+
+            if (dayDif > limit) {
+                return true;
+            } else if (dayDif < limit) {
+                return false;
+            }
+
+            if (time.curnt_hour < time.fetch_hour) {
+                return false;
+            } else if (time.curnt_hour > time.fetch_hour) {
+                return true;
+            }
+
+            if (time.curnt_min < time.fetch_min) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (dayDif > 1) {
+            return true;
+        }
+    }
+
+    if (modifier == Hour || time.curnt_hour != time.fetch_hour) { // Hour
+
+        if (dayDif == 0) {
+            hrDif = time.curnt_hour - time.fetch_hour;
+        } else {
+            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
+        }
+
+        if (modifier == Hour) {
+
+            if (hrDif > limit ||
+                (hrDif == limit && time.curnt_min >= time.fetch_min)) {
+                return true;
+            } else if (hrDif <= limit) {
+                return false;
+            }
+
+        } else if (hrDif > 1) {
+            return true;
+        }
+    }
+
+    if (time.curnt_min != time.fetch_min) { // Minute
+
+        if (hrDif == 0) {
+            minDif = time.curnt_min - time.fetch_min;
+        } else {
+            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
+        }
+
+        if (minDif >= limit && modifier != Day) {
+            return true;
+        }
+    }
+    return false;
+}
+static bool getFetchTime(char* fetch_date, char* fetch_time) {
 
     char c;
     int indx = 0;
@@ -35,19 +166,21 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     }
     pclose(file);
 
-    if (buf[0] == '\n') {
+    if (buf[0] == '\n' || buf[0] == '\0') {
+
         fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+
     } else {
-        int len = strlen(buf);
-        if (buf[len - 1] == '\n')
-            buf[len - 1] = '\0';
+
+        if (buf[indx - 1] == '\n') {
+            buf[indx - 1] = '\0';
+        }
         path[0] = '\0';
         strcat(path, "stat ");
         strcat(path, buf);
         strcat(path, ".git/FETCH_HEAD 2>/dev/null");
         fetch_status = popen(path, "r");
     }
-
     if (fetch_status == NULL) {
         return false;
     }
@@ -57,8 +190,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     int space = 0;
     bool inDate = false;
     bool inTime = false;
-    char fetch_date[11];
-    char fetch_time[9];
 
     while ((c = fgetc(fetch_status)) != EOF) {
 
@@ -84,6 +215,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
                 fetch_date[indx] = '\0';
                 indx = 0;
             }
+            continue;
         }
 
         if (inTime) {
@@ -94,135 +226,12 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             }
         }
     }
-
     pclose(fetch_status);
-
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
-    int days_in_month = 0;
-
-    int yearDif = 0;
-    int monthDif = 0;
-    int dayDif = 0;
-    int hrDif = 0;
-    int minDif = 0;
-    FetchModifier modifier = fetchConfig->modifier;
-    int limit = fetchConfig->limit;
-
-    IntTimesnDates time;
-    extractTimeData(&time, curnt_date, curnt_time, fetch_date, fetch_time);
-
-    if (time.curnt_year != time.fetch_year) { // Year
-
-        yearDif = time.curnt_year - time.fetch_year;
-        if (yearDif > 1) {
-            return true;
-        }
-    }
-
-    if (time.curnt_month != time.fetch_month) { // Month
-
-        if (yearDif == 0) {
-            monthDif = time.curnt_month - time.fetch_month;
-        } else {
-            monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
-        }
-
-        if (monthDif > 1) {
-
-            if ((time.curnt_month != 3 && time.fetch_month != 1) || modifier != Day) {
-                return true;
-            } else {
-                getDaysInMonth(&days_in_month, time.fetch_month);
-                dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
-                dayDif += 28; // add month of Febuary.
-
-                if (dayDif >= limit) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
-
-    if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
-
-        if (monthDif == 0) {
-            dayDif = time.curnt_day - time.fetch_day;
-        } else {
-            getDaysInMonth(&days_in_month, time.fetch_month);
-            dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
-        }
-
-        if (modifier != Day && dayDif > 1) {
-            return true;
-        }
-
-        else if (modifier == Day) {
-
-            if (dayDif > limit) {
-                return true;
-            } else if (dayDif < limit) {
-                return false;
-            }
-
-            if (time.curnt_hour < time.fetch_hour) {
-                return false;
-            }
-
-            if (time.curnt_hour > time.fetch_hour) {
-                return true;
-            }
-
-            if (time.curnt_min < time.fetch_min) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    if (modifier == Hour || time.curnt_hour != time.fetch_hour) { // Hour
-
-        if (dayDif == 0) {
-            hrDif = time.curnt_hour - time.fetch_hour;
-        } else {
-            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
-        }
-
-        if (modifier == Hour) {
-
-            if ((hrDif == limit && time.curnt_min >= time.fetch_min) || hrDif > limit) {
-                return true;
-            }
-            if (hrDif <= limit) {
-                return false;
-            }
-
-        } else if (hrDif > 1) {
-            return true;
-        }
-    }
-
-    if (time.curnt_min != time.fetch_min) { // Minute
-
-        if (hrDif == 0) {
-            minDif = time.curnt_min - time.fetch_min;
-        } else {
-            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
-        }
-
-        if (minDif >= limit) {
-            return true;
-        }
-    }
-    return false;
+    return true;
 }
-static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
-                            char fetch_date[], char fetch_time[]) {
-
+static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[],
+                          char curnt_time[], char fetch_date[],
+                          char fetch_time[]) {
     const int YR_INDX = 2;
     const int MONTH_INDX = 5;
     const int DAY_INDX = 8;
@@ -245,13 +254,12 @@ static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char cu
     dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
     return;
 }
-static void getDaysInMonth(int* daysInMonth, int month) {
+static int getDaysInMonth(int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11)
-        *daysInMonth = 30;
+        return 30;
     else if (month != 2)
-        *daysInMonth = 31;
+        return 31;
     else
-        *daysInMonth = 28;
-    return;
+        return 28;
 }

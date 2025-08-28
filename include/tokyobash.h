@@ -10,8 +10,6 @@
 #include <unistd.h>
 
 #define MAX_BRANCH_LEN 256
-#define ABV_PATH_LEN1 24
-#define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50
 
 typedef enum PathState {
@@ -107,10 +105,12 @@ void remCurntDir(char* path, int Plen);
 
 void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs);
 void printBranch(ConfigSettings* usrConfig, Colors* colorDefs);
-void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength);
-void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength);
-void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged, int committed,
-                    int fetched);
+void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+                     int pathLength);
+void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+                   int pathLength);
+void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
+                    int committed, int fetched);
 
 bool isGitAccessible(void);
 bool checkIfInRepo(void);

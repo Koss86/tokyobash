@@ -3,18 +3,21 @@
 void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
-        printf("%s%s%s", colorDefs->usr_color, usrConfig->sep_left, colorDefs->usr_txt);
-        printf("%s\\u@\\h%s%s", colorDefs->usr_bg, colorDefs->usr_color, colorDefs->reset);
+        printf("%s%s%s", colorDefs->usr_color, usrConfig->sep_left,
+               colorDefs->usr_txt);
+        printf("%s\\u@\\h%s%s", colorDefs->usr_bg, colorDefs->usr_color,
+               colorDefs->reset);
     } else {
-        printf("%s%s\\u@\\h%s:", colorDefs->bold, colorDefs->usr_txt, colorDefs->reset);
+        printf("%s%s\\u@\\h%s:", colorDefs->bold, colorDefs->usr_txt,
+               colorDefs->reset);
     }
 
     if (usrConfig->time) {
         if (usrConfig->background) {
-            printf("%s%s%s%s ", colorDefs->usr_color, colorDefs->time_bg, usrConfig->sep_right,
-                   usrConfig->left_line_sep);
-            printf("%s%s\\%c %s", colorDefs->time_txt, colorDefs->time_bg, usrConfig->timeformat[0],
-                   colorDefs->reset);
+            printf("%s%s%s%s ", colorDefs->usr_color, colorDefs->time_bg,
+                   usrConfig->sep_right, usrConfig->left_line_sep);
+            printf("%s%s\\%c %s", colorDefs->time_txt, colorDefs->time_bg,
+                   usrConfig->timeformat[0], colorDefs->reset);
         } else {
             printf("%s [\\%c]", colorDefs->time_txt, usrConfig->timeformat[0]);
         }
@@ -30,71 +33,80 @@ void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
     if (usrConfig->background) {
 
         if (usrConfig->time) {
-            printf("%s%s%s ", colorDefs->branch_bg, colorDefs->time_color, usrConfig->sep_right);
-            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg, branch_name,
-                   colorDefs->reset);
+            printf("%s%s%s ", colorDefs->branch_bg, colorDefs->time_color,
+                   usrConfig->sep_right);
+            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg,
+                   branch_name, colorDefs->reset);
         } else {
-            printf("%s%s%s%s ", colorDefs->branch_bg, colorDefs->usr_color, usrConfig->sep_right,
-                   usrConfig->left_line_sep);
-            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg, branch_name,
-                   colorDefs->reset);
+            printf("%s%s%s%s ", colorDefs->branch_bg, colorDefs->usr_color,
+                   usrConfig->sep_right, usrConfig->left_line_sep);
+            printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg,
+                   branch_name, colorDefs->reset);
         }
 
     } else {
-        printf(" %s%s %s", colorDefs->branch_txt, branch_name, colorDefs->usr_color);
+        printf(" %s%s %s", colorDefs->branch_txt, branch_name,
+               colorDefs->usr_color);
     }
     return;
 }
 
-void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength) {
+void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+                     int pathLength) {
 
     if (usrConfig->inARepo && usrConfig->branchname) {
 
-        printf("%s%s%s%s", colorDefs->path_txt, colorDefs->branch_bg, usrConfig->right_line_sep,
-               colorDefs->reset);
+        printf("%s%s%s%s", colorDefs->path_txt, colorDefs->branch_bg,
+               usrConfig->right_line_sep, colorDefs->reset);
 
     } else {
 
         if (usrConfig->time) {
 
-            printf("%s%s%s", colorDefs->time_color, colorDefs->path_bg, usrConfig->sep_right);
+            printf("%s%s%s", colorDefs->time_color, colorDefs->path_bg,
+                   usrConfig->sep_right);
             printf("%s%s", colorDefs->path_color, colorDefs->reset);
         } else {
             printf("%s%s", colorDefs->usr_color, colorDefs->path_bg);
-            printf("%s%s%s", usrConfig->sep_right, usrConfig->left_line_sep, colorDefs->reset);
+            printf("%s%s%s", usrConfig->sep_right, usrConfig->left_line_sep,
+                   colorDefs->reset);
         }
     }
 
     if (pathLength > 1) {
 
         printf("%s%s %s", colorDefs->path_txt, colorDefs->path_bg, path);
-        printf("%s%s\\W/ %s%s%s%s\\n", colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset,
-               colorDefs->path_color, usrConfig->sep_right, colorDefs->reset);
+        printf("%s%s\\W/ %s%s%s%s\\n", colorDefs->curDir_txt, colorDefs->bold,
+               colorDefs->reset, colorDefs->path_color, usrConfig->sep_right,
+               colorDefs->reset);
 
     } else {
 
         if (usrConfig->pathState == Root) {
 
             printf("%s%s %s%s\\W %s%s", colorDefs->path_txt, colorDefs->path_bg,
-                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color);
+                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset,
+                   colorDefs->path_color);
             printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
 
         } else {
 
-            printf("%s%s %s%s\\W/ %s%s", colorDefs->path_txt, colorDefs->path_bg,
-                   colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset, colorDefs->path_color);
+            printf("%s%s %s%s\\W/ %s%s", colorDefs->path_txt,
+                   colorDefs->path_bg, colorDefs->curDir_txt, colorDefs->bold,
+                   colorDefs->reset, colorDefs->path_color);
             printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
         }
     }
     return;
 }
 
-void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int pathLength) {
+void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+                   int pathLength) {
 
     if (pathLength > 1) {
 
-        printf(" %s%s%s%s\\W/\\n", colorDefs->path_txt, path, colorDefs->curDir_txt,
-               colorDefs->bold);
+        printf(" %s%s%s%s\\W/\\n", colorDefs->path_txt, path,
+               colorDefs->curDir_txt, colorDefs->bold);
 
     } else {
 
@@ -110,8 +122,8 @@ void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path, int
     return;
 }
 
-void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged, int committed,
-                    int fetched) {
+void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
+                    int committed, int fetched) {
 
     printf("  %s┗┳[%s", colorDefs->usr_color, colorDefs->reset);
 

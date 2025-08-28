@@ -62,7 +62,8 @@ void getBranch(char* branch_name) {
 int Committed(void) {
 
     FILE* file;
-    if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) == NULL) {
+    if ((file = popen("git rev-list --count @{u}.. 2>/dev/null", "r")) ==
+        NULL) {
         return -1;
     }
 
@@ -78,8 +79,9 @@ int Committed(void) {
 // Counts how many staged, unstaged, and untracked files in the repo
 // on the current branch, then assigns each value to the provided variables.
 void getStatusOf(int* staged, int* unstaged, int* untracked) {
-    FILE* file;
-    if ((file = popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r")) == NULL) {
+    FILE* file =
+        popen("git status --porcelain | grep -o '^..' 2>/dev/null", "r");
+    if (file == NULL) {
         return;
     }
     char c;
@@ -96,7 +98,8 @@ void getStatusOf(int* staged, int* unstaged, int* untracked) {
 
             if (c == '?') {
                 untr++;
-            } else if (c == 'M' || c == 'A' || c == 'D' || c == 'R' || c == 'C') {
+            } else if (c == 'M' || c == 'A' || c == 'D' || c == 'R' ||
+                       c == 'C') {
                 st++;
             }
             state = 1;
