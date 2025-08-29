@@ -1,5 +1,6 @@
 #include "../../include/tokyobash.h"
 
+static bool getFetchTime(char*, char*);
 static void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 static void getDaysInMonth(int*, int);
 
@@ -18,84 +19,18 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         return false;
     }
 
-    char c;
-    int indx = 0;
-    char buf[64];
-    char path[256];
-    FILE* file;
-    FILE* fetch_status;
-
-    file = popen("git rev-parse --show-cdup", "r");
-
-    if (file == NULL) {
-        return false;
-    }
-    while ((c = fgetc(file)) != EOF) {
-        buf[indx++] = c;
-    }
-    pclose(file);
-
-    if (buf[0] == '\n') {
-        fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
-    } else {
-        int len = strlen(buf);
-        if (buf[len - 1] == '\n')
-            buf[len - 1] = '\0';
-        path[0] = '\0';
-        strcat(path, "stat ");
-        strcat(path, buf);
-        strcat(path, ".git/FETCH_HEAD 2>/dev/null");
-        fetch_status = popen(path, "r");
-    }
-
-    if (fetch_status == NULL) {
-        return false;
-    }
-
-    indx = 0;
-    int newline = 0;
-    int space = 0;
-    bool inDate = false;
-    bool inTime = false;
     char fetch_date[11];
     char fetch_time[9];
 
-    while ((c = fgetc(fetch_status)) != EOF) {
-
-        if (c == '\n') {
-            newline++;
-            continue;
-        }
-
-        if (newline == 6 && c == ' ') {
-            space++;
-            if (space == 1) {
-                inDate = true;
-            } else if (space == 2) {
-                inTime = true;
-                inDate = false;
-            }
-            continue;
-        }
-
-        if (inDate) {
-            fetch_date[indx++] = c;
-            if (indx == 10) {
-                fetch_date[indx] = '\0';
-                indx = 0;
-            }
-        }
-
-        if (inTime) {
-            fetch_time[indx++] = c;
-            if (indx == 8) {
-                fetch_time[indx] = '\0';
-                break;
-            }
-        }
+    if (!getFetchTime(&fetch_date[0], &fetch_time[0])) {
+        return false;
     }
 
-    pclose(fetch_status);
+    IntTimesnDates time;
+    extractTimeData(&time, curnt_date, curnt_time, fetch_date, fetch_time);
+
+    FetchModifier modifier = fetchConfig->modifier;
+    int limit = fetchConfig->limit;
 
     const int MONTHS_IN_YR = 12;
     const int HOURS_IN_DAY = 24;
@@ -107,11 +42,6 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     int dayDif = 0;
     int hrDif = 0;
     int minDif = 0;
-    FetchModifier modifier = fetchConfig->modifier;
-    int limit = fetchConfig->limit;
-
-    IntTimesnDates time;
-    extractTimeData(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
     if (time.curnt_year != time.fetch_year) { // Year
 
@@ -219,6 +149,85 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         }
     }
     return false;
+}
+static bool getFetchTime(char* fetch_date, char* fetch_time) {
+
+    char c;
+    int indx = 0;
+    char buf[64];
+    char path[256];
+    FILE* file;
+    FILE* fetch_status;
+
+    file = popen("git rev-parse --show-cdup", "r");
+
+    if (file == NULL) {
+        return false;
+    }
+    while ((c = fgetc(file)) != EOF) {
+        buf[indx++] = c;
+    }
+    pclose(file);
+
+    if (buf[0] == '\n') {
+        fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+    } else {
+        int len = strlen(buf);
+        if (buf[len - 1] == '\n')
+            buf[len - 1] = '\0';
+        path[0] = '\0';
+        strcat(path, "stat ");
+        strcat(path, buf);
+        strcat(path, ".git/FETCH_HEAD 2>/dev/null");
+        fetch_status = popen(path, "r");
+    }
+    if (fetch_status == NULL) {
+        return false;
+    }
+
+    indx = 0;
+    int newline = 0;
+    int space = 0;
+    bool inDate = false;
+    bool inTime = false;
+
+    while ((c = fgetc(fetch_status)) != EOF) {
+
+        if (c == '\n') {
+            newline++;
+            continue;
+        }
+
+        if (newline == 6 && c == ' ') {
+            space++;
+            if (space == 1) {
+                inDate = true;
+            } else if (space == 2) {
+                inTime = true;
+                inDate = false;
+            }
+            continue;
+        }
+
+        if (inDate) {
+            fetch_date[indx++] = c;
+            if (indx == 10) {
+                fetch_date[indx] = '\0';
+                indx = 0;
+            }
+            continue;
+        }
+
+        if (inTime) {
+            fetch_time[indx++] = c;
+            if (indx == 8) {
+                fetch_time[indx] = '\0';
+                break;
+            }
+        }
+    }
+    pclose(fetch_status);
+    return true;
 }
 static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
                             char fetch_date[], char fetch_time[]) {
