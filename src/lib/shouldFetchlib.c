@@ -194,10 +194,10 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
         if (modifier == Hour) {
 
-            if (hrDif > limit || time.curnt_min >= time.fetch_min) {
+            if ((hrDif == limit && time.curnt_min >= time.fetch_min) || hrDif > limit) {
                 return true;
             }
-            if (hrDif < limit || time.curnt_min < time.fetch_min) {
+            if (hrDif <= limit) {
                 return false;
             }
 
