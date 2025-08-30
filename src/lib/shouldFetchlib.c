@@ -1,7 +1,7 @@
 #include "../../include/tokyobash.h"
 
 static bool getFetchTime(char*, char*);
-static void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
+static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
 static void getDaysInMonth(int*, int);
 
 bool shouldFetch(FetchOpts* fetchConfig) {
@@ -27,7 +27,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     }
 
     IntTimesnDates time;
-    extractTimeData(&time, curnt_date, curnt_time, fetch_date, fetch_time);
+    charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
     FetchModifier modifier = fetchConfig->modifier;
     int limit = fetchConfig->limit;
@@ -61,7 +61,8 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
         if (monthDif > 1) {
 
-            if ((time.curnt_month != 3 && time.fetch_month != 1) || modifier != Day) {
+            if (modifier != Day ||
+                (time.curnt_month != 3 && time.fetch_month != 1)) {
                 return true;
             } else {
                 getDaysInMonth(&days_in_month, time.fetch_month);
@@ -86,11 +87,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
-        if (modifier != Day && dayDif > 1) {
-            return true;
-        }
-
-        else if (modifier == Day) {
+        if (modifier == Day) {
 
             if (dayDif > limit) {
                 return true;
@@ -100,9 +97,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
             if (time.curnt_hour < time.fetch_hour) {
                 return false;
-            }
-
-            if (time.curnt_hour > time.fetch_hour) {
+            } else if (time.curnt_hour > time.fetch_hour) {
                 return true;
             }
 
@@ -111,6 +106,8 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             } else {
                 return true;
             }
+        } else if (dayDif > 1) {
+            return true;
         }
     }
 
@@ -124,10 +121,10 @@ bool shouldFetch(FetchOpts* fetchConfig) {
 
         if (modifier == Hour) {
 
-            if ((hrDif == limit && time.curnt_min >= time.fetch_min) || hrDif > limit) {
+            if (hrDif > limit ||
+                (hrDif == limit && time.curnt_min >= time.fetch_min)) {
                 return true;
-            }
-            if (hrDif <= limit) {
+            } else if (hrDif <= limit) {
                 return false;
             }
 
@@ -229,9 +226,9 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     pclose(fetch_status);
     return true;
 }
-static void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
-                            char fetch_date[], char fetch_time[]) {
-
+// clang-format off
+static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
+                             char fetch_date[], char fetch_time[]) { // clang-format on
     const int YR_INDX = 2;
     const int MONTH_INDX = 5;
     const int DAY_INDX = 8;
