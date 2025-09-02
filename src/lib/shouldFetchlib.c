@@ -172,8 +172,9 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
 
     } else {
 
-        if (buf[indx - 1] == '\n')
+        if (buf[indx - 1] == '\n') {
             buf[indx - 1] = '\0';
+        }
         path[0] = '\0';
         strcat(path, "stat ");
         strcat(path, buf);
@@ -228,9 +229,9 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     pclose(fetch_status);
     return true;
 }
-// clang-format off
-static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
-                             char fetch_date[], char fetch_time[]) { // clang-format on
+static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[],
+                          char curnt_time[], char fetch_date[],
+                          char fetch_time[]) {
     const int YR_INDX = 2;
     const int MONTH_INDX = 5;
     const int DAY_INDX = 8;

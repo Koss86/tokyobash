@@ -1,6 +1,7 @@
 #include "../../include/tokyobash.h"
 
-static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf);
+static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
+                          char* valbuf);
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
@@ -107,7 +108,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             strcpy(usrConfig->sep_right, "");
             strcpy(usrConfig->right_line_sep, "");
             strcpy(usrConfig->left_line_sep, "");
-            // strcpy(usrConfig->left_line_sep, "");
+            //  ""
             break;
 
         case Rounded:
@@ -115,7 +116,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             strcpy(usrConfig->sep_right, "");
             strcpy(usrConfig->right_line_sep, "");
             strcpy(usrConfig->left_line_sep, "");
-            // strcpy(usrConfig->left_line_sep, "");
+            // ""
             break;
 
         case Slanted:
@@ -128,7 +129,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     }
     return;
 }
-static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf) {
+static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
+                          char* valbuf) {
 
     if ((strncmp(keybuf, "theme", 5)) == 0) {
 
@@ -177,16 +179,22 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf, char* valbuf)
     } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
         if (valbuf[1] == 'h' || valbuf[2] == 'h') {
+
             usrConfig->fetchConfig.modifier = Hour;
+
         } else if (valbuf[1] == 'm' || valbuf[2] == 'm') {
+
             usrConfig->fetchConfig.modifier = Minute;
         }
 
         usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
 
         if (usrConfig->fetchConfig.limit < 1) {
+
             usrConfig->fetchConfig.limit = 1;
+
         } else {
+
             switch (usrConfig->fetchConfig.modifier) {
 
                 case Minute:
@@ -313,7 +321,7 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
             }
 
             strcpy(colorDefs->time_color, "\\[\\e[38;2;65;72;104m\\]"); // slate
-            strcpy(colorDefs->time_bg, "\\[\\e[48;2;65;72;104m\\]");    // slate_bg
+            strcpy(colorDefs->time_bg, "\\[\\e[48;2;65;72;104m\\]"); // slate_bg
             strcpy(colorDefs->branch_color,
                    "\\[\\e[38;2;86;95;137m\\]"); // light_slate
             strcpy(colorDefs->branch_bg,
@@ -347,12 +355,12 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
 
         strcpy(colorDefs->time_txt, "\\[\\e[38;5;117m\\]");          // sky_blue
         strcpy(colorDefs->branch_txt, "\\[\\e[38;2;98;146;182m\\]"); // smoke
-
-        strcpy(colorDefs->path_txt, "\\[\\e[38;2;122;162;247m\\]");   // blue
-        strcpy(colorDefs->curDir_txt, "\\[\\e[38;2;140;172;248m\\]"); // light_blue
+        strcpy(colorDefs->path_txt, "\\[\\e[38;2;122;162;247m\\]");  // blue
+        strcpy(colorDefs->curDir_txt,
+               "\\[\\e[38;2;140;172;248m\\]"); // light_blue
 
         strcpy(colorDefs->unstaged, "\\[\\e[38;2;255;149;20m\\]"); // orange
-        strcpy(colorDefs->staged, "\\[\\e[38;2;212;181;248m\\]");  // mocha_mauve
+        strcpy(colorDefs->staged, "\\[\\e[38;2;212;181;248m\\]"); // mocha_mauve
         strcpy(colorDefs->committed, "\\[\\e[38;2;87;214;87m\\]"); // lime_green
 
     } else if (usrConfig->theme == Catppuccin) {
@@ -390,10 +398,14 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
                     break;
             }
 
-            strcpy(colorDefs->time_color, "\\[\\e[38;2;69;71;90m\\]"); // surface1
-            strcpy(colorDefs->time_bg, "\\[\\e[48;2;69;71;90m\\]");    // surface1_bg
-            strcpy(colorDefs->branch_color, "\\[\\e[38;2;88;91;112m\\]"); // surface2
-            strcpy(colorDefs->branch_bg, "\\[\\e[48;2;88;91;112m\\]"); // surface2_bg
+            strcpy(colorDefs->time_color,
+                   "\\[\\e[38;2;69;71;90m\\]"); // surface1
+            strcpy(colorDefs->time_bg,
+                   "\\[\\e[48;2;69;71;90m\\]"); // surface1_bg
+            strcpy(colorDefs->branch_color,
+                   "\\[\\e[38;2;88;91;112m\\]"); // surface2
+            strcpy(colorDefs->branch_bg,
+                   "\\[\\e[48;2;88;91;112m\\]"); // surface2_bg
             strcpy(colorDefs->path_color, colorDefs->branch_color);
             strcpy(colorDefs->path_bg, colorDefs->branch_bg);
 
@@ -421,15 +433,19 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
             }
         }
 
-        strcpy(colorDefs->time_txt, "\\[\\e[38;2;245;224;220m\\]");   // rosewater
-        strcpy(colorDefs->branch_txt, "\\[\\e[38;2;249;226;175m\\]"); // mocha_yellow
+        strcpy(colorDefs->time_txt, "\\[\\e[38;2;245;224;220m\\]"); // rosewater
+        strcpy(colorDefs->branch_txt,
+               "\\[\\e[38;2;249;226;175m\\]"); // mocha_yellow
 
-        strcpy(colorDefs->path_txt, "\\[\\e[38;2;212;181;248m\\]");   // mocha_mauve
-        strcpy(colorDefs->curDir_txt, "\\[\\e[38;2;222;197;250m\\]"); // light_mauve
+        strcpy(colorDefs->path_txt,
+               "\\[\\e[38;2;212;181;248m\\]"); // mocha_mauve
+        strcpy(colorDefs->curDir_txt,
+               "\\[\\e[38;2;222;197;250m\\]"); // light_mauve
 
-        strcpy(colorDefs->unstaged, "\\[\\e[38;2;255;158;100m\\]"); // sandy_orange
-        strcpy(colorDefs->staged, "\\[\\e[38;2;122;162;247m\\]");   // blue
-        strcpy(colorDefs->committed, "\\[\\e[38;2;87;214;87m\\]");  // lime_green
+        strcpy(colorDefs->unstaged,
+               "\\[\\e[38;2;255;158;100m\\]"); // sandy_orange
+        strcpy(colorDefs->staged, "\\[\\e[38;2;122;162;247m\\]");  // blue
+        strcpy(colorDefs->committed, "\\[\\e[38;2;87;214;87m\\]"); // lime_green
 
     } else { // Kanagawa
 
@@ -496,16 +512,20 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
                     break;
             }
         }
-        strcpy(colorDefs->time_txt, "\\[\\e[38;2;126;156;216m\\]");   // crystal_blue
-        strcpy(colorDefs->branch_txt, "\\[\\e[38;2;192;163;110m\\]"); // boat_yellow2
+        strcpy(colorDefs->time_txt,
+               "\\[\\e[38;2;126;156;216m\\]"); // crystal_blue
+        strcpy(colorDefs->branch_txt,
+               "\\[\\e[38;2;192;163;110m\\]"); // boat_yellow2
 
-        strcpy(colorDefs->path_txt, "\\[\\e[38;2;230;196;132m\\]"); // carp_yellow
+        strcpy(colorDefs->path_txt,
+               "\\[\\e[38;2;230;196;132m\\]"); // carp_yellow
         strcpy(colorDefs->curDir_txt,
                "\\[\\e[38;2;234;201;145m\\]"); // light_carp_yellow
 
-        strcpy(colorDefs->unstaged, "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
-        strcpy(colorDefs->staged, "\\[\\e[38;2;122;162;247m\\]");   // blue
-        strcpy(colorDefs->committed, "\\[\\e[38;2;87;214;87m\\]");  // lime_green
+        strcpy(colorDefs->unstaged,
+               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+        strcpy(colorDefs->staged, "\\[\\e[38;2;122;162;247m\\]");  // blue
+        strcpy(colorDefs->committed, "\\[\\e[38;2;87;214;87m\\]"); // lime_green
     }
     return;
 }

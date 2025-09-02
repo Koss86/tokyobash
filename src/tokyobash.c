@@ -111,11 +111,14 @@ int main(void) {
                 fetched = 2;
             }
 
-            if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 || committed > 0) {
-                printStatusBar(&colorDefs, untracked, unstaged, staged, committed, fetched);
+            if (untracked > 0 || fetched > 0 || unstaged > 0 || staged > 0 ||
+                committed > 0) {
+                printStatusBar(&colorDefs, untracked, unstaged, staged,
+                               committed, fetched);
             }
         }
     }
-    printf("  %s%s┗>$ %s", colorDefs.bold, colorDefs.usr_color, colorDefs.reset);
+    printf("  %s%s┗>$ %s", colorDefs.bold, colorDefs.usr_color,
+           colorDefs.reset);
     return 0;
 }
