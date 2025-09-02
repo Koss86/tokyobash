@@ -26,8 +26,8 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
         strcat(path, filepath);
     }
 
-    FILE* file = fopen(path, "r");
-    if (file == NULL) {
+    FILE* configFile = fopen(path, "r");
+    if (configFile == NULL) {
         return;
     }
 
@@ -40,7 +40,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     char keybuf[64];
     char valbuf[64];
 
-    while ((c = fgetc(file)) != EOF) {
+    while ((c = fgetc(configFile)) != EOF) {
 
         if (c == ' ' || c == '/' || c == '\'' || c == '"') {
             if (c == '/') {
@@ -98,7 +98,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             valbuf[indx++] = c;
         }
     }
-    fclose(file);
+    fclose(configFile);
 
     switch (usrConfig->bgstyle) {
 
@@ -244,6 +244,9 @@ void replaceHome(char* path, int pathLength, int homeLength) {
 // If path lenth is greater than 50, keep first 24 chars, add '...' then
 // place last 23 chars after '...' .
 void abrvPath(char* path, int pathLength) {
+
+    const int ABV_PATH_LEN1 = 24;
+    const int ABV_PATH_LEN2 = 23;
 
     for (int i = ABV_PATH_LEN1; i < ABV_PATH_LEN1 + 3; i++) {
         path[i] = '.';

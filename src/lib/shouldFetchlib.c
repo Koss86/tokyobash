@@ -2,7 +2,7 @@
 
 static bool getFetchTime(char*, char*);
 static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
-static void getDaysInMonth(int*, int);
+static int getDaysInMonth(int);
 
 bool shouldFetch(FetchOpts* fetchConfig) {
 
@@ -65,7 +65,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
                 (time.curnt_month != 3 && time.fetch_month != 1)) {
                 return true;
             } else {
-                getDaysInMonth(&days_in_month, time.fetch_month);
+                days_in_month = getDaysInMonth(time.fetch_month);
                 dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
                 dayDif += 28; // add month of Febuary.
 
@@ -83,7 +83,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         if (monthDif == 0) {
             dayDif = time.curnt_day - time.fetch_day;
         } else {
-            getDaysInMonth(&days_in_month, time.fetch_month);
+            days_in_month = getDaysInMonth(time.fetch_month);
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
 
@@ -166,12 +166,14 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     }
     pclose(file);
 
-    if (buf[0] == '\n') {
+    if (buf[0] == '\n' || buf[0] == '\0') {
+
         fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
+
     } else {
-        int len = strlen(buf);
-        if (buf[len - 1] == '\n')
-            buf[len - 1] = '\0';
+
+        if (buf[indx - 1] == '\n')
+            buf[indx - 1] = '\0';
         path[0] = '\0';
         strcat(path, "stat ");
         strcat(path, buf);
@@ -251,13 +253,12 @@ static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[], char curn
     dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
     return;
 }
-static void getDaysInMonth(int* daysInMonth, int month) {
+static int getDaysInMonth(int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11)
-        *daysInMonth = 30;
+        return 30;
     else if (month != 2)
-        *daysInMonth = 31;
+        return 31;
     else
-        *daysInMonth = 28;
-    return;
+        return 28;
 }

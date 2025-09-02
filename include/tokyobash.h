@@ -10,8 +10,6 @@
 #include <unistd.h>
 
 #define MAX_BRANCH_LEN 256
-#define ABV_PATH_LEN1 24
-#define ABV_PATH_LEN2 23
 #define ABV_PATH_LEN_T 50
 
 typedef enum PathState {
