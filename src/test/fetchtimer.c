@@ -11,10 +11,10 @@ typedef struct {
 
 bool shouldFetchTest(Tester* fetchConfig);
 void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
-void getDaysInMonth(int* daysInMonth, int month);
+int getDaysInMonth(int month);
 void generateTests(Tester* times);
 
-#define TEST_SIZE 44
+#define TEST_SIZE 45
 
 int main() {
 
@@ -170,7 +170,7 @@ bool shouldFetchTest(Tester* fetchConfig) {
                 (time.curnt_month != 3 && time.fetch_month != 1)) {
                 return true;
             } else {
-                getDaysInMonth(&days_in_month, time.fetch_month);
+                days_in_month = getDaysInMonth(time.fetch_month);
                 dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
                 dayDif += 28; // add month of Febuary.
                 //////////// REMOVE ///////////////
@@ -191,7 +191,7 @@ bool shouldFetchTest(Tester* fetchConfig) {
         if (monthDif == 0) {
             dayDif = time.curnt_day - time.fetch_day;
         } else {
-            getDaysInMonth(&days_in_month, time.fetch_month);
+            days_in_month = getDaysInMonth(time.fetch_month);
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
         }
         //////////// REMOVE ///////////////
@@ -289,8 +289,8 @@ bool shouldFetchTest(Tester* fetchConfig) {
     return false;
 }
 
-void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_time[],
-                     char fetch_date[], char fetch_time[]) {
+void extractTimeData(IntTimesnDates* dateData, char curnt_date[],
+                     char curnt_time[], char fetch_date[], char fetch_time[]) {
 
     const int YR_INDX = 2;
     const int MONTH_INDX = 5;
@@ -314,7 +314,7 @@ void extractTimeData(IntTimesnDates* dateData, char curnt_date[], char curnt_tim
     dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
 }
 
-void getDaysInMonth(int* daysInMonth, int month) {
+int getDaysInMonth(int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         *daysInMonth = 30;
@@ -328,6 +328,15 @@ void getDaysInMonth(int* daysInMonth, int month) {
 void generateTests(Tester* times) {
     int in = 0;
     ///////// Day Tests ///////////
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 5;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-08-05");
+    strcpy(times[in].fetch_date, "2025-02-15");
+    strcpy(times[in].curnt_time, "00:01:43");
+    strcpy(times[in].fetch_time, "13:59:43");
+    in++;
+
     times[in].settings.modifier = Day;
     times[in].settings.limit = 1;
     times[in].expected = false;
