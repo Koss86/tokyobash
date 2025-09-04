@@ -14,7 +14,7 @@ void extractTimeData(IntTimesnDates*, char[], char[], char[], char[]);
 int getDaysInMonth(int month);
 void generateTests(Tester* times);
 
-#define TEST_SIZE 45
+#define TEST_SIZE 47
 
 int main() {
 
@@ -282,7 +282,7 @@ bool shouldFetchTest(Tester* fetchConfig) {
         //////////// REMOVE ///////////////
         printf("in Minute: minDif = %i\n", minDif);
         ///////////////////////////////////
-        if (minDif >= limit) {
+        if (minDif >= limit && modifier != Day) {
             return true;
         }
     }
@@ -317,11 +317,11 @@ void extractTimeData(IntTimesnDates* dateData, char curnt_date[],
 int getDaysInMonth(int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {
-        *daysInMonth = 30;
+        return 30;
     } else if (month != 2) {
-        *daysInMonth = 31;
+        return 31;
     } else {
-        *daysInMonth = 28;
+        return 28;
     }
 }
 // Be sure to update TEST_SIZE after adding or removing tests.
@@ -508,6 +508,24 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 3;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2026-04-04");
+    strcpy(times[in].fetch_date, "2025-04-01");
+    strcpy(times[in].curnt_time, "23:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Day;
+    times[in].settings.limit = 1;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-04-01");
+    strcpy(times[in].curnt_time, "23:51:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
     ///////// Hour Tests ///////////
     times[in].settings.modifier = Hour;
     times[in].settings.limit = 1;
@@ -516,6 +534,15 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_date, "2025-04-01");
     strcpy(times[in].curnt_time, "12:51:43");
     strcpy(times[in].fetch_time, "12:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "00:58:43");
+    strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
     times[in].settings.modifier = Hour;
@@ -542,15 +569,6 @@ void generateTests(Tester* times) {
     strcpy(times[in].curnt_date, "2025-04-01");
     strcpy(times[in].fetch_date, "2025-03-31");
     strcpy(times[in].curnt_time, "02:58:43");
-    strcpy(times[in].fetch_time, "23:50:43");
-    in++;
-
-    times[in].settings.modifier = Hour;
-    times[in].settings.limit = 1;
-    times[in].expected = true;
-    strcpy(times[in].curnt_date, "2025-04-01");
-    strcpy(times[in].fetch_date, "2025-03-31");
-    strcpy(times[in].curnt_time, "00:58:43");
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
@@ -634,6 +652,15 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_date, "2025-03-31");
     strcpy(times[in].curnt_time, "00:00:43");
     strcpy(times[in].fetch_time, "23:59:43");
+    in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 1;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-04-01");
+    strcpy(times[in].fetch_date, "2025-04-01");
+    strcpy(times[in].curnt_time, "10:25:43");
+    strcpy(times[in].fetch_time, "10:24:43");
     in++;
 
     times[in].settings.modifier = Minute;
@@ -724,14 +751,5 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_date, "2025-12-31");
     strcpy(times[in].curnt_time, "00:01:43");
     strcpy(times[in].fetch_time, "23:59:43");
-    in++;
-
-    times[in].settings.modifier = Day;
-    times[in].settings.limit = 3;
-    times[in].expected = true;
-    strcpy(times[in].curnt_date, "2026-04-04");
-    strcpy(times[in].fetch_date, "2025-04-01");
-    strcpy(times[in].curnt_time, "23:58:43");
-    strcpy(times[in].fetch_time, "23:50:43");
     in++;
 }
