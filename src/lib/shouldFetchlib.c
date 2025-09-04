@@ -141,7 +141,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
             minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
         }
 
-        if (minDif >= limit) {
+        if (minDif >= limit && modifier != Day) {
             return true;
         }
     }
