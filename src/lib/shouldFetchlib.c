@@ -1,8 +1,8 @@
 #include "../../include/tokyobash.h"
 
-static bool checkTimeDay(FetchOpts*, IntTimesnDates*);
-static bool checkTimeHr(FetchOpts*, IntTimesnDates*);
-static bool checkTimeMin(FetchOpts*, IntTimesnDates*);
+static bool checkTimeDay(int, IntTimesnDates*);
+static bool checkTimeHr(int, IntTimesnDates*);
+static bool checkTimeMin(int, IntTimesnDates*);
 static bool getFetchTime(char*, char*);
 static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
 static int getDaysInMonth(int);
@@ -32,28 +32,29 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     IntTimesnDates time;
     charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
+    int limit = fetchConfig->limit;
+
     switch (fetchConfig->modifier) {
         case Day:
-            if (checkTimeDay(fetchConfig, &time)) {
+            if (checkTimeDay(limit, &time)) {
                 return true;
             }
             break;
         case Hour:
-            if (checkTimeHr(fetchConfig, &time)) {
+            if (checkTimeHr(limit, &time)) {
                 return true;
             }
             break;
         case Minute:
-            if (checkTimeMin(fetchConfig, &time)) {
+            if (checkTimeMin(limit, &time)) {
                 return true;
             }
             break;
     }
     return false;
 }
-static bool checkTimeDay(FetchOpts* fetchConfig, IntTimesnDates* time) {
+static bool checkTimeDay(int limit, IntTimesnDates* time) {
 
-    int limit = fetchConfig->limit;
     const int MONTHS_IN_YR = 12;
     int days_in_month = 0;
     int yearDif = 0;
@@ -110,9 +111,8 @@ static bool checkTimeDay(FetchOpts* fetchConfig, IntTimesnDates* time) {
     }
     return false;
 }
-static bool checkTimeHr(FetchOpts* fetchConfig, IntTimesnDates* time) {
+static bool checkTimeHr(int limit, IntTimesnDates* time) {
 
-    int limit = fetchConfig->limit;
     const int MONTHS_IN_YR = 12;
     const int HOURS_IN_DAY = 24;
     int days_in_month = 0;
@@ -165,9 +165,8 @@ static bool checkTimeHr(FetchOpts* fetchConfig, IntTimesnDates* time) {
     }
     return false;
 }
-static bool checkTimeMin(FetchOpts* fetchConfig, IntTimesnDates* time) {
+static bool checkTimeMin(int limit, IntTimesnDates* time) {
 
-    int limit = fetchConfig->limit;
     const int MONTHS_IN_YR = 12;
     const int HOURS_IN_DAY = 24;
     const int MINS_IN_HOUR = 60;
