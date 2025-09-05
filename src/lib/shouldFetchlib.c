@@ -32,21 +32,19 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     IntTimesnDates time;
     charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
-    int limit = fetchConfig->limit;
-
     switch (fetchConfig->modifier) {
         case Day:
-            if (checkTimeDay(limit, &time)) {
+            if (checkTimeDay(fetchConfig->limit, &time)) {
                 return true;
             }
             break;
         case Hour:
-            if (checkTimeHr(limit, &time)) {
+            if (checkTimeHr(fetchConfig->limit, &time)) {
                 return true;
             }
             break;
         case Minute:
-            if (checkTimeMin(limit, &time)) {
+            if (checkTimeMin(fetchConfig->limit, &time)) {
                 return true;
             }
             break;
