@@ -1,32 +1,72 @@
 # Tokyobash
 A configurable bash prompt inspired by the [Tokyo Night](https://www.github.com/folke/tokyonight.nvim) Theme for [Neovim](http://www.neovim.io).
 
-Requires a [Nerd Font](https://www.nerdfonts.com) to use icons.
+Requires a [Nerd Font](https://www.nerdfonts.com)
 ## Features
 
-### Highlights
+### 🖌️ Highlighting
 Highlights the current directory and changes the color of User@Host depending on whether you're in HOME/, root/, or /mnt.
 
   <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/c5efd9d7-79af-48c2-9617-d478631ee710" />
 
+  #
+
+### 🎨 Themes
+There are currently three themes to choose from.
+
+* Tokyonight:
+
+  <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/b97f6193-910f-4814-bcd5-e7d1ef05fc1c" />
+
+* Catppuccin:
+
+  <img width="485" height="164" alt="cat_noBg_spread" src="https://github.com/user-attachments/assets/b0428e1a-1eab-4153-a92f-eefa85b9daeb" />
+
+* Kanagawa:
+
+  <img width="487" height="163" alt="kan_noBg_spread" src="https://github.com/user-attachments/assets/dacd4d04-8dbc-4e26-bf34-f6851e75e4e4" />
+
+Themes can be changed via the `theme` [config](#config) setting.
+
 #
 
-### Abbreviate Path
+#### 🌈 Backgrounds
+  
+  There are optional backgrounds that can be enable via the `background` [Config](#config) setting.
+
+  There are three variatons to choose from: Pointed, Rounded, and Slanted. Pointed is shown below.
+  
+
+  * Tokyonight:
+  
+    <img width="544" height="163" alt="tok_Bg_spread" src="https://github.com/user-attachments/assets/fb3a5426-da87-4718-bb3e-5f623ebdd757" />
+
+* Catppuccin:
+
+  <img width="545" height="163" alt="cat_Bg_spread" src="https://github.com/user-attachments/assets/785798e4-41eb-4418-97ea-27de9bab1b60" />
+
+* Kanagawa:
+
+  <img width="546" height="163" alt="kan_Bg_spread" src="https://github.com/user-attachments/assets/a45d4003-cbb4-45f7-9bc9-ae684b6c1cbf" />
+
+#
+
+### 🤏 Abbreviate Path
 Abbreviates paths longer than 50 characters.
 
 <img width="788" height="366" alt="tok_noBg_abv" src="https://github.com/user-attachments/assets/b8dd67cf-cb70-4d86-a2d6-cab5095f67b9" />
 
 #
 
-### Git Branch Name
+### 🌱 Branch Name
 If the current directory is a repository it will display the current branch name.
 
  <img width="485" height="46" alt="tok_branchName" src="https://github.com/user-attachments/assets/443d36ad-83c0-4d88-a008-dad27f7dc332" />
 
 #
 
-### Git Status Bar
-An icon bar that shows changes in the current repository.
+### 🔍 Status Bar
+An icon bar that displays changes in the current repository.
 
 <img width="487" height="65" alt="statusbar_clean" src="https://github.com/user-attachments/assets/b3596724-b5d4-4689-aad7-8a27bfdd711a" />
 
@@ -40,73 +80,29 @@ Displays (in order):
 
 <img width="487" height="126" alt="tokyobash_statusbar_explained" src="https://github.com/user-attachments/assets/ef044331-ef41-4f80-a320-caa8c8689eb5" />
 
-The status bar will only display when there are changes to the repository. And only items that were changed.
 > [!NOTE]
 >
-> The feature to fetch remote commits is disabled by default.
->
-> But it can be enabled via the `fetch` [Config](#config) setting.
+> The feature to auto-fetch commits is disabled by default.
+> 
+> Can be enabled via the `fetch` [Config](#config) setting.
+> 
+> And modified with the `fetchtimer` [Config](#config) setting.
 
-#
+## 🔧 Installation
 
-### Themes
-You can currently choose between 3 different themes.
+The easiest way would be to have make and gcc/clang installed on your system.
+For instructions on how to install without make click [here](#no-make).
 
-#### Tokyonight:
-
-  <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/b97f6193-910f-4814-bcd5-e7d1ef05fc1c" />
-
-#### Catppuccin:
-
-<img width="485" height="164" alt="cat_noBg_spread" src="https://github.com/user-attachments/assets/b0428e1a-1eab-4153-a92f-eefa85b9daeb" />
-
-#### Kanagawa:
-
-<img width="487" height="163" alt="kan_noBg_spread" src="https://github.com/user-attachments/assets/dacd4d04-8dbc-4e26-bf34-f6851e75e4e4" />
-
-Can be changed via the `theme` [Config](#config) setting.
-
-#
-
-### Backgrounds
-  
-  There are optional backgrounds you can enable via the `background` [Config](#config) setting.
-
-  There are three variatons to choose from: Pointed, Rounded, and Slanted. Pointed is shown below.
-  
-
-  #### Tokyonight:
-  
-  <img width="544" height="163" alt="tok_Bg_spread" src="https://github.com/user-attachments/assets/fb3a5426-da87-4718-bb3e-5f623ebdd757" />
-
-#
-
-#### Catppuccin:
-
-<img width="545" height="163" alt="cat_Bg_spread" src="https://github.com/user-attachments/assets/785798e4-41eb-4418-97ea-27de9bab1b60" />
-
-#
-
-#### Kanagawa:
-
-<img width="546" height="163" alt="kan_Bg_spread" src="https://github.com/user-attachments/assets/a45d4003-cbb4-45f7-9bc9-ae684b6c1cbf" />
+In the root of the tokyobash repository, there are three commands to use:
 
 
-## Installation
+* `make` Will build the tokyobash binary and place it in `/bin` in the root of the tokyobash repository.
 
-The easiest way would be to have make and gcc or clang installed on your system.
-Click [Here](#no-make) for instructions on how to install without make.
+- `make install` Will build tokyobash, create and then move the config file to `$XDG_CONFIG_HOME/tokyobash` if one is not already present.
+   * The config directory defaults to `$XDG_CONFIG_HOME`. If for any reason `$XDG_CONFIG_HOME` can't be resolved, the config directory will default to `$HOME/.config`.
 
-In the root of the tokyobash repository, there are 3 commands to use:
+* `make install prefix=custom/path` Will build tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
 
-
-  -`make` Will build the tokyobash binary and place it in `repo_location/tokyobash/bin`.
-
-  -`make install` Will build tokyobash and create then move the config file to `$HOME/.config/tokyobash` if one is not already present:
-
-  - The config directory defaults to `$HOME/.config`, but can be changed with `$XDG_CONFIG_HOME`.
-
-  -`make install prefix=custom/path` Will build tokyobash, create and move config file, then move tokyobash to `prefix/bin`.
   
 #
 
@@ -126,7 +122,7 @@ Replace `path/to/tokyobash/binary` above with the acutal path to the compiled to
 
 Now save and restart your terminal!
 
-## Config
+## ⚙️ Config 
 
 Config file uses standard key = value pairs.
 
@@ -154,17 +150,16 @@ fetchtimer  = 1d # See below.
 
 #### For example:
 
-  - If `fetchtimer = 25m` repository will update after 25 minutes.
-  - If `fetchtimer = 2h` repository will update after 2 hours.
-  - If `fetchtimer = 3d` repository will update after 3 days.
+  - If `fetchtimer = 25m` repository will update after 25 minutes, when the prompt reloads.
+  - If `fetchtimer = 2h` repository will update after 2 hours, when the prompt reloads.
+  - If `fetchtimer = 3d` repository will update after 3 days, when the prompt reloads.
   - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
 
+## 🚫 No Make
 
-## No Make
+All you really need is a C compiler to build Tokyobash.
 
-You will still need to have gcc or clang.
-
-But if you dont have make, you can use these commands in the top level of the tokyobash repository.
+So, if you dont have make you can use these commands in the top level of the tokyobash repository.
 
 For gcc:
 ```sh
@@ -186,20 +181,21 @@ clang -c src/lib/shouldFetchlib.c
 clang -c src/lib/printlib.c
 clang -O3 tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o -o tokyobash
 ```
-You don't need a config file if you don't plan on changing the defaults. But if you do want to change the defaults, you will need to manually create the directory `tokyobash` in `~/.config`.
+You don't need a config file if you don't plan on changing the defaults. But, if you do want to change the defaults
+you will need to manually create the directory `tokyobash` in `~/.config` or wherever you may have `$XDG_CONFIG_HOME` set.
 
 Try these commands in your terminal:
 
   ```sh
-  mkdir -p ~/.config/tokyobash/
+  mkdir -p $XDG_CONFIG_HOME/tokyobash/
   printf 'theme = tokyonight\n#theme = catppuccin\n#theme = kanagawa\n\nbackground = 0\ntime = 1\nbranchname = 1\nstatusbar = 0\nfetch = 0\nfetchtimer = 1d' > ./config
-  cp -n config ~/.config/tokyobash/
+  cp -n config $XDG_CONFIG_HOME/tokyobash/
   rm config
   ```
 
 #
 
-### Disclaimer
+### 🚧 Disclaimer
 I'm not sure if this will run on all linux distros. I believe it should work on most if not all.
 
 I'm also new to programming so any feedback is welcomed.
