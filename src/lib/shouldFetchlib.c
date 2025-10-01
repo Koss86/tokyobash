@@ -1,5 +1,9 @@
 #include "../../include/tokyobash.h"
 
+#define MONTHS_IN_YR 12
+#define HOURS_IN_DAY 24
+#define MINS_IN_HOUR 60
+
 static bool checkTimeDay(int, IntTimesnDates*);
 static bool checkTimeHr(int, IntTimesnDates*);
 static bool checkTimeMin(int, IntTimesnDates*);
@@ -33,27 +37,22 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
     switch (fetchConfig->modifier) {
+
         case Day:
-            if (checkTimeDay(fetchConfig->limit, &time)) {
-                return true;
-            }
-            break;
+            return checkTimeDay(fetchConfig->limit, &time);
+
         case Hour:
-            if (checkTimeHr(fetchConfig->limit, &time)) {
-                return true;
-            }
-            break;
+            return checkTimeHr(fetchConfig->limit, &time);
+
         case Minute:
-            if (checkTimeMin(fetchConfig->limit, &time)) {
-                return true;
-            }
-            break;
+            return checkTimeMin(fetchConfig->limit, &time);
     }
+
     return false;
 }
+
 static bool checkTimeDay(int limit, IntTimesnDates* time) {
 
-    const int MONTHS_IN_YR = 12;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -109,10 +108,9 @@ static bool checkTimeDay(int limit, IntTimesnDates* time) {
     }
     return false;
 }
+
 static bool checkTimeHr(int limit, IntTimesnDates* time) {
 
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -163,11 +161,9 @@ static bool checkTimeHr(int limit, IntTimesnDates* time) {
     }
     return false;
 }
+
 static bool checkTimeMin(int limit, IntTimesnDates* time) {
 
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -223,37 +219,40 @@ static bool checkTimeMin(int limit, IntTimesnDates* time) {
     }
     return false;
 }
+
 static bool getFetchTime(char* fetch_date, char* fetch_time) {
 
     char c;
     int indx = 0;
-    char buf[64];
+    char dist_buf[64];
     char path[256];
-    FILE* file;
+    FILE* dist_to_root;
     FILE* fetch_status;
 
-    file = popen("git rev-parse --show-cdup", "r");
+    dist_to_root = popen("git rev-parse --show-cdup", "r");
 
-    if (file == NULL) {
+    if (dist_to_root == NULL) {
         return false;
     }
-    while ((c = fgetc(file)) != EOF) {
-        buf[indx++] = c;
+    if ((fgets(&dist_buf[0], 64, dist_to_root)) == NULL) {
+        return false;
     }
-    pclose(file);
 
-    if (buf[0] == '\n' || buf[0] == '\0') {
+    pclose(dist_to_root);
+
+    if (dist_buf[0] == '\n' || dist_buf[0] == '\0') {
 
         fetch_status = popen("stat .git/FETCH_HEAD 2>/dev/null", "r");
 
     } else {
 
-        if (buf[indx - 1] == '\n') {
-            buf[indx - 1] = '\0';
+        int len = strlen(dist_buf);
+        if (dist_buf[len - 1] == '\n') {
+            dist_buf[len - 1] = '\0';
         }
         path[0] = '\0';
         strcat(path, "stat ");
-        strcat(path, buf);
+        strcat(path, dist_buf);
         strcat(path, ".git/FETCH_HEAD 2>/dev/null");
         fetch_status = popen(path, "r");
     }
