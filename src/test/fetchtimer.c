@@ -1,5 +1,9 @@
 #include "../../include/tokyobash.h"
 
+#define MONTHS_IN_YR 12
+#define HOURS_IN_DAY 24
+#define MINS_IN_HOUR 60
+
 typedef struct {
     char curnt_date[11];
     char fetch_date[11];
@@ -16,7 +20,7 @@ void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
 int getDaysInMonth(int month);
 void generateTests(Tester* times);
 
-#define TEST_SIZE 47
+#define TEST_SIZE 51
 
 int main() {
 
@@ -45,16 +49,19 @@ int main() {
 
         printf("Test %i\nModifier: ", i + 1);
 
-        if (times[i].settings.modifier == Day) {
+        switch (times[i].settings.modifier) {
 
-            printf("Day");
+            case Day:
+                printf("Day");
+                break;
 
-        } else if (times[i].settings.modifier == Hour) {
+            case Hour:
+                printf("Hour");
+                break;
 
-            printf("Hour");
-
-        } else {
-            printf("Minute");
+            case Minute:
+                printf("Minute");
+                break;
         }
 
         printf("  Limit: %i\n", times[i].settings.limit);
@@ -64,12 +71,15 @@ int main() {
         printf("Fetch Time: %s\n\n", times[i].fetch_time);
 
         switch (times[i].settings.modifier) {
+
             case Day:
                 result = checkTimeDay(&times[i]);
                 break;
+
             case Hour:
                 result = checkTimeHr(&times[i]);
                 break;
+
             case Minute:
                 result = checkTimeMin(&times[i]);
                 break;
@@ -126,7 +136,7 @@ int main() {
            expectedtrue);
     printf("%2d Retruned False %2d Expected to Return False\n", return_false,
            TEST_SIZE - expectedtrue);
-    if (failed != 0) {
+    if (failed > 0) {
         printf("%sTests That Failed: %s%s\n", red, failedTests, reset);
     }
     free(times);
@@ -136,9 +146,6 @@ bool checkTimeDay(Tester* fetchConfig) {
 
     FetchModifier modifier = fetchConfig->settings.modifier;
     int limit = fetchConfig->settings.limit;
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -225,9 +232,6 @@ bool checkTimeHr(Tester* fetchConfig) {
 
     FetchModifier modifier = fetchConfig->settings.modifier;
     int limit = fetchConfig->settings.limit;
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -306,9 +310,6 @@ bool checkTimeMin(Tester* fetchConfig) {
 
     FetchModifier modifier = fetchConfig->settings.modifier;
     int limit = fetchConfig->settings.limit;
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -720,6 +721,33 @@ void generateTests(Tester* times) {
     strcpy(times[in].fetch_time, "23:50:43");
     in++;
 
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 12;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "02:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 12;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-01");
+    strcpy(times[in].fetch_date, "2025-02-28");
+    strcpy(times[in].curnt_time, "11:55:43");
+    strcpy(times[in].fetch_time, "23:50:43");
+    in++;
+
+    times[in].settings.modifier = Hour;
+    times[in].settings.limit = 12;
+    times[in].expected = false;
+    strcpy(times[in].curnt_date, "2025-04-28");
+    strcpy(times[in].fetch_date, "2025-04-28");
+    strcpy(times[in].curnt_time, "15:49:43");
+    strcpy(times[in].fetch_time, "03:50:43");
+    in++;
+
     ///////// Minute Tests ///////////
     times[in].settings.modifier = Minute;
     times[in].settings.limit = 15;
@@ -846,168 +874,13 @@ void generateTests(Tester* times) {
     strcpy(times[in].curnt_time, "00:01:43");
     strcpy(times[in].fetch_time, "23:59:43");
     in++;
+
+    times[in].settings.modifier = Minute;
+    times[in].settings.limit = 15;
+    times[in].expected = true;
+    strcpy(times[in].curnt_date, "2025-03-31");
+    strcpy(times[in].fetch_date, "2025-03-31");
+    strcpy(times[in].curnt_time, "10:37:43");
+    strcpy(times[in].fetch_time, "10:22:43");
+    in++;
 }
-/*bool legacyShouldFetchTest(Tester* fetchConfig) {
-
-    const int MONTHS_IN_YR = 12;
-    const int HOURS_IN_DAY = 24;
-    const int MINS_IN_HOUR = 60;
-    int days_in_month = 0;
-
-    int yearDif = 0;
-    int monthDif = 0;
-    int dayDif = 0;
-    int hrDif = 0;
-    int minDif = 0;
-    FetchModifier modifier = fetchConfig->settings.modifier;
-    int limit = fetchConfig->settings.limit;
-
-    IntTimesnDates time;
-    charTimeToInt(&time, fetchConfig->curnt_date, fetchConfig->curnt_time,
-                  fetchConfig->fetch_date, fetchConfig->fetch_time);
-
-    if (time.curnt_year != time.fetch_year) { // Year
-
-        yearDif = time.curnt_year - time.fetch_year;
-        //////////// REMOVE ///////////////
-        printf("in Year: yearDif = %i\n", yearDif);
-        ///////////////////////////////////
-        if (yearDif > 1) {
-            return true;
-        }
-    }
-
-    if (time.curnt_month != time.fetch_month) { // Month
-
-        if (yearDif == 0) {
-            monthDif = time.curnt_month - time.fetch_month;
-        } else {
-            monthDif = (MONTHS_IN_YR - time.fetch_month) + time.curnt_month;
-        }
-        //////////// REMOVE ///////////////
-        printf("in Month: monthDif = %i\n", monthDif);
-        ///////////////////////////////////
-
-        if (monthDif > 1) {
-
-            if (modifier != Day ||
-                (time.curnt_month != 3 && time.fetch_month != 1)) {
-                return true;
-            } else {
-                days_in_month = getDaysInMonth(time.fetch_month);
-                dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
-                dayDif += 28; // add month of Febuary.
-                //////////// REMOVE ///////////////
-                printf("in Month: dayDif = %d\n", dayDif);
-                ///////////////////////////////////
-
-                if (dayDif >= limit) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
-    if (time.curnt_day != time.fetch_day || monthDif > 0) { // Day
-
-        if (monthDif == 0) {
-            dayDif = time.curnt_day - time.fetch_day;
-        } else {
-            days_in_month = getDaysInMonth(time.fetch_month);
-            dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
-        }
-        //////////// REMOVE ///////////////
-        printf("in Day: dayDif = %i\n", dayDif);
-        if (dayDif == 0) {
-            hrDif = time.curnt_hour - time.fetch_hour;
-        } else {
-            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
-        }
-        if (hrDif == 0) {
-            minDif = time.curnt_min - time.fetch_min;
-        } else {
-            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
-        }
-        // printf("%sin Day: hrDif = %i%s\n", red, hrDif, reset);
-        printf("in Day: hrDif = %i\n", hrDif);
-        printf("in Day: minDif = %i\n", minDif);
-        /////////////////////////////////////////////////////
-
-        if (modifier == Day) {
-
-            if (dayDif > limit) {
-                return true;
-            } else if (dayDif < limit) {
-                return false;
-            }
-
-            if (time.curnt_hour < time.fetch_hour) {
-                return false;
-            } else if (time.curnt_hour > time.fetch_hour) {
-                return true;
-            }
-
-            if (time.curnt_min < time.fetch_min) {
-                return false;
-            } else {
-                return true;
-            }
-        } else if (dayDif > 1) {
-            return true;
-        }
-    }
-
-    if (modifier == Hour || time.curnt_hour != time.fetch_hour) { // Hour
-
-        if (dayDif == 0) {
-            hrDif = time.curnt_hour - time.fetch_hour;
-        } else {
-            hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
-        }
-
-        ////////////// REMOVE FROM MAIN LIB ////////////////
-        // printf("%sin Hour: hrDif = %i%s\n", red, hrDif, reset);
-        printf("in Hour: hrDif = %i\n", hrDif);
-        if (modifier == Day) {
-
-            if (hrDif == 0) {
-                minDif = time.curnt_min - time.fetch_min;
-            } else {
-                minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
-            }
-
-            printf("in Hour: minDif = %i\n", minDif);
-        }
-        ////////////////////////////////////////////////////
-        if (modifier == Hour) {
-
-            if (hrDif > limit ||
-                (hrDif == limit && time.curnt_min >= time.fetch_min)) {
-                return true;
-            } else if (hrDif <= limit) {
-                return false;
-            }
-
-        } else if (hrDif > 1) {
-            return true;
-        }
-    }
-
-    if (time.curnt_min != time.fetch_min) { // Minute
-
-        if (hrDif == 0) {
-            minDif = time.curnt_min - time.fetch_min;
-        } else {
-            minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
-        }
-
-        //////////// REMOVE ///////////////
-        printf("in Minute: minDif = %i\n", minDif);
-        ///////////////////////////////////
-        if (minDif >= limit && modifier != Day) {
-            return true;
-        }
-    }
-    return false;
-}*/
