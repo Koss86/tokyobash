@@ -51,14 +51,14 @@ typedef struct ConfigSettings {
     Styles bgstyle;
     bool background;
     bool branchname;
-    char sep_left[4];
-    char sep_right[4];
+    char leftSep[4];
+    char rightSep[4];
     bool gitAccessible;
-    char timeformat[1];
+    char timeFormat[1];
     PathState pathState;
     FetchOpts fetchConfig;
-    char left_line_sep[8];
-    char right_line_sep[4];
+    char leftLineSep[8];
+    char rightLineSep[4];
 } ConfigSettings;
 
 typedef struct IntTimesAndDates {

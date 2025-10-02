@@ -103,26 +103,26 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     switch (usrConfig->bgstyle) {
 
         case Pointed:
-            strcpy(usrConfig->sep_left, "");
-            strcpy(usrConfig->sep_right, "");
-            strcpy(usrConfig->right_line_sep, "");
-            strcpy(usrConfig->left_line_sep, "");
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->rightLineSep, "");
+            strcpy(usrConfig->leftLineSep, "");
             //  ""
             break;
 
         case Rounded:
-            strcpy(usrConfig->sep_left, "");
-            strcpy(usrConfig->sep_right, "");
-            strcpy(usrConfig->right_line_sep, "");
-            strcpy(usrConfig->left_line_sep, "");
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->rightLineSep, "");
+            strcpy(usrConfig->leftLineSep, "");
             // ""
             break;
 
         case Slanted:
-            strcpy(usrConfig->sep_left, "");
-            strcpy(usrConfig->sep_right, "");
-            strcpy(usrConfig->right_line_sep, "");
-            strcpy(usrConfig->left_line_sep, "");
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->rightLineSep, "");
+            strcpy(usrConfig->leftLineSep, "");
             //  
             break;
     }
@@ -219,7 +219,7 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
         if (valbuf[0] == '0') {
             usrConfig->time = false;
         } else if (valbuf[0] == '2') {
-            usrConfig->timeformat[0] = 'T';
+            usrConfig->timeFormat[0] = 'T';
         }
 
     } else if ((strncmp(keybuf, "fetch", 5)) == 0) {
