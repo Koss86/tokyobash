@@ -3,7 +3,7 @@
 void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
-        printf("%s%s%s", colorDefs->usr_color, usrConfig->sep_left,
+        printf("%s%s%s", colorDefs->usr_color, usrConfig->leftSep,
                colorDefs->usr_txt);
         printf("%s\\u@\\h%s%s", colorDefs->usr_bg, colorDefs->usr_color,
                colorDefs->reset);
@@ -15,11 +15,11 @@ void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
     if (usrConfig->time) {
         if (usrConfig->background) {
             printf("%s%s%s%s ", colorDefs->usr_color, colorDefs->time_bg,
-                   usrConfig->sep_right, usrConfig->left_line_sep);
+                   usrConfig->rightSep, usrConfig->leftLineSep);
             printf("%s%s\\%c %s", colorDefs->time_txt, colorDefs->time_bg,
-                   usrConfig->timeformat[0], colorDefs->reset);
+                   usrConfig->timeFormat[0], colorDefs->reset);
         } else {
-            printf("%s [\\%c]", colorDefs->time_txt, usrConfig->timeformat[0]);
+            printf("%s [\\%c]", colorDefs->time_txt, usrConfig->timeFormat[0]);
         }
     }
     return;
@@ -34,12 +34,12 @@ void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
 
         if (usrConfig->time) {
             printf("%s%s%s ", colorDefs->branch_bg, colorDefs->time_color,
-                   usrConfig->sep_right);
+                   usrConfig->rightSep);
             printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg,
                    branch_name, colorDefs->reset);
         } else {
             printf("%s%s%s%s ", colorDefs->branch_bg, colorDefs->usr_color,
-                   usrConfig->sep_right, usrConfig->left_line_sep);
+                   usrConfig->rightSep, usrConfig->leftLineSep);
             printf("%s%s%s  %s", colorDefs->branch_txt, colorDefs->branch_bg,
                    branch_name, colorDefs->reset);
         }
@@ -57,18 +57,18 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
     if (usrConfig->inARepo && usrConfig->branchname) {
 
         printf("%s%s%s%s", colorDefs->path_txt, colorDefs->branch_bg,
-               usrConfig->right_line_sep, colorDefs->reset);
+               usrConfig->rightLineSep, colorDefs->reset);
 
     } else {
 
         if (usrConfig->time) {
 
             printf("%s%s%s", colorDefs->time_color, colorDefs->path_bg,
-                   usrConfig->sep_right);
+                   usrConfig->rightSep);
             printf("%s%s", colorDefs->path_color, colorDefs->reset);
         } else {
             printf("%s%s", colorDefs->usr_color, colorDefs->path_bg);
-            printf("%s%s%s", usrConfig->sep_right, usrConfig->left_line_sep,
+            printf("%s%s%s", usrConfig->rightSep, usrConfig->leftLineSep,
                    colorDefs->reset);
         }
     }
@@ -77,7 +77,7 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
 
         printf("%s%s %s", colorDefs->path_txt, colorDefs->path_bg, path);
         printf("%s%s\\W/ %s%s%s%s\\n", colorDefs->curDir_txt, colorDefs->bold,
-               colorDefs->reset, colorDefs->path_color, usrConfig->sep_right,
+               colorDefs->reset, colorDefs->path_color, usrConfig->rightSep,
                colorDefs->reset);
 
     } else {
@@ -87,14 +87,14 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
             printf("%s%s %s%s\\W %s%s", colorDefs->path_txt, colorDefs->path_bg,
                    colorDefs->curDir_txt, colorDefs->bold, colorDefs->reset,
                    colorDefs->path_color);
-            printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
+            printf("%s%s\\n", usrConfig->rightSep, colorDefs->reset);
 
         } else {
 
             printf("%s%s %s%s\\W/ %s%s", colorDefs->path_txt,
                    colorDefs->path_bg, colorDefs->curDir_txt, colorDefs->bold,
                    colorDefs->reset, colorDefs->path_color);
-            printf("%s%s\\n", usrConfig->sep_right, colorDefs->reset);
+            printf("%s%s\\n", usrConfig->rightSep, colorDefs->reset);
         }
     }
     return;

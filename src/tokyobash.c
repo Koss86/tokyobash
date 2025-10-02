@@ -27,7 +27,7 @@ int main(void) {
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;
-    usrConfig.timeformat[0] = 't';
+    usrConfig.timeFormat[0] = 't';
     usrConfig.gitAccessible = false;
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
