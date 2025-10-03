@@ -237,8 +237,8 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     if ((fgets(&dist_buf[0], 64, dist_to_root)) == NULL) {
         return false;
     }
-    }
-    pclose(file);
+
+    pclose(dist_to_root);
 
     if (dist_buf[0] == '\n' || dist_buf[0] == '\0') {
 
