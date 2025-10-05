@@ -23,7 +23,6 @@ int main(void) {
     usrConfig.debug = false;
     usrConfig.inARepo = false;
     usrConfig.statusbar = true;
-    usrConfig.bgstyle = Pointed;
     usrConfig.branchname = true;
     usrConfig.background = false;
     usrConfig.theme = Tokyonight;

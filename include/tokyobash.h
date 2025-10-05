@@ -30,12 +30,6 @@ typedef enum FetchModifier {
     Day,
 } FetchModifier;
 
-typedef enum Styles {
-    Pointed,
-    Rounded,
-    Slanted,
-} Styles;
-
 typedef struct FetchOpts {
     FetchModifier modifier;
     int limit;
@@ -48,7 +42,6 @@ typedef struct ConfigSettings {
     Themes theme;
     bool inARepo;
     bool statusbar;
-    Styles bgstyle;
     bool background;
     bool branchname;
     char leftSep[4];
