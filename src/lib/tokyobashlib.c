@@ -99,33 +99,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
         }
     }
     fclose(configFile);
-
-    switch (usrConfig->bgstyle) {
-
-        case Pointed:
-            strcpy(usrConfig->leftSep, "");
-            strcpy(usrConfig->rightSep, "");
-            strcpy(usrConfig->rightLineSep, "");
-            strcpy(usrConfig->leftLineSep, "");
-            //  ""
-            break;
-
-        case Rounded:
-            strcpy(usrConfig->leftSep, "");
-            strcpy(usrConfig->rightSep, "");
-            strcpy(usrConfig->rightLineSep, "");
-            strcpy(usrConfig->leftLineSep, "");
-            // ""
-            break;
-
-        case Slanted:
-            strcpy(usrConfig->leftSep, "");
-            strcpy(usrConfig->rightSep, "");
-            strcpy(usrConfig->rightLineSep, "");
-            strcpy(usrConfig->leftLineSep, "");
-            //  
-            break;
-    }
     return;
 }
 static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
@@ -143,18 +116,27 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
     } else if ((strncmp(keybuf, "background", 10)) == 0) {
 
         if (valbuf[0] == '1') {
-
             usrConfig->background = true;
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->leftLineSep, "");
+            strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '2') {
 
             usrConfig->background = true;
-            usrConfig->bgstyle = Rounded;
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->leftLineSep, "");
+            strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '3') {
 
             usrConfig->background = true;
-            usrConfig->bgstyle = Slanted;
+            strcpy(usrConfig->leftSep, "");
+            strcpy(usrConfig->rightSep, "");
+            strcpy(usrConfig->leftLineSep, "");
+            strcpy(usrConfig->rightLineSep, "");
         }
 
     } else if ((strncmp(keybuf, "statusbar", 9)) == 0) {
@@ -178,18 +160,15 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
     } else if ((strncmp(keybuf, "fetchtimer", 10)) == 0) {
 
         if (valbuf[1] == 'h' || valbuf[2] == 'h') {
-
             usrConfig->fetchConfig.modifier = Hour;
 
         } else if (valbuf[1] == 'm' || valbuf[2] == 'm') {
-
             usrConfig->fetchConfig.modifier = Minute;
         }
 
         usrConfig->fetchConfig.limit = atoi(&valbuf[0]);
 
         if (usrConfig->fetchConfig.limit < 1) {
-
             usrConfig->fetchConfig.limit = 1;
 
         } else {
