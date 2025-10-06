@@ -117,7 +117,7 @@ int main(void) {
             }
         }
     }
-    printf("  %s%s┗>$ %s", colorDefs.bold, colorDefs.usr_color,
+    printf("  %s%s┗> %s", colorDefs.bold, colorDefs.usr_color,
            colorDefs.reset);
     return 0;
 }
