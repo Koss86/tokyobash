@@ -125,7 +125,7 @@ void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
 void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
                     int committed, int fetched) {
 
-    printf("  %s┗┳[%s", colorDefs->usr_color, colorDefs->reset);
+    printf("  %s┗┳%s[%s", colorDefs->usr_color, colorDefs->bold, colorDefs->reset);
 
     int ct = 0;
     if (untracked > 0)
@@ -179,11 +179,6 @@ void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
     }
     if (fetched > 0) {
         printf("%s%s %d", colorDefs->fetched, colorDefs->reset, fetched);
-
-        if (ct > 0 && ct != 1) {
-            printf("%s | ", colorDefs->usr_color);
-            ct--;
-        }
     }
     if (space) {
         printf(" ");
