@@ -123,20 +123,18 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
             strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '2') {
-
             usrConfig->background = true;
             strcpy(usrConfig->leftSep, "");
             strcpy(usrConfig->rightSep, "");
-            strcpy(usrConfig->rightLineSep, "");
             strcpy(usrConfig->leftLineSep, "");
+            strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '3') {
-
             usrConfig->background = true;
             strcpy(usrConfig->leftSep, "");
             strcpy(usrConfig->rightSep, "");
-            strcpy(usrConfig->rightLineSep, "");
             strcpy(usrConfig->leftLineSep, "");
+            strcpy(usrConfig->rightLineSep, "");
         }
 
     } else if ((strncmp(keybuf, "statusbar", 9)) == 0) {
