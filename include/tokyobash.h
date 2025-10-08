@@ -36,6 +36,7 @@ typedef struct FetchOpts {
 } FetchOpts;
 
 typedef struct ConfigSettings {
+    bool abv;
     bool time;
     bool fetch;
     bool debug;
@@ -90,27 +91,24 @@ typedef struct Colors {
     char fetched[28];
 } Colors;
 
-void parseConfig(ConfigSettings* usrConfig, char* pHome);
-void defineColors(ConfigSettings* usrConfig, Colors* colorDefs);
-void replaceHome(char* path, int Plen, int Hlen);
-void abrvPath(char* path, int Plen);
-void remCurntDir(char* path, int Plen);
+void parseConfig(ConfigSettings*, char*);
+void defineColors(ConfigSettings*, Colors*);
+void replaceHome(char*, int, int);
+void abrvPath(char*, int);
+void remCurntDir(char*, int);
 
-void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs);
-void printBranch(ConfigSettings* usrConfig, Colors* colorDefs);
-void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
-                     int pathLength);
-void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
-                   int pathLength);
-void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
-                    int committed, int fetched);
+void printUsrTime(ConfigSettings*, Colors*);
+void printBranch(ConfigSettings*, Colors*);
+void printPathWithBg(ConfigSettings*, Colors*, char*, int);
+void printPathNoBg(ConfigSettings*, Colors*, char*, int);
+void printStatusBar(Colors*, int, int, int, int, int);
 
 bool isGitAccessible(void);
 bool checkIfInRepo(void);
-void getBranch(char* branch_name);
+void getBranch(char*);
 int Committed(void);
-void getStatusOf(int* staged, int* unstaged, int* untracked);
-int Fetched(FetchOpts* fetchConfig);
-bool shouldFetch(FetchOpts* fetchConfig);
+void getStatusOf(int*, int*, int*);
+int Fetched(FetchOpts*);
+bool shouldFetch(FetchOpts*);
 
 #endif

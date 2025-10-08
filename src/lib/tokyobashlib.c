@@ -123,7 +123,6 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
             strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '2') {
-
             usrConfig->background = true;
             strcpy(usrConfig->leftSep, "");
             strcpy(usrConfig->rightSep, "");
@@ -131,7 +130,6 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
             strcpy(usrConfig->rightLineSep, "");
 
         } else if (valbuf[0] == '3') {
-
             usrConfig->background = true;
             strcpy(usrConfig->leftSep, "");
             strcpy(usrConfig->rightSep, "");
@@ -206,6 +204,12 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
         if (valbuf[0] == '1') {
             usrConfig->fetch = true;
         }
+
+    } else if ((strncmp(keybuf, "abvpath", 7)) == 0) {
+
+        if(valbuf[0] == '0') {
+            usrConfig->abv = false;
+        }
     }
     return;
 }
@@ -251,11 +255,26 @@ void abrvPath(char* path, int pathLength) {
 // current dir is highlighted.
 void remCurntDir(char* path, int pathLength) {
 
+    int dot = 0;
     for (int i = pathLength - 1; i > -1; i--) {
 
         if (path[i] == '/') {
             path[i + 1] = '\0';
             break;
+        }
+        if (path[i] == '.') {
+            if (++dot == 3) {
+                path[i - 1] = '.';
+                path[i] = '.';
+                path[i + 1] = '.';
+                path[i + 2] = '/';
+                path[i + 3] = '\0';
+                break;
+            }
+            continue;
+        }
+        if (dot > 0) {
+            dot = 0;
         }
     }
     return;
