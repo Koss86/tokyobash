@@ -249,11 +249,26 @@ void abrvPath(char* path, int pathLength) {
 // current dir is highlighted.
 void remCurntDir(char* path, int pathLength) {
 
+    int dot = 0;
     for (int i = pathLength - 1; i > -1; i--) {
 
         if (path[i] == '/') {
             path[i + 1] = '\0';
             break;
+        }
+        if (path[i] == '.') {
+            if (++dot == 3) {
+                path[i - 1] = '.';
+                path[i] = '.';
+                path[i + 1] = '.';
+                path[i + 2] = '/';
+                path[i + 3] = '\0';
+                break;
+            }
+            continue;
+        }
+        if (dot > 0) {
+            dot = 0;
         }
     }
     return;
