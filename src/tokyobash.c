@@ -18,6 +18,7 @@ int main(void) {
     }
 
     ConfigSettings usrConfig;
+    usrConfig.abv = true;
     usrConfig.time = true;
     usrConfig.fetch = false;
     usrConfig.debug = false;
@@ -52,7 +53,7 @@ int main(void) {
         }
     }
 
-    if (pathLength > ABV_PATH_LEN_T) {
+    if (usrConfig.abv && pathLength > ABV_PATH_LEN_T) {
         abrvPath(path, pathLength);
         pathLength = ABV_PATH_LEN_T;
     }

@@ -204,6 +204,12 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
         if (valbuf[0] == '1') {
             usrConfig->fetch = true;
         }
+
+    } else if ((strncmp(keybuf, "abvpath", 7)) == 0) {
+
+        if(valbuf[0] == '0') {
+            usrConfig->abv = false;
+        }
     }
     return;
 }
