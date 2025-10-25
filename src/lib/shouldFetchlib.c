@@ -4,12 +4,12 @@
 #define HOURS_IN_DAY 24
 #define MINS_IN_HOUR 60
 
+static int getDaysInMonth(int);
+static bool getFetchTime(char*, char*);
 static bool checkTimeDay(int, IntTimesnDates*);
 static bool checkTimeHr(int, IntTimesnDates*);
 static bool checkTimeMin(int, IntTimesnDates*);
-static bool getFetchTime(char*, char*);
 static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
-static int getDaysInMonth(int);
 
 bool shouldFetch(FetchOpts* fetchConfig) {
 
@@ -225,7 +225,7 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     char c;
     int indx = 0;
     char dist_buf[64];
-    char path[256];
+    char path[MAX_BRANCH_LEN];
     FILE* dist_to_root;
     FILE* fetch_status;
 
@@ -274,10 +274,8 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
         }
 
         if (newline == 6 && c == ' ') {
-            space++;
-            if (space == 1) {
-                inDate = true;
-            } else if (space == 2) {
+            inDate = true;
+            if (++space == 2) {
                 inTime = true;
                 inDate = false;
             }
@@ -329,6 +327,7 @@ static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[],
     dateData->fetch_min = atoi(&fetch_time[MIN_INDX]);
     return;
 }
+
 static int getDaysInMonth(int month) {
 
     if (month == 4 || month == 6 || month == 9 || month == 11) {

@@ -1,7 +1,6 @@
 #include "../../include/tokyobash.h"
 
-static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
-                          char* valbuf);
+static void checkKeyValue(ConfigSettings*, char*, char*);
 
 void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
@@ -45,11 +44,10 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
         if (c == ' ' || c == '/' || c == '\'' || c == '"') {
             if (c == '/') {
-                slash++;
-            }
-            if (slash == 2) {
-                incomment = true;
-                slash = 0;
+                if (++slash == 2) {
+                    incomment = true;
+                    slash = 0;
+                }
             }
             continue;
         }
@@ -61,18 +59,15 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
 
         if (c == '\n') {
             if (incomment && indx == 0) {
-
                 inkey = true;
                 incomment = false;
                 invalue = false;
                 continue;
-
-            } else if (incomment) {
-                incomment = false;
             }
 
             inkey = true;
             invalue = false;
+            incomment = false;
             valbuf[indx] = '\0';
             indx = 0;
             checkKeyValue(usrConfig, &keybuf[0], &valbuf[0]);
@@ -207,13 +202,12 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
 
     } else if ((strncmp(keybuf, "abvpath", 7)) == 0) {
 
-        if(valbuf[0] == '0') {
+        if (valbuf[0] == '0') {
             usrConfig->abv = false;
         }
     }
     return;
 }
-// Replace $HOME with '~'.
 void replaceHome(char* path, int pathLength, int homeLength) {
 
     path[0] = '~';
@@ -231,8 +225,6 @@ void replaceHome(char* path, int pathLength, int homeLength) {
     }
     return;
 }
-// If path lenth is greater than 50, keep first 24 chars, add '...' then
-// place last 23 chars after '...' .
 void abrvPath(char* path, int pathLength) {
 
     const int ABV_PATH_LEN1 = 24;
@@ -250,14 +242,9 @@ void abrvPath(char* path, int pathLength) {
     path[ABV_PATH_LEN_T] = '\0';
     return;
 }
-// Remove current directory from path. We add it back with \W after
-// changing text to bold and a lighter color. This way the path is normal, while
-// current dir is highlighted.
 void remCurntDir(char* path, int pathLength) {
-
     int dot = 0;
     for (int i = pathLength - 1; i > -1; i--) {
-
         if (path[i] == '/') {
             path[i + 1] = '\0';
             break;
@@ -265,22 +252,18 @@ void remCurntDir(char* path, int pathLength) {
         if (path[i] == '.') {
             if (++dot == 3) {
                 path[i - 1] = '.';
-                path[i] = '.';
-                path[i + 1] = '.';
                 path[i + 2] = '/';
                 path[i + 3] = '\0';
                 break;
             }
             continue;
         }
-        if (dot > 0) {
-            dot = 0;
-        }
+        if (dot > 0) dot = 0;
     }
     return;
 }
-void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
 
+void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
     strcpy(colorDefs->bold, "\\[\\e[1m\\]");
     strcpy(colorDefs->reset, "\\[\\e[00m\\]");
     strcpy(colorDefs->untracked, "\\[\\e[38;2;255;255;0m\\]"); // yellow
