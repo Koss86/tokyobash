@@ -93,21 +93,35 @@ typedef struct Colors {
 
 void parseConfig(ConfigSettings*, char*);
 void defineColors(ConfigSettings*, Colors*);
-void replaceHome(char*, int, int);
-void abrvPath(char*, int);
-void remCurntDir(char*, int);
+// Replace $HOME with '~'.
+void replaceHome(char* path, int pLeng, int hLeng);
+// If path length is greater than 50, keep first 24 chars, add '...' then
+// place last 23 chars after '...' .
+void abrvPath(char* path, int pLeng);
+// Remove current directory from path. We add it back with \W after
+// changing text to bold and a lighter color. This way the path is normal, while
+// current dir is highlighted.
+void remCurntDir(char* path, int pLeng);
 
 void printUsrTime(ConfigSettings*, Colors*);
 void printBranch(ConfigSettings*, Colors*);
-void printPathWithBg(ConfigSettings*, Colors*, char*, int);
-void printPathNoBg(ConfigSettings*, Colors*, char*, int);
-void printStatusBar(Colors*, int, int, int, int, int);
+void printPathWithBg(ConfigSettings*, Colors*, char* path, int pLeng);
+void printPathNoBg(ConfigSettings*, Colors*, char* path, int pLeng);
+void printStatusBar(Colors*, int ut, int us, int s, int c, int f);
 
+// If git is available, return true.
 bool isGitAccessible(void);
+// If current directory is a repository, return true.
 bool checkIfInRepo(void);
+// Place branch name into provided buffer.
 void getBranch(char*);
+// Returns how many commits are ready to be pushed.
 int Committed(void);
-void getStatusOf(int*, int*, int*);
+// Counts how many staged, unstaged, and untracked files in the repo
+// on the current branch, and assigns the values to the provided variables.
+void getStatusOf(int* s, int* us, int* ut);
+// Checks when last the repo was updated. If longer than specified in
+// fetchConfig.limit, fetch is called and return number of commits from remote.
 int Fetched(FetchOpts*);
 bool shouldFetch(FetchOpts*);
 

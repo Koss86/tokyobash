@@ -3,7 +3,6 @@
 int main(void) {
 
     char path[PATH_MAX];
-
     if (getcwd(path, sizeof(path)) == NULL) {
         perror("tokyobash error: failed to retrieve path");
         printf("\\u@\\h: \\w ");
@@ -118,7 +117,7 @@ int main(void) {
             }
         }
     }
-    printf("  %s%s┗> %s", colorDefs.bold, colorDefs.usr_color,
+    printf("  %s%s┗ » %s", colorDefs.bold, colorDefs.usr_color,
            colorDefs.reset);
     return 0;
 }
