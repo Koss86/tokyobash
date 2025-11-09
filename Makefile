@@ -61,8 +61,18 @@ endif
 	@$(RM) $(OBJ) $(CONFIG_FILE)
 
 $(CONFIG_FILE):
-	@printf 'theme      = tokyonight\n#theme     = catppuccin\n#theme     = kanagawa\n\nbackground = 0\ntime       = 1\nabvpath    = 1\nbranchname = 1\nstatusbar  = 1\nfetch      = 0\nfetchtimer = 1d\n' > $(CONFIG_FILE)
+	@{ \
+		printf 'theme      = tokyonight\n'; \
+		printf '#theme     = catppuccin\n'; \
+		printf '#theme     = kanagawa\n\n'; \
+		printf 'background = 0\n'; \
+		printf 'time       = 1\n'; \
+		printf 'abvpath    = 1\n'; \
+		printf 'branchname = 1\n'; \
+		printf 'statusbar  = 1\n'; \
+		printf 'fetch      = 0\n'; \
+		printf 'fetchtimer = 1d\n'; \
+	} > "$(CONFIG_FILE)"
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)
-
