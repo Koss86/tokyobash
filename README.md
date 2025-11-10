@@ -150,11 +150,12 @@ branchname  = 1  # Turn the display of branch name on/off.
 statusbar   = 1  # Turn statusbar on/off.
 fetch       = 0  # Turn fetching of commits on/off.
 fetchtimer  = 1d # See below.
+icon        =   # Change icon or set to 0 to remove.
 ```
 
 `fetchtimer` will accept `#d`, `#h`, or `#m`. `d = days` `h = hours` and `m = minutes`.
 
-#### For example:
+##### For example:
 
 - If `fetchtimer = 25m` repository will update after 25 minutes, when the prompt reloads.
 - If `fetchtimer = 2h` repository will update after 2 hours, when the prompt reloads.

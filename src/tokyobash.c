@@ -31,6 +31,7 @@ int main(void) {
     usrConfig.fetchConfig.limit = 1;
     usrConfig.fetchConfig.modifier = Day;
     usrConfig.gitAccessible = isGitAccessible();
+    strcpy(usrConfig.icon, "");
 
     parseConfig(&usrConfig, pHome);
 
@@ -117,7 +118,7 @@ int main(void) {
             }
         }
     }
-    printf("  %s%s┗ » %s", colorDefs.bold, colorDefs.usr_color,
-           colorDefs.reset);
+    printf("  %s%s┗%s » %s", colorDefs.bold, colorDefs.usr_color,
+           usrConfig.icon, colorDefs.reset);
     return 0;
 }

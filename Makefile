@@ -44,7 +44,6 @@ $(LIB4).o: src/lib/$(LIB4).c
 	@$(CXX) $(CFLAGS) -c src/lib/$(LIB4).c
 
 install: $(BIN) $(CONFIG_FILE)
-
 	@mkdir -p $(CONFIGDIR)
 	@cp -n $(CONFIG_FILE) $(CONFIGDIR)/$(CONFIG_FILE)
 	@echo "$(CONFIG_FILE) file created and copied to '$(CONFIGDIR)'."
@@ -72,7 +71,8 @@ $(CONFIG_FILE):
 		printf 'statusbar  = 1\n'; \
 		printf 'fetch      = 0\n'; \
 		printf 'fetchtimer = 1d\n'; \
-	} > "$(CONFIG_FILE)"
+		printf 'icon       = \n'; \
+	} >"$(CONFIG_FILE)"
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)

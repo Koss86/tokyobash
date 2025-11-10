@@ -42,6 +42,7 @@ typedef struct ConfigSettings {
     bool debug;
     Themes theme;
     bool inARepo;
+    char icon[20];
     bool statusbar;
     bool background;
     bool branchname;

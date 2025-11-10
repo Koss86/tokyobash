@@ -37,23 +37,20 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     bool incomment = false;
     int slash = 0;
     int indx = 0;
-    char keybuf[64];
-    char valbuf[64];
+    char keybuf[20];
+    char valbuf[20];
 
     while ((c = fgetc(configFile)) != EOF) {
 
-        if (c == ' ' || c == '/' || c == '\'' || c == '"') {
+        if (c == '#' || c == ' ' || c == '/' || c == '\'' || c == '"') {
             if (c == '/') {
                 if (++slash == 2) {
                     incomment = true;
                     slash = 0;
                 }
+            } else if (c == '#') {
+                incomment = true;
             }
-            continue;
-        }
-
-        if (c == '#') {
-            incomment = true;
             continue;
         }
 
@@ -204,6 +201,14 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
 
         if (valbuf[0] == '0') {
             usrConfig->abv = false;
+        }
+
+    } else if ((strncmp(keybuf, "icon", 4)) == 0) {
+
+        if (valbuf[0] == '0') {
+            strcpy(usrConfig->icon, "");
+        } else {
+            strncpy(usrConfig->icon, valbuf, 20);
         }
     }
     return;
