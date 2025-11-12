@@ -418,7 +418,7 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
                         strcpy(colorDefs->usr_txt,
                                "\\[\\e[38;2;166;227;161m\\]"); // mocha_green
                         strcpy(colorDefs->usr_color,
-                               "\\[\\e[48;2;166;227;161m\\]"); // mocha_green
+                               "\\[\\e[38;2;166;227;161m\\]"); // mocha_green
                         break;
                 }
             }
