@@ -162,6 +162,11 @@ icon        =   # Change icon or set to 0 to remove.
 - If `fetchtimer = 3d` repository will update after 3 days, when the prompt reloads.
 - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
 
+> [!Note]
+> Tokyobash starts with above defaults.
+>
+> So your config only needs what you want to change in it.
+
 ## 🚫 No Make
 
 All you really need is a C compiler to build Tokyobash.
@@ -192,16 +197,27 @@ clang -O3 tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o -o tok
 rm tokyobash.o tokyobashlib.o gitlib.o shouldFetchlib.o printlib.o
 ```
 
-You don't need a config file if you don't plan on changing the defaults. But, if you do want to change the defaults
-you will need to manually create the directory `tokyobash` in `~/.config` or wherever you may have `$XDG_CONFIG_HOME` set.
+##### Config File
 
-Try these commands in your terminal:
+You will need to manually create the directory `tokyobash` in `~/.config` or wherever you may have `$XDG_CONFIG_HOME` set.
+
+Try these commands in your terminal. They will create the `tokyobash/config` directory and file in your `XDG_CONFIG_HOME` directory loaded with the defaults.
 
 ```sh
 mkdir -p $XDG_CONFIG_HOME/tokyobash/
-printf 'theme = tokyonight\n# theme = catppuccin\n# theme = kanagawa\n\nbackground = 0\ntime = 1\nabvpath = 1\nbranchname = 1\nstatusbar = 1\nfetch = 0\nfetchtimer = 1d' > ./config
-cp -n config $XDG_CONFIG_HOME/tokyobash/
-rm config
+{
+    printf 'theme      = tokyonight\n'
+    printf '#theme     = catppuccin\n'
+    printf '#theme     = kanagawa\n\n'
+    printf 'background = 0\n'
+    printf 'time       = 1\n'
+    printf 'abvpath    = 1\n'
+    printf 'branchname = 1\n'
+    printf 'statusbar  = 1\n'
+    printf 'fetch      = 0\n'
+    printf 'fetchtimer = 1d\n'
+    printf 'icon       = \n'
+} >$XDG_CONFIG_HOME/tokyobash/config
 ```
 
 #

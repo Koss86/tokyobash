@@ -9,16 +9,16 @@ LIB4 = printlib
 OBJ = $(BIN).o $(LIB1).o $(LIB2).o $(LIB3).o $(LIB4).o
 CONFIG_FILE = config
 CONFIGDIR = $(shell [ -n "$$XDG_CONFIG_HOME" ] && echo "$$XDG_CONFIG_HOME" || echo "$$HOME/.config")/$(BIN)
-prefix =
-CXX =
 COMP_VERSION := $(shell gcc --version)
+prefix =
+CC =
 
 ifneq ($(findstring gcc,$(COMP_VERSION)),)
-	CXX = gcc
+	CC = gcc
 else
 	COMP_VERSION = $(shell clang --version)
 	ifneq ($(findstring clang,$(COMP_VERSION)),)
-		CXX = clang
+		CC = clang
 	endif
 endif
 
@@ -26,22 +26,22 @@ all: $(BIN)
 
 $(BIN): $(OBJ)
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CFLAGS) $(OBJ) -o $(BINDIR)/$(BIN)
+	@$(CC) $(CFLAGS) $(OBJ) -o $(BINDIR)/$(BIN)
 
 $(BIN).o: src/$(BIN).c
-	@$(CXX) $(CFLAGS) -c src/$(BIN).c
+	@$(CC) $(CFLAGS) -c src/$(BIN).c
 
 $(LIB1).o: src/lib/$(LIB1).c
-	@$(CXX) $(CFLAGS) -c src/lib/$(LIB1).c
+	@$(CC) $(CFLAGS) -c src/lib/$(LIB1).c
 
 $(LIB2).o: src/lib/$(LIB2).c
-	@$(CXX) $(CFLAGS) -c src/lib/$(LIB2).c
+	@$(CC) $(CFLAGS) -c src/lib/$(LIB2).c
 
 $(LIB3).o: src/lib/$(LIB3).c
-	@$(CXX) $(CFLAGS) -c src/lib/$(LIB3).c
+	@$(CC) $(CFLAGS) -c src/lib/$(LIB3).c
 
 $(LIB4).o: src/lib/$(LIB4).c
-	@$(CXX) $(CFLAGS) -c src/lib/$(LIB4).c
+	@$(CC) $(CFLAGS) -c src/lib/$(LIB4).c
 
 install: $(BIN) $(CONFIG_FILE)
 	@mkdir -p $(CONFIGDIR)
@@ -72,7 +72,7 @@ $(CONFIG_FILE):
 		printf 'fetch      = 0\n'; \
 		printf 'fetchtimer = 1d\n'; \
 		printf 'icon       = \n'; \
-	} >"$(CONFIG_FILE)"
+	} >$(CONFIG_FILE)
 
 clean:
 	$(RM)r $(BINDIR) $(OBJ)
