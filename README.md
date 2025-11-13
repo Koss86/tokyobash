@@ -10,8 +10,6 @@ Requires a [Nerd Font](https://www.nerdfonts.com)
 
 Highlights the current directory and changes the color of User@Host depending on whether you're in HOME/, root/, or /mnt.
 
-<img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/c5efd9d7-79af-48c2-9617-d478631ee710" />
-
 #
 
 ### 🎨 Themes
@@ -20,15 +18,15 @@ There are currently three themes to choose from.
 
 - Tokyonight:
 
-  <img width="484" height="163" alt="tok_noBg_spread" src="https://github.com/user-attachments/assets/b97f6193-910f-4814-bcd5-e7d1ef05fc1c" />
+  <img width="345" height="135" alt="Tokyobash_tokyonight_noBg" src="https://github.com/user-attachments/assets/5063d7aa-8a16-4c3c-b471-36833e9491d2" />
 
 - Catppuccin:
 
-  <img width="485" height="164" alt="cat_noBg_spread" src="https://github.com/user-attachments/assets/b0428e1a-1eab-4153-a92f-eefa85b9daeb" />
+  <img width="345" height="135" alt="Tokyobash_catppuccin_noBg" src="https://github.com/user-attachments/assets/e7cccf9d-343c-4630-bb74-5055240d1f8e" />
 
 - Kanagawa:
 
-  <img width="487" height="163" alt="kan_noBg_spread" src="https://github.com/user-attachments/assets/dacd4d04-8dbc-4e26-bf34-f6851e75e4e4" />
+  <img width="345" height="135" alt="Tokyobash_kanagawa_noBg" src="https://github.com/user-attachments/assets/fca86232-553e-47eb-a798-2b73f787c469" />
 
 Themes can be changed via the `theme` [config](#config) setting.
 
@@ -38,19 +36,58 @@ Themes can be changed via the `theme` [config](#config) setting.
 
 There are optional backgrounds that can be enable via the `background` [Config](#config) setting.
 
-There are three variatons to choose from: Pointed, Rounded, and Slanted. Pointed is shown below.
+There are three variatons to choose from:
 
-- Tokyonight:
+<details>
+  <summary>Pointed</summary>
 
-  <img width="544" height="163" alt="tok_Bg_spread" src="https://github.com/user-attachments/assets/fb3a5426-da87-4718-bb3e-5f623ebdd757" />
+- Tokyonight
 
-- Catppuccin:
+  <img width="385" height="138" alt="Tokyobash_tokyonight_Bg_pointed" src="https://github.com/user-attachments/assets/1138846e-1c49-4925-9d96-46385dacaa8c" />
 
-  <img width="545" height="163" alt="cat_Bg_spread" src="https://github.com/user-attachments/assets/785798e4-41eb-4418-97ea-27de9bab1b60" />
+- Catppuccin
 
-- Kanagawa:
+  <img width="385" height="138" alt="Tokyobash_catppuccin_Bg_pointed" src="https://github.com/user-attachments/assets/f72b5b94-7880-4830-ad4e-50b0c5457e40" />
 
-  <img width="546" height="163" alt="kan_Bg_spread" src="https://github.com/user-attachments/assets/a45d4003-cbb4-45f7-9bc9-ae684b6c1cbf" />
+- Kanagawa
+
+  <img width="385" height="138" alt="Tokyobash_kanagawa_Bg_pointed" src="https://github.com/user-attachments/assets/6239f543-83e9-4926-84bc-7ce431979602" />
+
+</details>
+
+<details>
+  <summary>Rounded</summary>
+
+- Tokyonight
+  
+  <img width="375" height="138" alt="Tokyobash_tokyonight_Bg_rounded" src="https://github.com/user-attachments/assets/719405ca-4d1d-44da-b5aa-f857b983dc05" />
+
+- Catppucin
+    
+  <img width="375" height="138" alt="Tokyobash_catppuccin_Bg_rounded" src="https://github.com/user-attachments/assets/d2818783-7762-4f4e-bee8-6ad59f61478c" />
+
+- Kanagawa
+    
+  <img width="375" height="138" alt="Tokyobash_kanagawa_Bg_rounded" src="https://github.com/user-attachments/assets/f40ef138-3b0c-4c37-9b10-acad50cd0690" />
+
+</details>
+
+<details>
+  <summary>Slanted</summary>
+
+- Tokyonight
+  
+  <img width="395" height="138" alt="Tokyobash_tokyonight_Bg_slanted" src="https://github.com/user-attachments/assets/6fecc7bf-855e-4f5e-a30c-dc37c3276c96" />
+
+- Catppuccin
+
+  <img width="395" height="138" alt="Tokyobash_catppuccin_Bg_slanted" src="https://github.com/user-attachments/assets/6f2fb176-1f5f-42b1-9c9c-2e6f7fc03d7e" />
+
+- Kanagawa
+
+  <img width="395" height="138" alt="Tokyobash_kanagawa_Bg_slanted" src="https://github.com/user-attachments/assets/324c59d7-a46c-4131-bb2b-bb5607d14209" />
+
+</details>
 
 #
 
@@ -58,7 +95,7 @@ There are three variatons to choose from: Pointed, Rounded, and Slanted. Pointed
 
 Abbreviates paths longer than 50 characters.
 
-<img width="788" height="366" alt="tok_noBg_abv" src="https://github.com/user-attachments/assets/b8dd67cf-cb70-4d86-a2d6-cab5095f67b9" />
+<img width="777" height="462" alt="Tokyobash_abv" src="https://github.com/user-attachments/assets/a7d00006-64c8-4b2f-9d61-06441e7a8ddf" />
 
 #
 
@@ -66,7 +103,7 @@ Abbreviates paths longer than 50 characters.
 
 If the current directory is a repository it will display the current branch name.
 
-<img width="485" height="46" alt="tok_branchName" src="https://github.com/user-attachments/assets/443d36ad-83c0-4d88-a008-dad27f7dc332" />
+<img width="497" height="45" alt="Tokyobash_branchname" src="https://github.com/user-attachments/assets/a334e841-27bf-4835-951b-f78388c5319c" />
 
 #
 
@@ -74,7 +111,7 @@ If the current directory is a repository it will display the current branch name
 
 An icon bar that displays changes in the current repository.
 
-<img width="487" height="65" alt="statusbar_clean" src="https://github.com/user-attachments/assets/b3596724-b5d4-4689-aad7-8a27bfdd711a" />
+<img width="495" height="70" alt="Tokyobash_statusbar" src="https://github.com/user-attachments/assets/61efba08-11e5-4e10-8c2e-d17d848bbddf" />
 
 Displays (in order):
 
@@ -84,7 +121,7 @@ Displays (in order):
 - Number of local commits
 - Number of remote commits.
 
-<img width="487" height="126" alt="tokyobash_statusbar_explained" src="https://github.com/user-attachments/assets/ef044331-ef41-4f80-a320-caa8c8689eb5" />
+<img width="497" height="169" alt="Tokyobash_statusbar_explained" src="https://github.com/user-attachments/assets/55761db9-6fa0-4451-9388-2ef01a0e4fef" />
 
 > [!NOTE]
 >
@@ -161,11 +198,6 @@ icon        =   # Change icon or set to 0 to remove.
 - If `fetchtimer = 2h` repository will update after 2 hours, when the prompt reloads.
 - If `fetchtimer = 3d` repository will update after 3 days, when the prompt reloads.
 - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
-
-> [!Note]
-> Tokyobash starts with above defaults.
->
-> So your config only needs what you want to change in it.
 
 ## 🚫 No Make
 
