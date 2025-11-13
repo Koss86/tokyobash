@@ -59,15 +59,15 @@ There are three variatons to choose from:
   <summary>Rounded</summary>
 
 - Tokyonight
-  
+
   <img width="375" height="138" alt="Tokyobash_tokyonight_Bg_rounded" src="https://github.com/user-attachments/assets/719405ca-4d1d-44da-b5aa-f857b983dc05" />
 
 - Catppucin
-    
+
   <img width="375" height="138" alt="Tokyobash_catppuccin_Bg_rounded" src="https://github.com/user-attachments/assets/d2818783-7762-4f4e-bee8-6ad59f61478c" />
 
 - Kanagawa
-    
+
   <img width="375" height="138" alt="Tokyobash_kanagawa_Bg_rounded" src="https://github.com/user-attachments/assets/f40ef138-3b0c-4c37-9b10-acad50cd0690" />
 
 </details>
@@ -76,7 +76,7 @@ There are three variatons to choose from:
   <summary>Slanted</summary>
 
 - Tokyonight
-  
+
   <img width="395" height="138" alt="Tokyobash_tokyonight_Bg_slanted" src="https://github.com/user-attachments/assets/6fecc7bf-855e-4f5e-a30c-dc37c3276c96" />
 
 - Catppuccin
