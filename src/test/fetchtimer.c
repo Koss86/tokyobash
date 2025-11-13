@@ -13,9 +13,9 @@ typedef struct {
     FetchOpts settings;
 } Tester;
 
-bool checkTimeDay(Tester*);
-bool checkTimeHr(Tester*);
-bool checkTimeMin(Tester*);
+bool checkTimeDay(int, Tester*);
+bool checkTimeHr(int, Tester*);
+bool checkTimeMin(int, Tester*);
 void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
 int getDaysInMonth(int month);
 void generateTests(Tester* times);
@@ -66,22 +66,22 @@ int main() {
 
         printf("  Limit: %i\n", times[i].settings.limit);
         printf("Current Date: %s\n", times[i].curnt_date);
-        printf("Fetch Date: %s\n", times[i].fetch_date);
+        printf("  Fetch Date: %s\n", times[i].fetch_date);
         printf("Current Time: %s\n", times[i].curnt_time);
-        printf("Fetch Time: %s\n\n", times[i].fetch_time);
+        printf("  Fetch Time: %s\n\n", times[i].fetch_time);
 
         switch (times[i].settings.modifier) {
 
             case Day:
-                result = checkTimeDay(&times[i]);
+                result = checkTimeDay(times[i].settings.limit, &times[i]);
                 break;
 
             case Hour:
-                result = checkTimeHr(&times[i]);
+                result = checkTimeHr(times[i].settings.limit, &times[i]);
                 break;
 
             case Minute:
-                result = checkTimeMin(&times[i]);
+                result = checkTimeMin(times[i].settings.limit, &times[i]);
                 break;
         }
 
@@ -142,10 +142,8 @@ int main() {
     free(times);
     return 0;
 }
-bool checkTimeDay(Tester* fetchConfig) {
+bool checkTimeDay(int limit, Tester* fetchConfig) {
 
-    FetchModifier modifier = fetchConfig->settings.modifier;
-    int limit = fetchConfig->settings.limit;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -162,7 +160,7 @@ bool checkTimeDay(Tester* fetchConfig) {
         return true;
     }
     //////////// REMOVE ///////////////
-    printf("yearDif = %i\n", yearDif);
+    printf(" yearDif = %i\n", yearDif);
     ///////////////////////////////////
 
     if (yearDif == 0) {
@@ -196,18 +194,19 @@ bool checkTimeDay(Tester* fetchConfig) {
         dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
     }
     //////////// REMOVE ///////////////
-    printf("dayDif = %i\n", dayDif);
+    printf("  dayDif = %i\n", dayDif);
     if (dayDif == 0) {
         hrDif = time.curnt_hour - time.fetch_hour;
     } else {
         hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
     }
-    printf("hrDif = %i\n", hrDif);
+    printf("   hrDif = %i\n", hrDif);
     if (hrDif == 0) {
         minDif = time.curnt_min - time.fetch_min;
     } else {
         minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
     }
+    printf("  minDif = %i\n", minDif);
     ///////////////////////////////////
 
     if (dayDif > limit) {
@@ -228,10 +227,8 @@ bool checkTimeDay(Tester* fetchConfig) {
     return false;
 }
 
-bool checkTimeHr(Tester* fetchConfig) {
+bool checkTimeHr(int limit, Tester* fetchConfig) {
 
-    FetchModifier modifier = fetchConfig->settings.modifier;
-    int limit = fetchConfig->settings.limit;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -245,7 +242,7 @@ bool checkTimeHr(Tester* fetchConfig) {
 
     yearDif = time.curnt_year - time.fetch_year;
     //////////// REMOVE ///////////////
-    printf("yearDif = %i\n", yearDif);
+    printf(" yearDif = %i\n", yearDif);
     ///////////////////////////////////
 
     if (yearDif > 1) {
@@ -272,7 +269,7 @@ bool checkTimeHr(Tester* fetchConfig) {
         dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
     }
     //////////// REMOVE ///////////////
-    printf("dayDif = %i\n", dayDif);
+    printf("  dayDif = %i\n", dayDif);
     ///////////////////////////////////
 
     if (dayDif > 1) {
@@ -285,13 +282,13 @@ bool checkTimeHr(Tester* fetchConfig) {
         hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
     }
     //////////// REMOVE ///////////////
-    printf("hrDif = %i\n", hrDif);
+    printf("   hrDif = %i\n", hrDif);
     if (hrDif == 0) {
         minDif = time.curnt_min - time.fetch_min;
     } else {
         minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
     }
-    printf("minDif = %i\n", minDif);
+    printf("  minDif = %i\n", minDif);
     ///////////////////////////////////
 
     if (hrDif > limit) {
@@ -306,10 +303,8 @@ bool checkTimeHr(Tester* fetchConfig) {
     return false;
 }
 
-bool checkTimeMin(Tester* fetchConfig) {
+bool checkTimeMin(int limit, Tester* fetchConfig) {
 
-    FetchModifier modifier = fetchConfig->settings.modifier;
-    int limit = fetchConfig->settings.limit;
     int days_in_month = 0;
     int yearDif = 0;
     int monthDif = 0;
@@ -323,7 +318,7 @@ bool checkTimeMin(Tester* fetchConfig) {
 
     yearDif = time.curnt_year - time.fetch_year;
     //////////// REMOVE ///////////////
-    printf("yearDif = %i\n", yearDif);
+    printf(" yearDif = %i\n", yearDif);
     ///////////////////////////////////
 
     if (yearDif > 1) {
@@ -350,7 +345,7 @@ bool checkTimeMin(Tester* fetchConfig) {
         dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
     }
     //////////// REMOVE ///////////////
-    printf("dayDif = %i\n", dayDif);
+    printf("  dayDif = %i\n", dayDif);
     ///////////////////////////////////
 
     if (dayDif > 1) {
@@ -363,7 +358,7 @@ bool checkTimeMin(Tester* fetchConfig) {
         hrDif = (HOURS_IN_DAY - time.fetch_hour) + time.curnt_hour;
     }
     //////////// REMOVE ///////////////
-    printf("hrDif = %i\n", hrDif);
+    printf("   hrDif = %i\n", hrDif);
     ///////////////////////////////////
 
     if (hrDif > 1) {
@@ -376,7 +371,7 @@ bool checkTimeMin(Tester* fetchConfig) {
         minDif = (MINS_IN_HOUR - time.fetch_min) + time.curnt_min;
     }
     //////////// REMOVE ///////////////
-    printf("minDif = %i\n", minDif);
+    printf("  minDif = %i\n", minDif);
     ///////////////////////////////////
 
     if (minDif >= limit) {
