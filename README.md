@@ -28,7 +28,7 @@ There are currently three themes to choose from.
 
   <img width="345" height="135" alt="Tokyobash_kanagawa_noBg" src="https://github.com/user-attachments/assets/fca86232-553e-47eb-a798-2b73f787c469" />
 
-Themes can be changed via the `theme` [config](#config) setting.
+Themes can be changed via the `theme` [Config](#config) setting.
 
 #
 
@@ -95,7 +95,7 @@ There are three variatons to choose from:
 
 Abbreviates paths longer than 50 characters.
 
-<img width="777" height="462" alt="Tokyobash_abv" src="https://github.com/user-attachments/assets/a7d00006-64c8-4b2f-9d61-06441e7a8ddf" />
+<img width="575" height="310" alt="Tokyobash_abv" src="https://github.com/user-attachments/assets/a7d00006-64c8-4b2f-9d61-06441e7a8ddf" />
 
 #
 
@@ -163,7 +163,7 @@ export PROMPT_COMMAND='PS1="$(tokyobash)"'
 
 Now save and restart your terminal!
 
-## ⚙️ Config
+## Config
 
 Config file uses standard key = value pairs.
 
@@ -199,7 +199,7 @@ icon        =   # Change icon or set to 0 to remove.
 - If `fetchtimer = 3d` repository will update after 3 days, when the prompt reloads.
 - `fetchtimer = 1h30m` is not vaild. Only one `Day`, `Hour`, or `Minute` modifier is allowed.
 
-## 🚫 No Make
+## No Make
 
 All you really need is a C compiler to build Tokyobash.
 
