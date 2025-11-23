@@ -41,16 +41,13 @@ int main(void) {
     if (strstr(path, pHome) != NULL) {
         replaceHome(path, pathLength, homeLength);
         pathLength = (pathLength - homeLength) + 1;
-    }
-
-    if (path[0] == '~') {
         usrConfig.pathState = Home;
+
+    } else if (strstr(path, "/mnt") != NULL) {
+        usrConfig.pathState = Mnt;
+
     } else {
-        if (strstr(path, "/mnt") != NULL) {
-            usrConfig.pathState = Mnt;
-        } else {
-            usrConfig.pathState = Root;
-        }
+        usrConfig.pathState = Root;
     }
 
     if (usrConfig.abv && pathLength > ABV_PATH_LEN_T) {

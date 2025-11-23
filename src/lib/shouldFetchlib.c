@@ -29,7 +29,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     char fetch_date[11];
     char fetch_time[9];
 
-    if (!getFetchTime(&fetch_date[0], &fetch_time[0])) {
+    if (!getFetchTime(fetch_date, fetch_time)) {
         return false;
     }
 

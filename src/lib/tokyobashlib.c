@@ -18,7 +18,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     } else {
 
         int configPathLen = strlen(pConfig);
-        // This check may not be needed but it's here just in case.
         if (pConfig[configPathLen - 1] == '/') {
             pConfig[configPathLen - 1] = '\0';
         }
@@ -37,8 +36,9 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     bool incomment = false;
     int slash = 0;
     int indx = 0;
-    char keybuf[20];
-    char valbuf[20];
+    int BUF_SIZE = 20;
+    char keybuf[BUF_SIZE];
+    char valbuf[BUF_SIZE];
 
     while ((c = fgetc(configFile)) != EOF) {
 
@@ -67,7 +67,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             incomment = false;
             valbuf[indx] = '\0';
             indx = 0;
-            checkKeyValue(usrConfig, &keybuf[0], &valbuf[0]);
+            checkKeyValue(usrConfig, keybuf, valbuf);
             continue;
         }
 
@@ -80,6 +80,10 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             inkey = false;
             keybuf[indx] = '\0';
             indx = 0;
+            continue;
+        }
+
+        if (indx > BUF_SIZE - 2) {
             continue;
         }
 
