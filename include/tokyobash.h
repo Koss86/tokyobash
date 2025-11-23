@@ -51,9 +51,9 @@ typedef struct ConfigSettings {
     bool gitAccessible;
     char timeFormat[1];
     PathState pathState;
-    FetchOpts fetchConfig;
     char leftLineSep[8];
     char rightLineSep[4];
+    FetchOpts fetchConfig;
 } ConfigSettings;
 
 typedef struct IntTimesAndDates {

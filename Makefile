@@ -54,7 +54,7 @@ ifeq ($(prefix),)
 else
 	@cp -r $(BINDIR) $(prefix)
 	@echo "$(BIN) successfully built and moved to '$(prefix)/$(BINDIR)'."
-	@$(RM)r $(BINDIR)
+	@$(RM) -r $(BINDIR)
 endif
 
 	@$(RM) $(OBJ) $(CONFIG_FILE)
@@ -75,4 +75,4 @@ $(CONFIG_FILE):
 	} >$(CONFIG_FILE)
 
 clean:
-	$(RM)r $(BINDIR) $(OBJ)
+	$(RM) -r $(BINDIR) $(OBJ)

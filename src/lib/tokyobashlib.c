@@ -18,7 +18,6 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     } else {
 
         int configPathLen = strlen(pConfig);
-        // This check may not be needed but it's here just in case.
         if (pConfig[configPathLen - 1] == '/') {
             pConfig[configPathLen - 1] = '\0';
         }
@@ -67,7 +66,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
             incomment = false;
             valbuf[indx] = '\0';
             indx = 0;
-            checkKeyValue(usrConfig, &keybuf[0], &valbuf[0]);
+            checkKeyValue(usrConfig, keybuf, valbuf);
             continue;
         }
 
