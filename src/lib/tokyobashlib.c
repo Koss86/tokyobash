@@ -105,8 +105,12 @@ static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
         if ((strncmp(valbuf, "catppuccin", 10)) == 0) {
             usrConfig->theme = Catppuccin;
 
-        } else if ((strncmp(valbuf, "kanagawa", 8)) == 0) {
-            usrConfig->theme = Kanagawa;
+        } else if ((strncmp(valbuf, "kanagawa", 9) == 0 ||
+                    strncmp(valbuf, "kanagawa1", 9) == 0)) {
+            usrConfig->theme = Kanagawa1;
+
+        } else if ((strncmp(valbuf, "kanagawa2", 9)) == 0) {
+            usrConfig->theme = Kanagawa2;
         }
 
     } else if ((strncmp(keybuf, "background", 10)) == 0) {
@@ -450,7 +454,7 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
 
             break;
 
-        case Kanagawa:
+        case Kanagawa1:
 
             if (usrConfig->background) {
 
@@ -491,6 +495,89 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
                        "\\[\\e[38;2;43;51;40m\\]"); // winter_green
                 strcpy(colorDefs->branch_bg,
                        "\\[\\e[48;2;43;51;40m\\]"); // winter_green_bg
+                strcpy(colorDefs->path_color, colorDefs->branch_color);
+                strcpy(colorDefs->path_bg, colorDefs->branch_bg);
+
+            } else { // No Bg
+
+                switch (usrConfig->pathState) {
+                    case Home:
+                        strcpy(colorDefs->usr_txt,
+                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
+                        break;
+                    case Mnt:
+                        strcpy(colorDefs->usr_txt,
+                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
+                        break;
+                    case Root:
+                        strcpy(colorDefs->usr_txt,
+                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+                        break;
+                }
+            }
+            strcpy(colorDefs->time_txt,
+                   "\\[\\e[38;2;126;156;216m\\]"); // crystal_blue
+            strcpy(colorDefs->branch_txt,
+                   "\\[\\e[38;2;192;163;110m\\]"); // boat_yellow2
+
+            strcpy(colorDefs->path_txt,
+                   "\\[\\e[38;2;230;196;132m\\]"); // carp_yellow
+            strcpy(colorDefs->curDir_txt,
+                   "\\[\\e[38;2;234;201;145m\\]"); // light_carp_yellow
+
+            strcpy(colorDefs->unstaged,
+                   "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+            strcpy(colorDefs->staged, "\\[\\e[38;2;122;162;247m\\]"); // blue
+            strcpy(colorDefs->committed,
+                   "\\[\\e[38;2;87;214;87m\\]"); // lime_green
+
+            break;
+
+        case Kanagawa2:
+            if (usrConfig->background) {
+                switch (usrConfig->pathState) {
+                    case Home:
+                        strcpy(colorDefs->usr_txt,
+                               "\\[\\e[38;2;75;100;100m\\]"); // dark_waveAqua2
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
+                        strcpy(colorDefs->usr_bg,
+                               "\\[\\e[48;2;122;168;159m\\]"); // waveAqua2_bg
+                        break;
+                    case Mnt:
+                        strcpy(
+                            colorDefs->usr_txt,
+                            "\\[\\e[38;2;150;95;60m\\]"); // dark_surimiOrange
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+                        strcpy(
+                            colorDefs->usr_bg,
+                            "\\[\\e[48;2;255;161;102m\\]"); // surimiOrange_bg
+                        break;
+                    case Root:
+                        strcpy(colorDefs->usr_txt,
+                               "\\[\\e[38;2;105;40;39m\\]"); // dark_autumn_red
+                        strcpy(colorDefs->usr_color,
+                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
+                        strcpy(colorDefs->usr_bg,
+                               "\\[\\e[48;2;195;64;66m\\]"); // autumn_red_bg
+                        break;
+                }
+
+                strcpy(colorDefs->time_color,
+                       "\\[\\e[38;2;43;51;40m\\]"); // winter_green
+                strcpy(colorDefs->time_bg,
+                       "\\[\\e[48;2;43;51;40m\\]"); // winter_green_bg
+                strcpy(colorDefs->branch_color,
+                       "\\[\\e[38;2;73;68;60m\\]"); // winter_yellow
+                strcpy(colorDefs->branch_bg,
+                       "\\[\\e[48;2;73;68;60m\\]"); // winter_yellow_bg
                 strcpy(colorDefs->path_color, colorDefs->branch_color);
                 strcpy(colorDefs->path_bg, colorDefs->branch_bg);
 

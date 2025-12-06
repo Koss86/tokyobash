@@ -21,7 +21,8 @@ typedef enum PathState {
 typedef enum Themes {
     Tokyonight,
     Catppuccin,
-    Kanagawa,
+    Kanagawa1,
+    Kanagawa2,
 } Themes;
 
 typedef enum FetchModifier {
