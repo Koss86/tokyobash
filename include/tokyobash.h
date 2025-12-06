@@ -56,19 +56,6 @@ typedef struct ConfigSettings {
     FetchOpts fetchConfig;
 } ConfigSettings;
 
-typedef struct IntTimesAndDates {
-    int curnt_year;
-    int curnt_month;
-    int curnt_day;
-    int curnt_hour;
-    int curnt_min;
-    int fetch_year;
-    int fetch_month;
-    int fetch_day;
-    int fetch_hour;
-    int fetch_min;
-} IntTimesnDates;
-
 typedef struct Colors {
     char bold[13];
     char reset[14];

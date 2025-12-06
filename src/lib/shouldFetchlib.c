@@ -4,6 +4,19 @@
 #define HOURS_IN_DAY 24
 #define MINS_IN_HOUR 60
 
+typedef struct IntTimesAndDates {
+    int curnt_year;
+    int curnt_month;
+    int curnt_day;
+    int curnt_hour;
+    int curnt_min;
+    int fetch_year;
+    int fetch_month;
+    int fetch_day;
+    int fetch_hour;
+    int fetch_min;
+} IntTimesnDates;
+
 static int getDaysInMonth(int);
 static bool getFetchTime(char*, char*);
 static bool checkTimeDay(int, IntTimesnDates*);
