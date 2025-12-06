@@ -586,21 +586,21 @@ void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
                 switch (usrConfig->pathState) {
                     case Home:
                         strcpy(colorDefs->usr_txt,
-                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
+                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
                         strcpy(colorDefs->usr_color,
-                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
+                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
                         break;
                     case Mnt:
                         strcpy(colorDefs->usr_txt,
-                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
+                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
                         strcpy(colorDefs->usr_color,
-                               "\\[\\e[38;2;122;168;159m\\]"); // waveAqua2
+                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
                         break;
                     case Root:
                         strcpy(colorDefs->usr_txt,
-                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
                         strcpy(colorDefs->usr_color,
-                               "\\[\\e[38;2;255;161;102m\\]"); // surimiOrange
+                               "\\[\\e[38;2;195;64;66m\\]"); // autumn_red
                         break;
                 }
             }
