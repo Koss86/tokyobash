@@ -4,25 +4,12 @@
 #define HOURS_IN_DAY 24
 #define MINS_IN_HOUR 60
 
-typedef struct IntTimesAndDates {
-    int curnt_year;
-    int curnt_month;
-    int curnt_day;
-    int curnt_hour;
-    int curnt_min;
-    int fetch_year;
-    int fetch_month;
-    int fetch_day;
-    int fetch_hour;
-    int fetch_min;
-} IntTimesnDates;
-
 static int getDaysInMonth(int);
 static bool getFetchTime(char*, char*);
-static bool checkTimeDay(int, IntTimesnDates*);
-static bool checkTimeHr(int, IntTimesnDates*);
-static bool checkTimeMin(int, IntTimesnDates*);
-static void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
+static bool checkTimeDay(int, Time_Dates*);
+static bool checkTimeHr(int, Time_Dates*);
+static bool checkTimeMin(int, Time_Dates*);
+static void charTimeToInt(Time_Dates*, char[], char[], char[], char[]);
 
 bool shouldFetch(FetchOpts* fetchConfig) {
 
@@ -46,7 +33,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
         return false;
     }
 
-    IntTimesnDates time;
+    Time_Dates time;
     charTimeToInt(&time, curnt_date, curnt_time, fetch_date, fetch_time);
 
     switch (fetchConfig->modifier) {
@@ -64,7 +51,7 @@ bool shouldFetch(FetchOpts* fetchConfig) {
     return false;
 }
 
-static bool checkTimeDay(int limit, IntTimesnDates* time) {
+static bool checkTimeDay(int limit, Time_Dates* time) {
 
     int days_in_month = 0;
     int yearDif = 0;
@@ -89,7 +76,7 @@ static bool checkTimeDay(int limit, IntTimesnDates* time) {
         } else {
             days_in_month = getDaysInMonth(time->fetch_month);
             dayDif = (days_in_month - time->fetch_day) + time->curnt_day;
-            dayDif += 28; // add month of Febuary.
+            dayDif += 28; // add month of February.
 
             if (dayDif > limit) {
                 return true;
@@ -122,7 +109,7 @@ static bool checkTimeDay(int limit, IntTimesnDates* time) {
     return false;
 }
 
-static bool checkTimeHr(int limit, IntTimesnDates* time) {
+static bool checkTimeHr(int limit, Time_Dates* time) {
 
     int days_in_month = 0;
     int yearDif = 0;
@@ -175,7 +162,7 @@ static bool checkTimeHr(int limit, IntTimesnDates* time) {
     return false;
 }
 
-static bool checkTimeMin(int limit, IntTimesnDates* time) {
+static bool checkTimeMin(int limit, Time_Dates* time) {
 
     int days_in_month = 0;
     int yearDif = 0;
@@ -315,7 +302,7 @@ static bool getFetchTime(char* fetch_date, char* fetch_time) {
     pclose(fetch_status);
     return true;
 }
-static void charTimeToInt(IntTimesnDates* dateData, char curnt_date[],
+static void charTimeToInt(Time_Dates* dateData, char curnt_date[],
                           char curnt_time[], char fetch_date[],
                           char fetch_time[]) {
     const int YR_INDX = 2;

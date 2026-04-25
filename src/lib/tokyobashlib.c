@@ -1,8 +1,8 @@
 #include "../../include/tokyobash.h"
 
-static void checkKeyValue(ConfigSettings*, char*, char*);
+static void checkKeyValue(Config*, char*, char*);
 
-void parseConfig(ConfigSettings* usrConfig, char* pHome) {
+void parseConfig(Config* usrConfig, char* pHome) {
 
     char path[PATH_MAX];
     char* pConfig = getenv("XDG_CONFIG_HOME");
@@ -97,8 +97,7 @@ void parseConfig(ConfigSettings* usrConfig, char* pHome) {
     fclose(configFile);
     return;
 }
-static void checkKeyValue(ConfigSettings* usrConfig, char* keybuf,
-                          char* valbuf) {
+static void checkKeyValue(Config* usrConfig, char* keybuf, char* valbuf) {
 
     if ((strncmp(keybuf, "theme", 5)) == 0) {
 
@@ -276,7 +275,7 @@ void remCurntDir(char* path, int pathLength) {
     return;
 }
 
-void defineColors(ConfigSettings* usrConfig, Colors* colorDefs) {
+void defineColors(Config* usrConfig, Colors* colorDefs) {
     strcpy(colorDefs->bold, "\\[\\e[1m\\]");
     strcpy(colorDefs->reset, "\\[\\e[00m\\]");
     strcpy(colorDefs->untracked, "\\[\\e[38;2;255;255;0m\\]"); // yellow

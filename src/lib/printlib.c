@@ -1,6 +1,6 @@
 #include "../../include/tokyobash.h"
 
-void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
+void printUsrTime(Config* usrConfig, Colors* colorDefs) {
 
     if (usrConfig->background) {
         printf("%s%s%s", colorDefs->usr_color, usrConfig->leftSep,
@@ -25,7 +25,7 @@ void printUsrTime(ConfigSettings* usrConfig, Colors* colorDefs) {
     return;
 }
 
-void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
+void printBranch(Config* usrConfig, Colors* colorDefs) {
 
     char branch_name[MAX_BRANCH_LEN];
     getBranch(&branch_name[0]);
@@ -51,7 +51,7 @@ void printBranch(ConfigSettings* usrConfig, Colors* colorDefs) {
     return;
 }
 
-void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+void printPathWithBg(Config* usrConfig, Colors* colorDefs, char* path,
                      int pathLength) {
 
     if (usrConfig->inARepo && usrConfig->branchname) {
@@ -100,7 +100,7 @@ void printPathWithBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
     return;
 }
 
-void printPathNoBg(ConfigSettings* usrConfig, Colors* colorDefs, char* path,
+void printPathNoBg(Config* usrConfig, Colors* colorDefs, char* path,
                    int pathLength) {
 
     if (pathLength > 1) {
@@ -170,7 +170,6 @@ void printStatusBar(Colors* colorDefs, int untracked, int unstaged, int staged,
 
         if (ct > 1) {
             printf("%s | ", colorDefs->usr_color);
-            ct--;
         }
     }
     if (fetched > 0) {

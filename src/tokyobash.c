@@ -16,7 +16,7 @@ int main(void) {
         exit(-1);
     }
 
-    ConfigSettings usrConfig;
+    Config usrConfig;
     usrConfig.abv = true;
     usrConfig.time = true;
     usrConfig.fetch = false;
@@ -32,6 +32,7 @@ int main(void) {
     usrConfig.fetchConfig.modifier = Day;
     usrConfig.gitAccessible = isGitAccessible();
     strcpy(usrConfig.icon, "");
+    if (usrConfig.gitAccessible) usrConfig.inARepo = checkIfInRepo();
 
     parseConfig(&usrConfig, pHome);
 
@@ -57,10 +58,6 @@ int main(void) {
 
     if (pathLength > 1) {
         remCurntDir(path, pathLength);
-    }
-
-    if (usrConfig.gitAccessible) {
-        usrConfig.inARepo = checkIfInRepo();
     }
 
     Colors colorDefs;

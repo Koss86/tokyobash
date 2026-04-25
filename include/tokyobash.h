@@ -12,31 +12,31 @@
 #define MAX_BRANCH_LEN 256
 #define ABV_PATH_LEN_T 50
 
-typedef enum PathState {
+typedef enum {
     Home,
     Mnt,
     Root,
 } PathState;
 
-typedef enum Themes {
+typedef enum {
     Tokyonight,
     Catppuccin,
     Kanagawa1,
     Kanagawa2,
 } Themes;
 
-typedef enum FetchModifier {
+typedef enum {
     Minute,
     Hour,
     Day,
-} FetchModifier;
+} FetchMod;
 
-typedef struct FetchOpts {
-    FetchModifier modifier;
+typedef struct {
+    FetchMod modifier;
     int limit;
 } FetchOpts;
 
-typedef struct ConfigSettings {
+typedef struct {
     bool abv;
     bool time;
     bool fetch;
@@ -55,9 +55,9 @@ typedef struct ConfigSettings {
     char leftLineSep[8];
     char rightLineSep[4];
     FetchOpts fetchConfig;
-} ConfigSettings;
+} Config;
 
-typedef struct Colors {
+typedef struct {
     char bold[13];
     char reset[14];
     char usr_color[28];
@@ -80,8 +80,21 @@ typedef struct Colors {
     char fetched[28];
 } Colors;
 
-void parseConfig(ConfigSettings*, char*);
-void defineColors(ConfigSettings*, Colors*);
+typedef struct {
+    int curnt_year;
+    int curnt_month;
+    int curnt_day;
+    int curnt_hour;
+    int curnt_min;
+    int fetch_year;
+    int fetch_month;
+    int fetch_day;
+    int fetch_hour;
+    int fetch_min;
+} Time_Dates;
+
+void parseConfig(Config*, char*);
+void defineColors(Config*, Colors*);
 // Replace $HOME with '~'.
 void replaceHome(char* path, int pLeng, int hLeng);
 // If path length is greater than 50, keep first 24 chars, add '...' then
@@ -92,10 +105,10 @@ void abrvPath(char* path, int pLeng);
 // current dir is highlighted.
 void remCurntDir(char* path, int pLeng);
 
-void printUsrTime(ConfigSettings*, Colors*);
-void printBranch(ConfigSettings*, Colors*);
-void printPathWithBg(ConfigSettings*, Colors*, char* path, int pLeng);
-void printPathNoBg(ConfigSettings*, Colors*, char* path, int pLeng);
+void printUsrTime(Config*, Colors*);
+void printBranch(Config*, Colors*);
+void printPathWithBg(Config*, Colors*, char* path, int pLeng);
+void printPathNoBg(Config*, Colors*, char* path, int pLeng);
 void printStatusBar(Colors*, int ut, int us, int s, int c, int f);
 
 // If git is available, return true.
