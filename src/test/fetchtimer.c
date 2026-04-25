@@ -16,7 +16,7 @@ typedef struct {
 bool checkTimeDay(int, Tester*);
 bool checkTimeHr(int, Tester*);
 bool checkTimeMin(int, Tester*);
-void charTimeToInt(IntTimesnDates*, char[], char[], char[], char[]);
+void charTimeToInt(Time_Dates*, char[], char[], char[], char[]);
 int getDaysInMonth(int month);
 void generateTests(Tester* times);
 
@@ -134,7 +134,7 @@ int main() {
     printf("%2d Tests Failed%s\n", failed, reset);
     printf("%2d Returned True  %2d Expected to Return True\n", return_true,
            expectedtrue);
-    printf("%2d Retruned False %2d Expected to Return False\n", return_false,
+    printf("%2d Returned False %2d Expected to Return False\n", return_false,
            TEST_SIZE - expectedtrue);
     if (failed > 0) {
         printf("%sTests That Failed: %s%s\n", red, failedTests, reset);
@@ -151,7 +151,7 @@ bool checkTimeDay(int limit, Tester* fetchConfig) {
     int hrDif = 0;
     int minDif = 0;
 
-    IntTimesnDates time;
+    Time_Dates time;
     charTimeToInt(&time, fetchConfig->curnt_date, fetchConfig->curnt_time,
                   fetchConfig->fetch_date, fetchConfig->fetch_time);
 
@@ -179,7 +179,7 @@ bool checkTimeDay(int limit, Tester* fetchConfig) {
         } else {
             days_in_month = getDaysInMonth(time.fetch_month);
             dayDif = (days_in_month - time.fetch_day) + time.curnt_day;
-            dayDif += 28; // add month of Febuary.
+            dayDif += 28; // add month of February.
 
             if (dayDif > limit) {
                 return true;
@@ -236,7 +236,7 @@ bool checkTimeHr(int limit, Tester* fetchConfig) {
     int hrDif = 0;
     int minDif = 0;
 
-    IntTimesnDates time;
+    Time_Dates time;
     charTimeToInt(&time, fetchConfig->curnt_date, fetchConfig->curnt_time,
                   fetchConfig->fetch_date, fetchConfig->fetch_time);
 
@@ -312,7 +312,7 @@ bool checkTimeMin(int limit, Tester* fetchConfig) {
     int hrDif = 0;
     int minDif = 0;
 
-    IntTimesnDates time;
+    Time_Dates time;
     charTimeToInt(&time, fetchConfig->curnt_date, fetchConfig->curnt_time,
                   fetchConfig->fetch_date, fetchConfig->fetch_time);
 
@@ -379,7 +379,7 @@ bool checkTimeMin(int limit, Tester* fetchConfig) {
     }
     return false;
 }
-void charTimeToInt(IntTimesnDates* dateData, char curnt_date[],
+void charTimeToInt(Time_Dates* dateData, char curnt_date[],
                    char curnt_time[], char fetch_date[], char fetch_time[]) {
 
     const int YR_INDX = 2;
